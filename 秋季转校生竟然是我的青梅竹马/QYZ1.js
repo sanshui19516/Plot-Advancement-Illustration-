@@ -17,7 +17,6 @@ const BASE_URL = USE_CN
 
 // 动态加载功能脚本
 import(BASE_URL + 'QY1.js');   // 事件控制器
-import(BASE_URL + 'Q2.js');   // 枫叶地图
 import(BASE_URL + 'Q3.js');   // CG热更新
 import(BASE_URL + 'Q1.js');   // CG切换
 
