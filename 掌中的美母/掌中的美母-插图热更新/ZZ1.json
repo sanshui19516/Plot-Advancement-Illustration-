@@ -1,0 +1,58 @@
+[
+    {
+        "scriptName": "测试一",
+        "disabled": false,
+        "runOnEdit": true,
+        "findRegex": "/1/gi",
+        "trimStrings": [],
+        "replaceString": "测试成功",
+        "placement": [1, 2],
+        "substituteRegex": 0,
+        "minDepth": null,
+        "maxDepth": null,
+        "markdownOnly": true,
+        "promptOnly": false
+    },
+    {
+        "scriptName": "测试二",
+        "disabled": false,
+        "runOnEdit": true,
+        "findRegex": "/2/gi",
+        "trimStrings": [],
+        "replaceString": "测试成功",
+        "placement": [1, 2],
+        "substituteRegex": 0,
+        "minDepth": null,
+        "maxDepth": null,
+        "markdownOnly": true,
+        "promptOnly": false
+    },
+    {
+        "scriptName": "测试三",
+        "disabled": false,
+        "runOnEdit": true,
+        "findRegex": "/3/gi",
+        "trimStrings": [],
+        "replaceString": "测试成功",
+        "placement": [1, 2],
+        "substituteRegex": 0,
+        "minDepth": null,
+        "maxDepth": null,
+        "markdownOnly": true,
+        "promptOnly": false
+    },
+    {
+        "scriptName": "测试四",
+        "disabled": false,
+        "runOnEdit": true,
+        "findRegex": "/4/gi",
+        "trimStrings": [],
+        "replaceString": "测试成功",
+        "placement": [1, 2],
+        "substituteRegex": 0,
+        "minDepth": null,
+        "maxDepth": null,
+        "markdownOnly": true,
+        "promptOnly": false
+    }
+]
