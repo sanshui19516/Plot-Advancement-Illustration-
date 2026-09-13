@@ -1,0 +1,1665 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>掌中的美母 · 状态栏</title>
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+    min-height: auto;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    background: transparent;
+    padding: 20px;
+    font-family: "Inter", "PingFang SC", "Microsoft YaHei", sans-serif;
+}
+.status-container {
+    width: 100%;
+    max-width: 520px;
+    border-radius: 28px;
+    border: 1px solid hsla(42, 30%, 55%, 0.12);
+    box-shadow: 0 24px 64px rgba(0, 0, 0, 0.6);
+    padding: 18px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    background: hsla(350, 18%, 10%, 0.9);
+}
+.status-container::after {
+    content: '';
+    position: absolute;
+    inset: -50%;
+    background: radial-gradient(ellipse at 30% 20%, hsla(42, 60%, 45%, 0.04), transparent 60%);
+    animation: shimmer 10s ease-in-out infinite alternate;
+    pointer-events: none;
+    z-index: 0;
+}
+@keyframes shimmer {
+    0% { transform: translate(-5%, -5%) scale(1); opacity: 0.4; }
+    100% { transform: translate(5%, 5%) scale(1.1); opacity: 0.8; }
+}
+.status-container > * { position: relative; z-index: 1; }
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding-bottom: 12px;
+    border-bottom: 1px solid hsla(42, 20%, 50%, 0.1);
+    margin-bottom: 12px;
+}
+.header-left { flex: 1; min-width: 0; }
+.header-title {
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: hsl(42, 60%, 65%);
+    margin-bottom: 4px;
+}
+.header-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    font-size: 11px;
+    color: hsla(42, 20%, 70%, 0.7);
+}
+.header-meta span { display: flex; align-items: center; gap: 4px; }
+.header-meta .dot {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: hsl(42, 60%, 55%);
+    animation: pulse-dot 2s ease-in-out infinite;
+}
+@keyframes pulse-dot {
+    0%, 100% { opacity: 0.3; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.4); }
+}
+.header-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+.father-warning {
+    font-size: 10px;
+    padding: 3px 8px;
+    border-radius: 6px;
+    background: hsla(350, 60%, 50%, 0.2);
+    color: hsl(350, 70%, 70%);
+    border: 1px solid hsla(350, 60%, 50%, 0.3);
+    animation: warnPulse 2s ease-in-out infinite;
+}
+@keyframes warnPulse {
+    0%, 100% { opacity: 0.8; }
+    50% { opacity: 1; }
+}
+.fold-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: hsla(42, 20%, 70%, 0.4);
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    transition: color 0.3s;
+}
+.fold-btn:hover { color: hsla(42, 30%, 80%, 0.8); }
+.fold-btn svg {
+    width: 18px;
+    height: 18px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 2.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: transform 0.3s;
+}
+.status-container.collapsed .fold-btn svg { transform: rotate(-90deg); }
+.status-container.collapsed .role-hero,
+.status-container.collapsed .l2,
+.status-container.collapsed .l3 { display: none; }
+
+/* ============ 角色头卡（主面板顶部） ============ */
+.role-hero {
+    display: flex;
+    gap: 14px;
+    padding: 14px 16px;
+    background: linear-gradient(135deg, hsla(350, 40%, 20%, 0.25), hsla(42, 30%, 20%, 0.1));
+    border: 1px solid hsla(42, 30%, 50%, 0.12);
+    border-radius: 16px;
+    margin-bottom: 12px;
+    align-items: center;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+/* ⬇️ 主面板头像：竖长方形 72x96 ⬇️ */
+.role-hero-avatar {
+    width: 72px;
+    height: 96px;
+    border-radius: 14px;
+    overflow: hidden;
+    flex-shrink: 0;
+    border: 2px solid hsla(42, 60%, 55%, 0.3);
+    background: hsla(42, 20%, 15%, 0.6);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+    transition: transform 0.3s, border-color 0.3s;
+}
+.role-hero-avatar:hover {
+    border-color: hsla(42, 60%, 55%, 0.6);
+    transform: scale(1.03);
+}
+.role-hero-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+    display: block;
+}
+.role-hero-content {
+    flex: 1;
+    min-width: 0;
+}
+.role-hero-name {
+    font-size: 15px;
+    font-weight: 700;
+    color: hsl(42, 65%, 75%);
+    letter-spacing: 1px;
+    margin-bottom: 3px;
+}
+.role-hero-subtitle {
+    font-size: 11px;
+    color: hsla(42, 30%, 80%, 0.7);
+    letter-spacing: 0.5px;
+    margin-bottom: 5px;
+}
+.role-hero-desc {
+    font-size: 10px;
+    color: hsla(42, 25%, 75%, 0.55);
+    letter-spacing: 0.3px;
+    line-height: 1.5;
+}
+
+.l2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+.ring-card {
+    background: hsla(350, 15%, 14%, 0.6);
+    border: 1px solid hsla(42, 20%, 50%, 0.1);
+    border-radius: 16px;
+    padding: 14px 12px 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.ring-wrap {
+    position: relative;
+    width: 80px;
+    height: 80px;
+    margin-bottom: 6px;
+}
+.ring-wrap svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+.ring-bg {
+    fill: none;
+    stroke: hsla(42, 20%, 50%, 0.1);
+    stroke-width: 6;
+}
+.ring-fill {
+    fill: none;
+    stroke-width: 6;
+    stroke-linecap: round;
+    transition: stroke-dashoffset 0.8s ease;
+}
+.ring-fill.intimacy { stroke: hsl(350, 65%, 60%); }
+.ring-fill.submit { stroke: hsl(280, 55%, 65%); }
+.ring-value {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    font-weight: 700;
+    color: hsla(42, 30%, 90%, 0.95);
+}
+.ring-value .unit {
+    font-size: 9px;
+    font-weight: 400;
+    color: hsla(42, 20%, 70%, 0.5);
+}
+.ring-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    color: hsla(42, 25%, 75%, 0.85);
+}
+
+.relation-info {
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 14px;
+    background: linear-gradient(135deg, hsla(350, 40%, 20%, 0.3), hsla(42, 30%, 20%, 0.15));
+    border-radius: 14px;
+    border-left: 3px solid hsl(42, 60%, 55%);
+}
+.relation-status {
+    font-size: 14px;
+    font-weight: 700;
+    color: hsl(42, 60%, 70%);
+    letter-spacing: 2px;
+}
+.emotion-tag {
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 10px;
+    background: hsla(42, 40%, 50%, 0.15);
+    color: hsl(42, 50%, 75%);
+    border: 1px solid hsla(42, 40%, 50%, 0.2);
+}
+.badges {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+.badge {
+    font-size: 10px;
+    padding: 3px 10px;
+    border-radius: 10px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+.badge.pregnant {
+    background: hsla(350, 60%, 50%, 0.2);
+    color: hsl(350, 70%, 75%);
+    border: 1px solid hsla(350, 60%, 50%, 0.3);
+}
+.badge.master {
+    background: hsla(280, 50%, 50%, 0.2);
+    color: hsl(280, 60%, 80%);
+    border: 1px solid hsla(280, 50%, 50%, 0.3);
+}
+.badge.tattoo {
+    background: hsla(42, 60%, 45%, 0.2);
+    color: hsl(42, 60%, 75%);
+    border: 1px solid hsla(42, 60%, 45%, 0.3);
+}
+
+.detail-btn {
+    grid-column: 1 / -1;
+    width: 100%;
+    padding: 9px 0;
+    background: hsla(42, 40%, 50%, 0.08);
+    border: 1px solid hsla(42, 40%, 50%, 0.15);
+    border-radius: 12px;
+    color: hsl(42, 50%, 70%);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-family: inherit;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+.detail-btn:hover {
+    background: hsla(42, 40%, 50%, 0.15);
+    border-color: hsla(42, 40%, 50%, 0.3);
+    transform: translateY(-1px);
+}
+.detail-btn svg {
+    width: 14px;
+    height: 14px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.l3 {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.panel {
+    background: hsla(350, 15%, 14%, 0.5);
+    border: 1px solid hsla(42, 20%, 50%, 0.08);
+    border-radius: 14px;
+    overflow: hidden;
+}
+.panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 14px;
+    cursor: pointer;
+    user-select: none;
+}
+.panel-title {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    color: hsla(42, 25%, 80%, 0.9);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.panel-title svg {
+    width: 14px;
+    height: 14px;
+    stroke: hsl(42, 50%, 65%);
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+.panel-toggle {
+    font-size: 10px;
+    color: hsla(42, 20%, 60%, 0.5);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+.panel-toggle svg {
+    width: 12px;
+    height: 12px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: transform 0.3s;
+}
+.panel.open .panel-toggle svg { transform: rotate(180deg); }
+.panel-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease, padding 0.4s ease;
+    padding: 0 14px;
+}
+.panel.open .panel-body {
+    max-height: 600px;
+    padding: 0 14px 14px;
+}
+
+.char-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 6px;
+    border-bottom: 1px solid hsla(42, 20%, 50%, 0.05);
+    cursor: pointer;
+    border-radius: 8px;
+    margin: 0 -6px;
+    transition: background 0.2s;
+}
+.char-row:last-child { border-bottom: none; }
+.char-row:hover { background: hsla(42, 40%, 50%, 0.06); }
+.char-row::after {
+    content: '\203A';
+    font-size: 16px;
+    color: hsla(42, 20%, 60%, 0.4);
+    flex-shrink: 0;
+}
+.char-avatar-sm {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    overflow: hidden;
+    flex-shrink: 0;
+    border: 1px solid hsla(42, 60%, 55%, 0.3);
+    background: hsla(42, 20%, 15%, 0.6);
+    cursor: pointer;
+    transition: transform 0.2s, border-color 0.2s;
+}
+.char-avatar-sm:hover {
+    transform: scale(1.15);
+    border-color: hsla(42, 60%, 55%, 0.7);
+}
+.char-avatar-sm img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+.char-name {
+    font-size: 12px;
+    font-weight: 600;
+    color: hsla(42, 25%, 85%, 0.9);
+    width: 56px;
+    flex-shrink: 0;
+}
+.char-bar {
+    flex: 1;
+    height: 6px;
+    background: hsla(42, 20%, 50%, 0.1);
+    border-radius: 3px;
+    overflow: hidden;
+}
+.char-bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.6s ease;
+}
+.char-bar-fill.yiyi {
+    background: linear-gradient(90deg, hsl(350, 60%, 50%), hsl(350, 70%, 65%));
+}
+.char-bar-fill.linyi {
+    background: linear-gradient(90deg, hsl(280, 50%, 55%), hsl(280, 60%, 70%));
+}
+.char-bar-fill.hansu {
+    background: linear-gradient(90deg, hsl(42, 60%, 50%), hsl(42, 70%, 65%));
+}
+.char-status {
+    font-size: 10px;
+    color: hsla(42, 20%, 70%, 0.6);
+    width: 56px;
+    text-align: right;
+    flex-shrink: 0;
+}
+
+.world-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+}
+.world-cell {
+    background: hsla(42, 20%, 50%, 0.04);
+    border-radius: 10px;
+    padding: 8px 10px;
+}
+.world-cell .label {
+    font-size: 9px;
+    color: hsla(42, 20%, 70%, 0.5);
+    letter-spacing: 0.5px;
+    margin-bottom: 2px;
+}
+.world-cell .value {
+    font-size: 12px;
+    font-weight: 600;
+    color: hsla(42, 25%, 88%, 0.9);
+}
+
+/* ============ 详情抽屉 ============ */
+.drawer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: inherit;
+    background: hsl(350, 15%, 8%);
+    z-index: 50;
+    display: flex;
+    flex-direction: column;
+    transform: translateX(100%);
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+}
+.drawer.open { transform: translateX(0); }
+
+.drawer-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 20px;
+    border-bottom: 1px solid hsla(42, 20%, 50%, 0.1);
+    flex-shrink: 0;
+}
+.drawer-title {
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: hsl(42, 60%, 70%);
+}
+.drawer-close {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: hsla(42, 20%, 70%, 0.5);
+    font-size: 20px;
+    padding: 4px 8px;
+    font-family: inherit;
+    line-height: 1;
+    transition: color 0.3s;
+}
+.drawer-close:hover { color: hsl(42, 60%, 75%); }
+
+.drawer-tabs {
+    display: flex;
+    gap: 4px;
+    padding: 12px 20px 0;
+    border-bottom: 1px solid hsla(42, 20%, 50%, 0.08);
+    flex-shrink: 0;
+}
+.drawer-tab {
+    flex: 1;
+    padding: 9px 0;
+    background: none;
+    border: none;
+    color: hsla(42, 20%, 70%, 0.4);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    cursor: pointer;
+    font-family: inherit;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    transition: color 0.3s;
+}
+.drawer-tab:hover { color: hsla(42, 30%, 80%, 0.7); }
+.drawer-tab.active {
+    color: hsl(42, 60%, 70%);
+    border-bottom-color: hsl(42, 60%, 55%);
+}
+
+/* ============ 内置滚动条 ============ */
+.drawer-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px 20px 24px;
+    min-height: 0;
+    scrollbar-width: thin;
+    scrollbar-color: hsla(42, 55%, 58%, 0.4) transparent;
+}
+.drawer-content::-webkit-scrollbar { width: 5px; height: 5px; }
+.drawer-content::-webkit-scrollbar-track { background: transparent; margin: 8px 0; }
+.drawer-content::-webkit-scrollbar-thumb {
+    background: hsla(42, 55%, 58%, 0.4);
+    border-radius: 99px;
+    transition: background 0.3s ease;
+}
+.drawer-content::-webkit-scrollbar-thumb:hover { background: hsla(42, 60%, 65%, 0.7); }
+.drawer-content::-webkit-scrollbar-corner { background: transparent; }
+
+.drawer-pane { display: none; }
+.drawer-pane.active { display: block; }
+
+/* 抽屉内的角色简介卡（带头像） */
+.char-hero {
+    background: linear-gradient(135deg, hsla(350, 40%, 20%, 0.3), hsla(42, 30%, 20%, 0.15));
+    border-radius: 14px;
+    padding: 16px 18px;
+    margin-bottom: 16px;
+    border: 1px solid hsla(42, 30%, 50%, 0.15);
+    display: flex;
+    gap: 14px;
+    align-items: center;
+}
+/* ⬇️ 抽屉内头像：竖长方形 64x88 ⬇️ */
+.char-hero-avatar {
+    width: 64px;
+    height: 88px;
+    border-radius: 12px;
+    overflow: hidden;
+    flex-shrink: 0;
+    border: 2px solid hsla(42, 60%, 55%, 0.3);
+    background: hsla(42, 20%, 15%, 0.6);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+    transition: transform 0.3s, border-color 0.3s;
+}
+.char-hero-avatar:hover {
+    border-color: hsla(42, 60%, 55%, 0.6);
+    transform: scale(1.03);
+}
+.char-hero-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+    display: block;
+}
+.char-hero-text { flex: 1; min-width: 0; }
+.char-hero .name {
+    font-size: 15px;
+    font-weight: 700;
+    color: hsl(42, 65%, 75%);
+    letter-spacing: 1px;
+    margin-bottom: 3px;
+}
+.char-hero .sub {
+    font-size: 11px;
+    color: hsla(42, 30%, 80%, 0.7);
+    letter-spacing: 0.5px;
+    margin-bottom: 5px;
+}
+.char-hero .desc {
+    font-size: 10px;
+    color: hsla(42, 25%, 75%, 0.55);
+    letter-spacing: 0.3px;
+    line-height: 1.5;
+}
+.char-hero .relation {
+    font-size: 12px;
+    font-weight: 700;
+    color: hsl(350, 65%, 70%);
+    padding: 4px 10px;
+    border-radius: 10px;
+    background: hsla(350, 60%, 50%, 0.15);
+    border: 1px solid hsla(350, 60%, 50%, 0.25);
+    letter-spacing: 1px;
+    flex-shrink: 0;
+    align-self: flex-start;
+}
+
+.milestone-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+}
+.milestone-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 10px;
+    border-radius: 8px;
+    font-size: 11px;
+    background: hsla(42, 20%, 50%, 0.04);
+    border: 1px solid hsla(42, 20%, 50%, 0.06);
+}
+.milestone-item.done {
+    background: hsla(42, 50%, 50%, 0.08);
+    border-color: hsla(42, 50%, 50%, 0.2);
+    color: hsl(42, 55%, 75%);
+}
+.milestone-item.undone { color: hsla(42, 15%, 65%, 0.4); }
+.milestone-item .check {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 9px;
+    font-weight: 700;
+}
+.milestone-item.done .check {
+    background: hsl(42, 60%, 55%);
+    color: hsl(350, 15%, 8%);
+}
+.milestone-item.undone .check {
+    background: hsla(42, 20%, 50%, 0.15);
+    color: hsla(42, 20%, 70%, 0.4);
+}
+
+.count-list { display: flex; flex-direction: column; gap: 8px; }
+.count-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 14px;
+    background: hsla(42, 20%, 50%, 0.04);
+    border-radius: 10px;
+    border: 1px solid hsla(42, 20%, 50%, 0.06);
+}
+.count-label {
+    font-size: 12px;
+    color: hsla(42, 25%, 80%, 0.8);
+}
+.count-value {
+    font-size: 16px;
+    font-weight: 700;
+    color: hsl(42, 60%, 70%);
+}
+
+.mark-list { display: flex; flex-direction: column; gap: 8px; }
+.mark-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 14px;
+    background: hsla(42, 20%, 50%, 0.04);
+    border-radius: 10px;
+    border: 1px solid hsla(42, 20%, 50%, 0.06);
+}
+.mark-label {
+    font-size: 12px;
+    color: hsla(42, 25%, 80%, 0.8);
+}
+.mark-value {
+    font-size: 12px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 8px;
+}
+.mark-value.yes {
+    background: hsla(140, 50%, 50%, 0.2);
+    color: hsl(140, 60%, 70%);
+}
+.mark-value.no {
+    background: hsla(42, 20%, 50%, 0.1);
+    color: hsla(42, 20%, 70%, 0.5);
+}
+
+.chapter-progress {
+    background: linear-gradient(135deg, hsla(350, 40%, 20%, 0.3), hsla(42, 30%, 20%, 0.15));
+    border-radius: 14px;
+    padding: 16px 18px;
+    margin-bottom: 16px;
+    border: 1px solid hsla(42, 30%, 50%, 0.15);
+}
+.chapter-progress .label {
+    font-size: 10px;
+    color: hsla(42, 20%, 70%, 0.6);
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+}
+.chapter-progress .value {
+    font-size: 22px;
+    font-weight: 800;
+    color: hsl(42, 65%, 72%);
+    margin-bottom: 8px;
+}
+.chapter-progress .value .suffix {
+    font-size: 13px;
+    font-weight: 400;
+    color: hsla(42, 20%, 70%, 0.4);
+}
+.chapter-progress .bar {
+    height: 6px;
+    background: hsla(42, 20%, 50%, 0.1);
+    border-radius: 3px;
+    overflow: hidden;
+}
+.chapter-progress .bar .fill {
+    height: 100%;
+    background: linear-gradient(90deg, hsl(350, 60%, 50%), hsl(42, 70%, 65%));
+    border-radius: 3px;
+    transition: width 0.8s ease;
+}
+
+.timeline { position: relative; padding-left: 20px; }
+.timeline::before {
+    content: '';
+    position: absolute;
+    left: 6px;
+    top: 8px;
+    bottom: 8px;
+    width: 1.5px;
+    background: hsla(42, 30%, 50%, 0.15);
+}
+.timeline-item {
+    position: relative;
+    padding: 6px 0 6px 14px;
+    font-size: 11px;
+    color: hsla(42, 20%, 70%, 0.6);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -14px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: hsla(42, 20%, 50%, 0.15);
+    border: 1.5px solid hsla(42, 20%, 50%, 0.25);
+}
+.timeline-item.done::before {
+    background: hsl(42, 55%, 55%);
+    border-color: hsl(42, 55%, 55%);
+}
+.timeline-item.current {
+    color: hsl(42, 65%, 72%);
+    font-weight: 600;
+}
+.timeline-item.current::before {
+    background: hsl(350, 65%, 60%);
+    border-color: hsl(350, 65%, 60%);
+    box-shadow: 0 0 12px hsla(350, 65%, 60%, 0.5);
+}
+.timeline-item .num {
+    font-size: 10px;
+    color: hsla(42, 20%, 70%, 0.4);
+    width: 50px;
+    flex-shrink: 0;
+}
+
+/* ============ 图片放大遮罩 ============ */
+.image-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 999999;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s ease;
+    cursor: pointer;
+}
+.image-overlay.active {
+    opacity: 1;
+    pointer-events: all;
+}
+.image-overlay .overlay-content {
+    max-width: 90vw;
+    max-height: 85vh;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 24px 80px rgba(0, 0, 0, 0.6);
+    transform: scale(0.9);
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    cursor: default;
+}
+.image-overlay.active .overlay-content {
+    transform: scale(1);
+}
+.image-overlay .overlay-content img {
+    width: 100%;
+    height: 100%;
+    max-width: 90vw;
+    max-height: 85vh;
+    object-fit: contain;
+    display: block;
+}
+.image-overlay .close-btn {
+    position: absolute;
+    top: 24px;
+    right: 24px;
+    width: 44px;
+    height: 44px;
+    border: none;
+    background: hsla(0, 0%, 100%, 0.06);
+    border-radius: 50%;
+    color: hsla(0, 0%, 100%, 0.4);
+    font-size: 22px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: "Inter", sans-serif;
+    font-weight: 300;
+    line-height: 1;
+}
+.image-overlay .close-btn:hover {
+    background: hsla(0, 0%, 100%, 0.12);
+    color: hsla(0, 0%, 100%, 0.8);
+    transform: rotate(90deg);
+}
+
+@media (max-width: 460px) {
+    .status-container { padding: 14px; border-radius: 22px; }
+    .header-title { font-size: 13px; }
+    .header-meta { font-size: 10px; gap: 6px; }
+    .ring-wrap { width: 68px; height: 68px; }
+    .ring-value { font-size: 17px; }
+    .milestone-grid { grid-template-columns: 1fr; }
+    .world-grid { grid-template-columns: 1fr; }
+    .role-hero-avatar { width: 60px; height: 80px; }
+    .role-hero-name { font-size: 14px; }
+    .role-hero-subtitle { font-size: 10px; }
+    .role-hero-desc { font-size: 9px; }
+    .char-hero-avatar { width: 54px; height: 74px; }
+    .image-overlay .close-btn { top: 12px; right: 12px; width: 36px; height: 36px; font-size: 18px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ============ 图片放大遮罩 ============ -->
+<div class="image-overlay" id="imageOverlay" onclick="closeImageOverlay()">
+    <button class="close-btn" onclick="closeImageOverlay()">✕</button>
+    <div class="overlay-content" onclick="event.stopPropagation()">
+        <img id="overlayImage" src="" alt="放大预览" />
+    </div>
+</div>
+
+<div class="status-container" id="app">
+    <div class="header">
+        <div class="header-left">
+            <div class="header-title" id="headerTitle">掌中的美母 · --</div>
+            <div class="header-meta">
+                <span id="hTime">--</span>
+                <span class="dot"></span>
+                <span id="hPlace">--</span>
+                <span>·</span>
+                <span id="hSeasonWeather">--</span>
+                <span>·</span>
+                <span id="hActivity">--</span>
+            </div>
+        </div>
+        <div class="header-right">
+            <div class="father-warning" id="fatherWarning" style="display:none;">&#9888; 父亲在家</div>
+            <button class="fold-btn" onclick="toggleFold()" aria-label="折叠">
+                <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- 角色头卡（柳如玉） -->
+    <div class="role-hero" id="roleHero">
+        <div class="role-hero-avatar" onclick="openImageOverlay(document.getElementById('roleHeroImg').src)">
+            <img id="roleHeroImg" src="" alt="柳如玉" />
+        </div>
+        <div class="role-hero-content">
+            <div class="role-hero-name" id="roleHeroName">柳如玉</div>
+            <div class="role-hero-subtitle" id="roleHeroSubtitle">大学古典文学讲师</div>
+            <div class="role-hero-desc" id="roleHeroDesc">--</div>
+        </div>
+    </div>
+
+    <div class="l2">
+        <div class="ring-card">
+            <div class="ring-wrap">
+                <svg viewBox="0 0 80 80">
+                    <circle class="ring-bg" cx="40" cy="40" r="34"/>
+                    <circle class="ring-fill intimacy" id="ringIntimacy" cx="40" cy="40" r="34"
+                        stroke-dasharray="213.6" stroke-dashoffset="213.6"/>
+                </svg>
+                <div class="ring-value"><span id="valIntimacy">0</span><span class="unit">/1000</span></div>
+            </div>
+            <div class="ring-label">亲密</div>
+        </div>
+
+        <div class="ring-card">
+            <div class="ring-wrap">
+                <svg viewBox="0 0 80 80">
+                    <circle class="ring-bg" cx="40" cy="40" r="34"/>
+                    <circle class="ring-fill submit" id="ringSubmit" cx="40" cy="40" r="34"
+                        stroke-dasharray="213.6" stroke-dashoffset="213.6"/>
+                </svg>
+                <div class="ring-value"><span id="valSubmit">0</span><span class="unit">/1000</span></div>
+            </div>
+            <div class="ring-label">顺从</div>
+        </div>
+
+        <div class="relation-info">
+            <div class="relation-status" id="relationStatus">--</div>
+            <div class="emotion-tag" id="emotionTag">--</div>
+        </div>
+
+        <div class="badges" id="badges"></div>
+
+        <button class="detail-btn" onclick="openDrawer('liuruoyu')">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+            查看柳如玉完整详情
+        </button>
+    </div>
+
+    <div class="l3">
+        <div class="panel open" id="panel-chars">
+            <div class="panel-header" onclick="togglePanel('panel-chars')">
+                <div class="panel-title">
+                    <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+                    其他角色
+                </div>
+                <div class="panel-toggle">展开 <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
+            </div>
+            <div class="panel-body">
+                <div class="char-row" onclick="openDrawer('zhouyiyi')">
+                    <div class="char-avatar-sm" onclick="event.stopPropagation(); openImageOverlay(this.querySelector('img').src);">
+                        <img id="avatarYiyi" src="" alt="周依依" />
+                    </div>
+                    <div class="char-name">周依依</div>
+                    <div class="char-bar"><div class="char-bar-fill yiyi" id="barYiyi" style="width:0%"></div></div>
+                    <div class="char-status" id="statusYiyi">--</div>
+                </div>
+                <div class="char-row" onclick="openDrawer('zhoulinyi')">
+                    <div class="char-avatar-sm" onclick="event.stopPropagation(); openImageOverlay(this.querySelector('img').src);">
+                        <img id="avatarLinyi" src="" alt="周琳依" />
+                    </div>
+                    <div class="char-name">周琳依</div>
+                    <div class="char-bar"><div class="char-bar-fill linyi" id="barLinyi" style="width:0%"></div></div>
+                    <div class="char-status" id="statusLinyi">--</div>
+                </div>
+                <div class="char-row" onclick="openDrawer('hansu')">
+                    <div class="char-avatar-sm" onclick="event.stopPropagation(); openImageOverlay(this.querySelector('img').src);">
+                        <img id="avatarHansu" src="" alt="韩素" />
+                    </div>
+                    <div class="char-name">韩素</div>
+                    <div class="char-bar"><div class="char-bar-fill hansu" id="barHansu" style="width:0%"></div></div>
+                    <div class="char-status" id="statusHansu">--</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel" id="panel-world">
+            <div class="panel-header" onclick="togglePanel('panel-world')">
+                <div class="panel-title">
+                    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                    世界状态
+                </div>
+                <div class="panel-toggle">展开 <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
+            </div>
+            <div class="panel-body">
+                <div class="world-grid">
+                    <div class="world-cell"><div class="label">时间</div><div class="value" id="wTime">--</div></div>
+                    <div class="world-cell"><div class="label">季节</div><div class="value" id="wSeason">--</div></div>
+                    <div class="world-cell"><div class="label">天气</div><div class="value" id="wWeather">--</div></div>
+                    <div class="world-cell"><div class="label">时段</div><div class="value" id="wPeriod">--</div></div>
+                    <div class="world-cell"><div class="label">地点</div><div class="value" id="wPlace">--</div></div>
+                    <div class="world-cell"><div class="label">场景</div><div class="value" id="wScene">--</div></div>
+                    <div class="world-cell"><div class="label">活动</div><div class="value" id="wActivity">--</div></div>
+                    <div class="world-cell"><div class="label">父亲</div><div class="value" id="wFather">--</div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 详情抽屉 -->
+    <div class="drawer" id="drawer">
+        <div class="drawer-header">
+            <div class="drawer-title" id="drawerTitle">柳如玉 · 完整详情</div>
+            <button class="drawer-close" onclick="closeDrawer()">&#10005;</button>
+        </div>
+        <div class="drawer-tabs" id="drawerTabs"></div>
+        <div class="drawer-content" id="drawerContent"></div>
+    </div>
+</div>
+
+<script>
+var FOLD_KEY = 'statusBarCollapsed';
+
+/* ============================================================
+   头像 CDN 前缀
+   ============================================================ */
+var AVATAR_BASE = 'https://testingcf.jsdelivr.net/gh/sanshui19516/CG@main/%E6%8E%8C%E4%B8%AD%E7%9A%84%E7%BE%8E%E6%AF%8D/';
+
+/* ============================================================
+   章节名映射
+   ============================================================ */
+var CHAPTER_NAMES = {
+    '第1章':'计划开始','第2章':'周依依','第3章':'同性恋？','第4章':'转机','第5章':'和妈妈一起睡',
+    '第6章':'再次按摩','第7章':'得寸进尺','第8章':'离家','第9章':'开苞','第10章':'梅开二度',
+    '第11章':'姐姐','第12章':'回家','第13章':'谈心','第14章':'缠绵的夜','第15章':'丝袜足交',
+    '第16章':'达摩克里斯之剑','第17章':'爸爸回家','第18章':'平地起风','第19章':'拉扯之间','第20章':'背德的序曲',
+    '第21章':'淫靡的演出','第22章':'暧昧的间奏','第23章':'骤雨中的高潮','第24章':'妈妈的反击','第25章':'不能碰我',
+    '第26章':'打屁股','第27章':'深喉射精','第28章':'还有下一次？','第29章':'回家日常','第30章':'父前淫母',
+    '第31章':'厕所激情','第32章':'住校伊始','第33章':'文爱调教','第34章':'妈妈的小秘密','第35章':'玩具',
+    '第36章':'再次深喉','第37章':'初尝肛交','第41章':'小日常','第42章':'餐厅足交','第43章':'爱',
+    '第44章':'欲','第45章':'乱','第49章':'听话的妈妈','第50章':'夜色',
+    '第66章':'一日谈之跳蛋','第67章':'一日谈之拍摄','第68章':'一日谈之母狗','第69章':'一日谈之出门','第70章':'一日谈之漫展',
+    '第71章':'厕所','第72章':'洗干净','第73章':'项圈','第74章':'遛狗','第75章':'填满',
+    '第76章':'母亲的回忆（一）','第77章':'母亲的回忆（二）','第78章':'母亲的回忆（三）','第79章':'母亲的回忆（四）','第80章':'日常',
+    '第110章':'主奴契约','第111章':'主奴契约','第120章':'大结局'
+};
+
+/* ============================================================
+   角色档案
+   ============================================================ */
+var PROFILE = {
+    liuruoyu: {
+        name: '柳如玉',
+        subtitle: '大学古典文学讲师',
+        stages: {
+            '寻常母子': { key: '%E6%9F%B3%E5%A6%82%E7%8E%89-%E5%AF%BB%E5%B8%B8%E6%AF%8D%E5%AD%90.jpg', desc: '平时端庄知性，儿子眼中的好妈妈' },
+            '心生戒备': { key: '%E6%9F%B3%E5%A6%82%E7%8E%89-%E5%BF%83%E7%94%9F%E6%88%92%E5%A4%87.jpg', desc: '发现儿子欲望，在家穿得严实，冷处理' },
+            '心防松动': { key: '%E6%9F%B3%E5%A6%82%E7%8E%89-%E5%BF%83%E9%98%B2%E6%9D%BE%E5%8A%A8.jpg', desc: '默许同睡、足交、口交，说"别闹"但不坚决反抗' },
+            '身不由己': { key: '%E6%9F%B3%E5%A6%82%E7%8E%89-%E8%BA%AB%E4%B8%8D%E7%94%B1%E5%B7%B1.jpg', desc: '会高潮会配合，但心里觉得对不起丈夫' },
+            '身心沉沦': { key: '%E6%9F%B3%E5%A6%82%E7%8E%89-%E8%BA%AB%E5%BF%83%E6%B2%89%E6%B2%A6.jpg', desc: '开始主动亲、主动配合、主动叫"爸爸"' },
+            '玉奴臣服': { key: '%E6%9F%B3%E5%A6%82%E7%8E%89-%E7%8E%89%E5%A5%B4%E8%87%A3%E6%9C%8D.jpg', desc: '签主奴契约，被赐名"玉奴"，叫主人' }
+        }
+    },
+    zhouyiyi: {
+        name: '周依依',
+        subtitle: '同班同学 · 双胞胎妹妹 · 街舞',
+        stages: {
+            '陌生人': { key: '%E5%91%A8%E4%BE%9D%E4%BE%9D-%E9%99%8C%E7%94%9F%E4%BA%BA.jpg', desc: '因餐盘事件结识，飒爽直率' },
+            '同学': { key: '%E5%91%A8%E4%BE%9D%E4%BE%9D-%E5%90%8C%E5%AD%A6.jpg', desc: '请吃饭、经常开两句玩笑，逐渐熟络' },
+            '恋人': { key: '%E5%91%A8%E4%BE%9D%E4%BE%9D-%E6%81%8B%E4%BA%BA.jpg', desc: '主动表白，确定关系，喜欢{{user}}' },
+            '接受多角关系': { key: '%E5%91%A8%E4%BE%9D%E4%BE%9D-%E6%8E%A5%E5%8F%97%E5%A4%9A%E8%A7%92%E5%85%B3%E7%B3%BB.jpg', desc: '知道{{user}}花心，但选择留下，默默守候' }
+        }
+    },
+    zhoulinyi: {
+        name: '周琳依',
+        subtitle: '三班学姐 · 双胞胎姐姐',
+        stages: {
+            '陌生人': { key: '%E5%91%A8%E7%90%B3%E4%BE%9D-%E9%99%8C%E7%94%9F%E4%BA%BA.jpg', desc: '第一次见面，安静疏离' },
+            '暧昧': { key: '%E5%91%A8%E7%90%B3%E4%BE%9D-%E6%9A%A7%E6%98%A7.jpg', desc: '问{{user}}要不要摸脚，乐于逗弄，享受掌控' },
+            '接受': { key: '%E5%91%A8%E7%90%B3%E4%BE%9D-%E6%8E%A5%E5%8F%97.jpg', desc: '在妹妹面前和{{user}}亲热，接受多元关系' }
+        }
+    },
+    hansu: {
+        name: '韩素',
+        subtitle: '周依依母亲 · 医生妻子',
+        stages: {
+            '陌生人': { key: '%E9%9F%A9%E7%B4%A0-%E9%99%8C%E7%94%9F%E4%BA%BA.jpg', desc: '芦清湖旅游时初见，热情开朗' },
+            '长辈': { key: '%E9%9F%A9%E7%B4%A0-%E9%95%BF%E8%BE%88.jpg', desc: '学游泳不肯认输，主动找{{user}}聊微信' },
+            '暧昧': { key: '%E9%9F%A9%E7%B4%A0-%E6%9A%A7%E6%98%A7.jpg', desc: '丈夫常年不在家，和{{user}}聊天越来越暧昧' },
+            '接受': { key: '%E9%9F%A9%E7%B4%A0-%E6%8E%A5%E5%8F%97.jpg', desc: '明知是女儿男朋友，还是接受了' }
+        }
+    }
+};
+
+function getProfile(charKey, stage) {
+    var p = PROFILE[charKey];
+    if (!p) return null;
+    var s = p.stages[stage];
+    if (!s) {
+        var stageKeys = Object.keys(p.stages);
+        s = p.stages[stageKeys[0]];
+    }
+    return {
+        name: p.name,
+        subtitle: p.subtitle,
+        avatar: AVATAR_BASE + s.key,
+        desc: s.desc
+    };
+}
+
+/* ============================================================
+   抽屉内各角色要展示的里程碑 / 计数列表
+   ============================================================ */
+var CHARS = {
+    liuruoyu: {
+        milestones: ['第一次接吻','第一次口交','第一次足交','第一次插入','第一次肛交','第一次深喉','第一次在父亲面前','第一次潮吹','第一次叫爸爸','第一次叫主人','第一次穿婚纱','第一次纹淫纹','第一次签主奴契约','第一次怀孕'],
+        counts: ['性爱次数','口交次数','足交次数','肛交次数','深喉次数','调教次数','日常亲热次数','日常互动次数'],
+        marks: [
+            { label: '是否怀孕', path: '柳如玉.是否怀孕' },
+            { label: '是否已签主奴契约', path: '柳如玉.是否已签主奴契约' },
+            { label: '是否已纹淫纹', path: '柳如玉.是否已纹淫纹' }
+        ],
+        hasChapter: true, hasMilestone: true, hasCount: true, hasMark: true
+    },
+    zhouyiyi: {
+        milestones: ['第一次见面','第一次一起吃饭','第一次表白','第一次接吻','第一次确认关系','第一次抚摸','第一次口交','第一次性爱（破处）','第一次在周琳依面前','第一次穿丝袜','第一次拍私密照','第一次和姐姐一起亲热'],
+        counts: ['性爱次数','口交次数','日常亲热次数'],
+        marks: [],
+        hasChapter: false, hasMilestone: true, hasCount: true, hasMark: false
+    },
+    zhoulinyi: {
+        milestones: ['第一次见面','第一次单独对话','第一次勾引','第一次接吻','第一次被摸胸','第一次在面前暴露','第一次帮口交','第一次被插入','第一次和依依一起亲热'],
+        counts: ['性爱次数','口交次数'],
+        marks: [],
+        hasChapter: false, hasMilestone: true, hasCount: true, hasMark: false
+    },
+    hansu: {
+        milestones: ['第一次见面','第一次拍照','第一次一起吃饭','第一次学游泳','第一次微信私聊','第一次暧昧对话','第一次单独相处'],
+        counts: ['聊天次数','拍照次数'],
+        marks: [],
+        hasChapter: false, hasMilestone: true, hasCount: true, hasMark: false
+    }
+};
+
+var state = {
+    chapter: '第1章',
+    time: '--', place: '--', season: '--', weather: '--', activity: '--',
+    father: false,
+    intimacy: 0, submit: 0,
+    stage: '--', emotion: '--',
+    pregnant: false, master: false, tattoo: false
+};
+
+var currentDrawerChar = 'liuruoyu';
+var currentDrawerTab = 'chapter';
+var lastSnapshotKey = '';
+
+/* ============================================================
+   MVU 数据读取
+   ============================================================ */
+function getMVUData() {
+    try {
+        var allVars = typeof getAllVariables === 'function' ? getAllVariables() : {};
+        return allVars.stat_data || {};
+    } catch (e) {
+        return {};
+    }
+}
+
+function fetchStateFromMVU() {
+    var data = getMVUData();
+    if (!data || Object.keys(data).length === 0) return;
+
+    state.chapter = _.get(data, '事件.当前章节', '第1章');
+    state.time = _.get(data, '世界.时段', '--');
+    state.place = _.get(data, '世界.地点', '--');
+    state.season = _.get(data, '世界.季节', '--');
+    state.weather = _.get(data, '世界.天气', '--');
+    state.activity = _.get(data, '世界.当前活动', '--');
+    state.father = _.get(data, '世界.父亲是否在家', false);
+
+    state.intimacy = _.get(data, '柳如玉.亲密', 0);
+    state.submit = _.get(data, '柳如玉.顺从', 0);
+    state.stage = _.get(data, '柳如玉.关系状态', '--');
+    state.emotion = _.get(data, '柳如玉.当前情绪', '--');
+    state.pregnant = _.get(data, '柳如玉.是否怀孕', false);
+    state.master = _.get(data, '柳如玉.是否已签主奴契约', false);
+    state.tattoo = _.get(data, '柳如玉.是否已纹淫纹', false);
+}
+
+/* ============================================================
+   渲染：头部
+   ============================================================ */
+function renderHeader() {
+    var cur = state.chapter;
+    var name = CHAPTER_NAMES[cur] || '';
+    var el = document.getElementById('headerTitle');
+    if (el) el.textContent = '掌中的美母 · ' + cur + (name ? ' ' + name : '');
+
+    var t = document.getElementById('hTime'); if (t) t.textContent = state.time;
+    var p = document.getElementById('hPlace'); if (p) p.textContent = state.place;
+    var sw = document.getElementById('hSeasonWeather'); if (sw) sw.textContent = state.season + ' · ' + state.weather;
+    var ac = document.getElementById('hActivity'); if (ac) ac.textContent = state.activity;
+
+    var fw = document.getElementById('fatherWarning');
+    if (fw) fw.style.display = state.father ? 'block' : 'none';
+}
+
+/* ============================================================
+   渲染：主面板角色头卡（柳如玉）
+   ============================================================ */
+function renderRoleHero() {
+    var profile = getProfile('liuruoyu', state.stage);
+    if (!profile) return;
+
+    var img = document.getElementById('roleHeroImg');
+    var name = document.getElementById('roleHeroName');
+    var sub = document.getElementById('roleHeroSubtitle');
+    var desc = document.getElementById('roleHeroDesc');
+
+    if (img) img.src = profile.avatar;
+    if (name) name.textContent = profile.name;
+    if (sub) sub.textContent = profile.subtitle;
+    if (desc) desc.textContent = profile.desc;
+}
+
+/* ============================================================
+   渲染：核心环形
+   ============================================================ */
+function renderCore() {
+    var intimacy = Number(state.intimacy) || 0;
+    var submit = Number(state.submit) || 0;
+
+    var vi = document.getElementById('valIntimacy'); if (vi) vi.textContent = intimacy;
+    var vs = document.getElementById('valSubmit'); if (vs) vs.textContent = submit;
+
+    var C = 213.6;
+    var ri = document.getElementById('ringIntimacy');
+    var rs = document.getElementById('ringSubmit');
+    if (ri) ri.setAttribute('stroke-dashoffset', C * (1 - Math.min(Math.max(intimacy, 0), 1000) / 1000));
+    if (rs) rs.setAttribute('stroke-dashoffset', C * (1 - Math.min(Math.max(submit, 0), 1000) / 1000));
+
+    var rst = document.getElementById('relationStatus'); if (rst) rst.textContent = state.stage;
+    var em = document.getElementById('emotionTag'); if (em) em.textContent = state.emotion;
+
+    var badges = '';
+    if (state.pregnant) badges += '<div class="badge pregnant">已怀孕</div>';
+    if (state.master) badges += '<div class="badge master">已签主奴契约</div>';
+    if (state.tattoo) badges += '<div class="badge tattoo">已纹淫纹</div>';
+    var bx = document.getElementById('badges'); if (bx) bx.innerHTML = badges;
+}
+
+/* ============================================================
+   渲染：其他角色行
+   ============================================================ */
+function renderOtherChars() {
+    var data = getMVUData();
+
+    var yiyi = Number(_.get(data, '周依依.亲密', 0)) || 0;
+    var linyi = Number(_.get(data, '周琳依.亲密', 0)) || 0;
+    var hansu = Number(_.get(data, '韩素.亲密', 0)) || 0;
+
+    var by = document.getElementById('barYiyi'); if (by) by.style.width = Math.min(yiyi / 10, 100) + '%';
+    var bl = document.getElementById('barLinyi'); if (bl) bl.style.width = Math.min(linyi / 10, 100) + '%';
+    var bh = document.getElementById('barHansu'); if (bh) bh.style.width = Math.min(hansu / 10, 100) + '%';
+
+    var sy = document.getElementById('statusYiyi'); if (sy) sy.textContent = _.get(data, '周依依.关系状态', '--');
+    var sl = document.getElementById('statusLinyi'); if (sl) sl.textContent = _.get(data, '周琳依.关系状态', '--');
+    var sh = document.getElementById('statusHansu'); if (sh) sh.textContent = _.get(data, '韩素.关系状态', '--');
+
+    var pYiyi = getProfile('zhouyiyi', _.get(data, '周依依.关系状态', '陌生人'));
+    var pLinyi = getProfile('zhoulinyi', _.get(data, '周琳依.关系状态', '陌生人'));
+    var pHansu = getProfile('hansu', _.get(data, '韩素.关系状态', '陌生人'));
+
+    var aY = document.getElementById('avatarYiyi'); if (aY && pYiyi) aY.src = pYiyi.avatar;
+    var aL = document.getElementById('avatarLinyi'); if (aL && pLinyi) aL.src = pLinyi.avatar;
+    var aH = document.getElementById('avatarHansu'); if (aH && pHansu) aH.src = pHansu.avatar;
+}
+
+/* ============================================================
+   渲染：世界状态
+   ============================================================ */
+function renderWorld() {
+    var data = getMVUData();
+
+    var wt = document.getElementById('wTime'); if (wt) wt.textContent = _.get(data, '世界.时间', '--');
+    var ws = document.getElementById('wSeason'); if (ws) ws.textContent = _.get(data, '世界.季节', '--');
+    var ww = document.getElementById('wWeather'); if (ww) ww.textContent = _.get(data, '世界.天气', '--');
+    var wp = document.getElementById('wPeriod'); if (wp) wp.textContent = _.get(data, '世界.时段', '--');
+    var wpl = document.getElementById('wPlace'); if (wpl) wpl.textContent = _.get(data, '世界.地点', '--');
+    var wsc = document.getElementById('wScene'); if (wsc) wsc.textContent = _.get(data, '世界.当前场景', '--');
+    var wa = document.getElementById('wActivity'); if (wa) wa.textContent = _.get(data, '世界.当前活动', '--');
+    var wf = document.getElementById('wFather'); if (wf) wf.textContent = _.get(data, '世界.父亲是否在家', false) ? '在家' : '外出';
+}
+
+/* ============================================================
+   渲染：抽屉内容
+   ============================================================ */
+function buildDrawerContent(charKey) {
+    var cfg = CHARS[charKey];
+    if (!cfg) return;
+
+    var data = getMVUData();
+    var stagePath = charKey === 'liuruoyu' ? '柳如玉.关系状态' :
+                    charKey === 'zhouyiyi' ? '周依依.关系状态' :
+                    charKey === 'zhoulinyi' ? '周琳依.关系状态' : '韩素.关系状态';
+    var stage = _.get(data, stagePath, '--');
+    var profile = getProfile(charKey, stage);
+
+    var titleEl = document.getElementById('drawerTitle');
+    if (titleEl) titleEl.textContent = profile.name + ' · 完整详情';
+
+    var tabsAvailable = [];
+    if (cfg.hasChapter) tabsAvailable.push('chapter');
+    if (cfg.hasMilestone) tabsAvailable.push('milestone');
+    if (cfg.hasCount) tabsAvailable.push('count');
+    if (cfg.hasMark) tabsAvailable.push('mark');
+    if (tabsAvailable.indexOf(currentDrawerTab) === -1) {
+        currentDrawerTab = tabsAvailable[0];
+    }
+
+    var tabs = [];
+    if (cfg.hasChapter) tabs.push({ key: 'chapter', label: '章节' });
+    if (cfg.hasMilestone) tabs.push({ key: 'milestone', label: '里程碑' });
+    if (cfg.hasCount) tabs.push({ key: 'count', label: '计数' });
+    if (cfg.hasMark) tabs.push({ key: 'mark', label: '标记' });
+
+    var tabsEl = document.getElementById('drawerTabs');
+    var tabsHtml = '';
+    for (var i = 0; i < tabs.length; i++) {
+        var activeCls = (tabs[i].key === currentDrawerTab) ? ' active' : '';
+        tabsHtml += '<button class="drawer-tab' + activeCls + '" data-tab="' + tabs[i].key + '" onclick="switchTab(this)">' + tabs[i].label + '</button>';
+    }
+    if (tabsEl) tabsEl.innerHTML = tabsHtml;
+
+    var contentEl = document.getElementById('drawerContent');
+    var html = '';
+
+    /* 角色简介卡（头像可点击放大） */
+    html += '<div class="char-hero">' +
+            '<div class="char-hero-avatar" onclick="openImageOverlay(\'' + profile.avatar + '\')">' +
+            '<img src="' + profile.avatar + '" alt="' + profile.name + '" />' +
+            '</div>' +
+            '<div class="char-hero-text">' +
+            '<div class="name">' + profile.name + '</div>' +
+            '<div class="sub">' + profile.subtitle + '</div>' +
+            '<div class="desc">' + profile.desc + '</div>' +
+            '</div>' +
+            '<div class="relation">' + stage + '</div>' +
+            '</div>';
+
+    /* 章节页 */
+    if (cfg.hasChapter) {
+        var cur = _.get(data, '事件.当前章节', '第1章');
+        var curNum = parseInt(String(cur).replace(/[^\d]/g, ''), 10) || 1;
+        var name = CHAPTER_NAMES[cur] || '';
+        var activeC = (currentDrawerTab === 'chapter') ? ' active' : '';
+        html += '<div class="drawer-pane' + activeC + '" id="pane-chapter">' +
+                '<div class="chapter-progress">' +
+                '<div class="label">当前章节</div>' +
+                '<div class="value">' + cur + (name ? ' ' + name : '') + '<span class="suffix"> ' + curNum + '/120</span></div>' +
+                '<div class="bar"><div class="fill" style="width:' + (curNum / 120 * 100) + '%"></div></div>' +
+                '</div>' +
+                '<div class="timeline">';
+        var events = _.get(data, '事件.章节', {}) || {};
+        for (var n = 1; n <= 120; n++) {
+            var key = '第' + n + '章';
+            var chName = CHAPTER_NAMES[key] || '';
+            var done = events && events[key] === true;
+            var cls = done ? 'done' : (n === curNum ? 'current' : '');
+            html += '<div class="timeline-item ' + cls + '"><span class="num">' + key + '</span>' + (chName || '—') + '</div>';
+        }
+        html += '</div></div>';
+    }
+
+    /* 里程碑页 */
+    if (cfg.hasMilestone) {
+        var mPath = charKey === 'liuruoyu' ? '柳如玉.里程碑' :
+                    charKey === 'zhouyiyi' ? '周依依.里程碑' :
+                    charKey === 'zhoulinyi' ? '周琳依.里程碑' : '韩素.里程碑';
+        var m = _.get(data, mPath, {}) || {};
+
+        var activeM = (currentDrawerTab === 'milestone') ? ' active' : '';
+        html += '<div class="drawer-pane' + activeM + '" id="pane-milestone"><div class="milestone-grid">';
+        for (var j = 0; j < cfg.milestones.length; j++) {
+            var mn = cfg.milestones[j];
+            var ok = m[mn] === true;
+            html += '<div class="milestone-item ' + (ok ? 'done' : 'undone') + '">' +
+                    '<span class="check">' + (ok ? '\u2713' : '\u2717') + '</span>' + mn + '</div>';
+        }
+        html += '</div></div>';
+    }
+
+    /* 计数页 */
+    if (cfg.hasCount) {
+        var cPath = charKey === 'liuruoyu' ? '柳如玉.计数' :
+                    charKey === 'zhouyiyi' ? '周依依.计数' :
+                    charKey === 'zhoulinyi' ? '周琳依.计数' : '韩素.计数';
+        var c = _.get(data, cPath, {}) || {};
+
+        var activeC2 = (currentDrawerTab === 'count') ? ' active' : '';
+        html += '<div class="drawer-pane' + activeC2 + '" id="pane-count"><div class="count-list">';
+        for (var k = 0; k < cfg.counts.length; k++) {
+            var cn = cfg.counts[k];
+            html += '<div class="count-item"><span class="count-label">' + cn + '</span>' +
+                    '<span class="count-value">' + (Number(c[cn]) || 0) + '</span></div>';
+        }
+        html += '</div></div>';
+    }
+
+    /* 标记页 */
+    if (cfg.hasMark) {
+        var activeK = (currentDrawerTab === 'mark') ? ' active' : '';
+        html += '<div class="drawer-pane' + activeK + '" id="pane-mark"><div class="mark-list">';
+        for (var x = 0; x < cfg.marks.length; x++) {
+            var mk = cfg.marks[x];
+            var v = _.get(data, mk.path, false);
+            html += '<div class="mark-item"><span class="mark-label">' + mk.label + '</span>' +
+                    '<span class="mark-value ' + (v ? 'yes' : 'no') + '">' + (v ? '是' : '否') + '</span></div>';
+        }
+        html += '</div></div>';
+    }
+
+    if (contentEl) contentEl.innerHTML = html;
+}
+
+/* ============================================================
+   快照 key
+   ============================================================ */
+function getSnapshotKey() {
+    var data = getMVUData();
+    return JSON.stringify({
+        c: _.get(data, '事件.当前章节', ''),
+        cs: _.get(data, '事件.章节', {}),
+        lry: _.get(data, '柳如玉', {}),
+        yy: _.get(data, '周依依', {}),
+        ly: _.get(data, '周琳依', {}),
+        hs: _.get(data, '韩素', {})
+    });
+}
+
+/* ============================================================
+   渲染主函数
+   ============================================================ */
+function render() {
+    renderHeader();
+    renderRoleHero();
+    renderCore();
+    renderOtherChars();
+    renderWorld();
+
+    var d = document.getElementById('drawer');
+    if (d && d.classList.contains('open')) {
+        var key = getSnapshotKey();
+        if (key !== lastSnapshotKey) {
+            lastSnapshotKey = key;
+            var content = document.getElementById('drawerContent');
+            var scrollTop = content ? content.scrollTop : 0;
+            buildDrawerContent(currentDrawerChar);
+            if (content) content.scrollTop = scrollTop;
+        }
+    }
+}
+
+/* ============================================================
+   折叠
+   ============================================================ */
+function toggleFold() {
+    var app = document.getElementById('app');
+    if (!app) return;
+    app.classList.toggle('collapsed');
+    try {
+        localStorage.setItem(FOLD_KEY, app.classList.contains('collapsed') ? 'true' : 'false');
+    } catch (e) {}
+}
+
+/* ============================================================
+   面板
+   ============================================================ */
+function togglePanel(id) {
+    var p = document.getElementById(id);
+    if (p) p.classList.toggle('open');
+}
+
+/* ============================================================
+   详情抽屉
+   ============================================================ */
+function openDrawer(charKey) {
+    if (!charKey || !CHARS[charKey]) charKey = 'liuruoyu';
+    currentDrawerChar = charKey;
+
+    var cfg = CHARS[charKey];
+    currentDrawerTab = cfg.hasChapter ? 'chapter' : (cfg.hasMilestone ? 'milestone' : (cfg.hasCount ? 'count' : 'mark'));
+
+    lastSnapshotKey = getSnapshotKey();
+    buildDrawerContent(charKey);
+
+    var d = document.getElementById('drawer');
+    if (d) d.classList.add('open');
+
+    var content = document.getElementById('drawerContent');
+    if (content) content.scrollTop = 0;
+}
+
+function closeDrawer() {
+    var d = document.getElementById('drawer');
+    if (d) d.classList.remove('open');
+}
+
+/* ============================================================
+   抽屉标签页
+   ============================================================ */
+function switchTab(el) {
+    var tabsWrap = el.parentElement;
+    var drawer = tabsWrap ? tabsWrap.parentElement : null;
+    if (!drawer) return;
+
+    currentDrawerTab = el.dataset.tab;
+
+    var tabs = drawer.querySelectorAll('.drawer-tab');
+    for (var i = 0; i < tabs.length; i++) tabs[i].classList.remove('active');
+    el.classList.add('active');
+
+    var panes = drawer.querySelectorAll('.drawer-pane');
+    for (var j = 0; j < panes.length; j++) panes[j].classList.remove('active');
+
+    var pane = drawer.querySelector('#pane-' + el.dataset.tab);
+    if (pane) pane.classList.add('active');
+
+    var content = document.getElementById('drawerContent');
+    if (content) content.scrollTop = 0;
+}
+
+/* ============================================================
+   图片放大遮罩
+   ============================================================ */
+function openImageOverlay(src) {
+    if (!src) return;
+    var overlay = document.getElementById('imageOverlay');
+    var img = document.getElementById('overlayImage');
+    if (!overlay || !img) return;
+    img.src = src;
+    overlay.classList.add('active');
+}
+
+function closeImageOverlay() {
+    var overlay = document.getElementById('imageOverlay');
+    var img = document.getElementById('overlayImage');
+    if (!overlay || !img) return;
+    overlay.classList.remove('active');
+    setTimeout(function () { img.src = ''; }, 400);
+}
+
+/* ============================================================
+   挂到 window
+   ============================================================ */
+window.toggleFold = toggleFold;
+window.togglePanel = togglePanel;
+window.openDrawer = openDrawer;
+window.closeDrawer = closeDrawer;
+window.switchTab = switchTab;
+window.openImageOverlay = openImageOverlay;
+window.closeImageOverlay = closeImageOverlay;
+
+/* ============================================================
+   初始化
+   ============================================================ */
+function init() {
+    try {
+        var saved = localStorage.getItem(FOLD_KEY);
+        var app = document.getElementById('app');
+        if (saved === 'true' && app) app.classList.add('collapsed');
+    } catch (e) {}
+
+    if (typeof waitGlobalInitialized === 'function') {
+        waitGlobalInitialized('Mvu').then(function () {
+            fetchStateFromMVU();
+            render();
+        })['catch'](function () {
+            fetchStateFromMVU();
+            render();
+        });
+    } else {
+        fetchStateFromMVU();
+        render();
+    }
+
+    setInterval(function () {
+        fetchStateFromMVU();
+        render();
+    }, 2000);
+
+    try {
+        if (typeof eventOn === 'function' && typeof Mvu !== 'undefined' && Mvu.events && Mvu.events.VARIABLE_UPDATE_ENDED) {
+            eventOn(Mvu.events.VARIABLE_UPDATE_ENDED, function () {
+                fetchStateFromMVU();
+                render();
+            });
+        }
+    } catch (e) {}
+
+    /* ESC 关闭放大遮罩 */
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') closeImageOverlay();
+    });
+}
+
+if (typeof errorCatched === 'function') {
+    $(errorCatched(init));
+} else {
+    $(init);
+}
+
+console.log('掌中的美母 · 状态栏已加载');
+</script>
+
+</body>
+</html>
