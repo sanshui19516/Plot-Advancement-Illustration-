@@ -2,7 +2,7 @@
 // 【カラフルな葉：只是兄妹的日常CG更新】手动注入版-原生弹窗版＋通知弹窗
 // 功能：脚本启动时自动弹窗（无圆形头像），玩家选择国内或国外节点更新
 //       更新成功后显示毛玻璃通知
-// 版本：v4.1（弹窗去图片版）
+// 版本：v4.2（四条目更新版：SFW库 / NSFW库 / 规则-SFW / 规则-NSFW）
 // ============================================================
 
 (function() {
@@ -11,16 +11,23 @@
     // ─── ⚠️ 配置区域 ────────────────────────────────────────────────
     var CONFIG = {
         worldbookName: '长须川兄妹',
-        entryUids: { sfw: 7, nsfw: 5, rules: 8 },
+        entryUids: {
+            sfw: 7,
+            nsfw: 5,
+            rulesSfw: 8,
+            rulesNsfw: 109
+        },
         cnUrls: {
             sfw: 'https://testingcf.jsdelivr.net/gh/sanshui19516/Hot-Update-World-Book-Illustrations@main/%E3%82%AB%E3%83%A9%E3%83%95%E3%83%AB%E3%81%AA%E8%91%89%EF%BC%9A%E5%8F%AA%E6%98%AF%E5%85%84%E5%A6%B9%E7%9A%84%E6%97%A5%E5%B8%B8/%E4%B8%96%E7%95%8C%E4%B9%A6%E6%9D%A1%E7%9B%AE%E7%83%AD%E6%9B%B4%E6%96%B0/SFW.txt',
             nsfw: 'https://testingcf.jsdelivr.net/gh/sanshui19516/Hot-Update-World-Book-Illustrations@main/%E3%82%AB%E3%83%A9%E3%83%95%E3%83%AB%E3%81%AA%E8%91%89%EF%BC%9A%E5%8F%AA%E6%98%AF%E5%85%84%E5%A6%B9%E7%9A%84%E6%97%A5%E5%B8%B8/%E4%B8%96%E7%95%8C%E4%B9%A6%E6%9D%A1%E7%9B%AE%E7%83%AD%E6%9B%B4%E6%96%B0/NSFW.txt',
-            rules: 'https://testingcf.jsdelivr.net/gh/sanshui19516/Hot-Update-World-Book-Illustrations@main/%E3%82%AB%E3%83%A9%E3%83%95%E3%83%AB%E3%81%AA%E8%91%89%EF%BC%9A%E5%8F%AA%E6%98%AF%E5%85%84%E5%A6%B9%E7%9A%84%E6%97%A5%E5%B8%B8/%E4%B8%96%E7%95%8C%E4%B9%A6%E6%9D%A1%E7%9B%AE%E7%83%AD%E6%9B%B4%E6%96%B0/rules.txt'
+            rulesSfw: 'https://testingcf.jsdelivr.net/gh/sanshui19516/Hot-Update-World-Book-Illustrations@main/%E3%82%AB%E3%83%A9%E3%83%95%E3%83%AB%E3%81%AA%E8%91%89%EF%BC%9A%E5%8F%AA%E6%98%AF%E5%85%84%E5%A6%B9%E7%9A%84%E6%97%A5%E5%B8%B8/%E4%B8%96%E7%95%8C%E4%B9%A6%E6%9D%A1%E7%9B%AE%E7%83%AD%E6%9B%B4%E6%96%B0/rules-sfw.txt',
+            rulesNsfw: 'https://testingcf.jsdelivr.net/gh/sanshui19516/Hot-Update-World-Book-Illustrations@main/%E3%82%AB%E3%83%A9%E3%83%95%E3%83%AB%E3%81%AA%E8%91%89%EF%BC%9A%E5%8F%AA%E6%98%AF%E5%85%84%E5%A6%B9%E7%9A%84%E6%97%A5%E5%B8%B8/%E4%B8%96%E7%95%8C%E4%B9%A6%E6%9D%A1%E7%9B%AE%E7%83%AD%E6%9B%B4%E6%96%B0/rules-nsfw.txt'
         },
         globalUrls: {
             sfw: 'https://cdn.jsdelivr.net/gh/sanshui19516/Hot-Update-World-Book-Illustrations@main/%E3%82%AB%E3%83%A9%E3%83%95%E3%83%AB%E3%81%AA%E8%91%89%EF%BC%9A%E5%8F%AA%E6%98%AF%E5%85%84%E5%A6%B9%E7%9A%84%E6%97%A5%E5%B8%B8/%E4%B8%96%E7%95%8C%E4%B9%A6%E6%9D%A1%E7%9B%AE%E7%83%AD%E6%9B%B4%E6%96%B0/SFW.txt',
             nsfw: 'https://cdn.jsdelivr.net/gh/sanshui19516/Hot-Update-World-Book-Illustrations@main/%E3%82%AB%E3%83%A9%E3%83%95%E3%83%AB%E3%81%AA%E8%91%89%EF%BC%9A%E5%8F%AA%E6%98%AF%E5%85%84%E5%A6%B9%E7%9A%84%E6%97%A5%E5%B8%B8/%E4%B8%96%E7%95%8C%E4%B9%A6%E6%9D%A1%E7%9B%AE%E7%83%AD%E6%9B%B4%E6%96%B0/NSFW.txt',
-            rules: 'https://cdn.jsdelivr.net/gh/sanshui19516/Hot-Update-World-Book-Illustrations@main/%E3%82%AB%E3%83%A9%E3%83%95%E3%83%AB%E3%81%AA%E8%91%89%EF%BC%9A%E5%8F%AA%E6%98%AF%E5%85%84%E5%A6%B9%E7%9A%84%E6%97%A5%E5%B8%B8/%E4%B8%96%E7%95%8C%E4%B9%A6%E6%9D%A1%E7%9B%AE%E7%83%AD%E6%9B%B4%E6%96%B0/rules.txt'
+            rulesSfw: 'https://cdn.jsdelivr.net/gh/sanshui19516/Hot-Update-World-Book-Illustrations@main/%E3%82%AB%E3%83%A9%E3%83%95%E3%83%AB%E3%81%AA%E8%91%89%EF%BC%9A%E5%8F%AA%E6%98%AF%E5%85%84%E5%A6%B9%E7%9A%84%E6%97%A5%E5%B8%B8/%E4%B8%96%E7%95%8C%E4%B9%A6%E6%9D%A1%E7%9B%AE%E7%83%AD%E6%9B%B4%E6%96%B0/rules-sfw.txt',
+            rulesNsfw: 'https://cdn.jsdelivr.net/gh/sanshui19516/Hot-Update-World-Book-Illustrations@main/%E3%82%AB%E3%83%A9%E3%83%95%E3%83%AB%E3%81%AA%E8%91%89%EF%BC%9A%E5%8F%AA%E6%98%AF%E5%85%84%E5%A6%B9%E7%9A%84%E6%97%A5%E5%B8%B8/%E4%B8%96%E7%95%8C%E4%B9%A6%E6%9D%A1%E7%9B%AE%E7%83%AD%E6%9B%B4%E6%96%B0/rules-nsfw.txt'
         },
         popup: {
             title: '长须川兄妹CG最新CG更新',
@@ -186,9 +193,10 @@
 
         var sfw = await fetchRemoteContent(urls.sfw, 'SFW');
         var nsfw = await fetchRemoteContent(urls.nsfw, 'NSFW');
-        var rules = await fetchRemoteContent(urls.rules, '规则');
+        var rulesSfw = await fetchRemoteContent(urls.rulesSfw, '规则-SFW');
+        var rulesNsfw = await fetchRemoteContent(urls.rulesNsfw, '规则-NSFW');
 
-        if (!sfw || !nsfw || !rules) {
+        if (!sfw || !nsfw || !rulesSfw || !rulesNsfw) {
             showToast('❌ 拉取失败，请检查网络');
             return;
         }
@@ -214,9 +222,12 @@
             } else if (uid === CONFIG.entryUids.nsfw) {
                 entry.content = nsfw;
                 updated.push('NSFW(5)');
-            } else if (uid === CONFIG.entryUids.rules) {
-                entry.content = rules;
-                updated.push('规则(8)');
+            } else if (uid === CONFIG.entryUids.rulesSfw) {
+                entry.content = rulesSfw;
+                updated.push('规则-SFW(8)');
+            } else if (uid === CONFIG.entryUids.rulesNsfw) {
+                entry.content = rulesNsfw;
+                updated.push('规则-NSFW(109)');
             }
         }
 
@@ -231,7 +242,6 @@
         }
 
         log('✅ 更新成功: ' + updated.join(', '));
-        // ★ 更新成功使用毛玻璃通知 ★
         showGlassNotification(
             '✅ 最新插图CG已更新完成',
             '请关注创作者，每一个点赞即是激励。此卡作者：三年的水，敬请期待更多精彩故事！'
@@ -395,7 +405,7 @@
 
     // ─── 启动 ──────────────────────────────────────────────────────
     function init() {
-        log('脚本已加载（长须川兄妹CG更新 v4.1 - 弹窗去图片版）');
+        log('脚本已加载（长须川兄妹CG更新 v4.2 - 四条目更新版）');
         setupChatChangedListener();
         if (hasShownWizard()) {
             log('向导已显示过，跳过弹窗');
@@ -412,6 +422,6 @@
         });
     }
 
-    log('✅ 长须川兄妹CG更新脚本（v4.1）已加载');
+    log('✅ 长须川兄妹CG更新脚本（v4.2）已加载');
 
 })();
