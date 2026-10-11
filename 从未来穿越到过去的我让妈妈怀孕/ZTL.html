@@ -1,0 +1,1154 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>藤原优月 · 状态栏</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+    --primary: 340, 45%, 62%;
+    --secondary: 38, 55%, 58%;
+    --accent: 210, 35%, 55%;
+    --danger: 0, 50%, 55%;
+    --desire: 330, 55%, 60%;
+    --bg-deep: 240, 18%, 6%;
+    --bg-panel: 240, 14%, 11%;
+    --text-main: 240, 10%, 92%;
+    --text-muted: 240, 8%, 58%;
+    --text-dim: 240, 8%, 38%;
+}
+
+.uterine-root {
+    max-width: 620px;
+    margin: 1.5rem auto;
+    padding: 0 8px;
+    font-family: 'Inter', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    color: hsl(var(--text-main));
+    position: relative;
+    background: transparent;
+}
+
+.uterine-panel {
+    position: relative;
+    background:
+        radial-gradient(circle at 50% 45%, hsla(330, 55%, 60%, 0.08), transparent 55%),
+        radial-gradient(circle at 50% 45%, hsla(38, 55%, 58%, 0.04), transparent 75%),
+        hsla(var(--bg-deep), 0.7);
+    border-radius: 12px;
+    border: 1px solid hsla(var(--secondary), 0.1);
+    overflow: hidden;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), inset 0 0 0 1px hsla(var(--secondary), 0.04);
+}
+.uterine-panel::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+        linear-gradient(hsla(var(--secondary), 0.025) 1px, transparent 1px),
+        linear-gradient(90deg, hsla(var(--secondary), 0.025) 1px, transparent 1px);
+    background-size: 28px 28px;
+    pointer-events: none;
+    mask-image: radial-gradient(ellipse at center, black 20%, transparent 85%);
+    -webkit-mask-image: radial-gradient(ellipse at center, black 20%, transparent 85%);
+    z-index: 0;
+}
+
+/* ============ 顶栏 ============ */
+.uterine-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    border-bottom: 1px solid hsla(var(--secondary), 0.08);
+    position: relative;
+    z-index: 2;
+    background: hsla(var(--bg-deep), 0.5);
+}
+.uterine-tag {
+    font-family: 'SF Mono', 'Consolas', monospace;
+    font-weight: 700;
+    color: hsl(var(--secondary));
+    letter-spacing: 3px;
+    font-size: 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.uterine-tag::before {
+    content: '';
+    width: 5px; height: 5px;
+    background: hsl(var(--secondary));
+    border-radius: 50%;
+    box-shadow: 0 0 10px hsla(var(--secondary), 0.9);
+    animation: pulseTag 1.8s ease-in-out infinite;
+}
+@keyframes pulseTag {
+    0%, 100% { opacity: 0.3; transform: scale(0.8); }
+    50% { opacity: 1; transform: scale(1.2); }
+}
+.uterine-time, .uterine-loc {
+    font-family: 'SF Mono', 'Consolas', monospace;
+    font-size: 10px;
+    color: hsl(var(--text-muted));
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+.uterine-time { color: hsla(var(--accent), 0.9); }
+.uterine-spacer { flex: 1; }
+
+.fold-btn {
+    background: none;
+    border: none;
+    color: hsla(var(--text-muted), 0.5);
+    cursor: pointer;
+    padding: 2px 6px;
+    display: flex;
+    align-items: center;
+    transition: color 0.3s;
+}
+.fold-btn:hover { color: hsl(var(--text-main)); }
+.fold-btn svg {
+    width: 14px; height: 14px;
+    fill: none; stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+.uterine-root.collapsed .fold-btn svg { transform: rotate(-90deg); }
+.uterine-root.collapsed .uterine-body { display: none; }
+
+/* ============ 主体 ============ */
+.uterine-body {
+    position: relative;
+    z-index: 1;
+}
+
+/* ============ 上层信息区 ============ */
+.uterine-info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: hsla(var(--secondary), 0.08);
+    border-bottom: 1px solid hsla(var(--secondary), 0.08);
+}
+.info-cell {
+    padding: 12px 14px;
+    background: hsla(var(--bg-deep), 0.6);
+    position: relative;
+}
+.info-cell-tag {
+    font-family: 'SF Mono', 'Consolas', monospace;
+    font-size: 8px;
+    letter-spacing: 2px;
+    color: hsla(var(--secondary), 0.6);
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.info-cell-tag .dot {
+    width: 3px; height: 3px; border-radius: 50%;
+    background: hsla(var(--secondary), 0.6);
+    box-shadow: 0 0 6px hsla(var(--secondary), 0.8);
+}
+
+.unsaid-text {
+    font-size: 11px;
+    line-height: 1.6;
+    color: hsla(var(--text-main), 0.85);
+    font-style: italic;
+    padding: 6px 10px;
+    background: hsla(var(--bg-deep), 0.5);
+    border-left: 2px solid hsla(var(--primary), 0.5);
+    border-radius: 2px;
+    min-height: 40px;
+}
+
+.meta-list {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 10px;
+    font-family: 'SF Mono', 'Consolas', monospace;
+}
+.meta-list .row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 3px 0;
+    border-bottom: 1px dashed hsla(var(--secondary), 0.06);
+}
+.meta-list .row:last-child { border-bottom: none; }
+.meta-list .k { color: hsl(var(--text-dim)); letter-spacing: 1px; font-size: 9px; }
+.meta-list .v { color: hsl(var(--text-main), 0.95); font-weight: 600; }
+
+/* ============ 环形数值区 ============ */
+.ring-section {
+    padding: 20px 16px;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 400px;
+    background:
+        radial-gradient(circle at 50% 50%, hsla(var(--primary), 0.05), transparent 55%),
+        hsla(var(--bg-deep), 0.3);
+    overflow: hidden;
+}
+.ring-stage {
+    position: relative;
+    width: 360px;
+    height: 360px;
+}
+.ring-svg {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+}
+.ring-circle {
+    fill: none;
+    transform-origin: 180px 180px;
+    transition: stroke-dasharray 1.2s cubic-bezier(0.25, 0.8, 0.25, 1), stroke-dashoffset 1.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+.ring-circle-moral {
+    stroke: hsla(var(--danger), 0.75);
+    stroke-width: 5;
+    stroke-linecap: round;
+    filter: drop-shadow(0 0 6px hsla(var(--danger), 0.5));
+}
+.ring-circle-fallen {
+    stroke: hsla(var(--desire), 0.7);
+    stroke-width: 5;
+    stroke-linecap: round;
+    filter: drop-shadow(0 0 6px hsla(var(--desire), 0.5));
+}
+.ring-circle-lust {
+    stroke: hsla(var(--primary), 0.65);
+    stroke-width: 4;
+    stroke-linecap: round;
+    filter: drop-shadow(0 0 5px hsla(var(--primary), 0.4));
+}
+.ring-circle-lonely {
+    stroke: hsla(var(--accent), 0.55);
+    stroke-width: 3;
+    stroke-linecap: round;
+    filter: drop-shadow(0 0 4px hsla(var(--accent), 0.4));
+}
+
+.ring-center {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 5;
+    text-align: center;
+    width: 120px;
+}
+.ring-avatar {
+    width: 84px;
+    height: 84px;
+    border-radius: 50%;
+    border: 2px solid hsla(var(--primary), 0.35);
+    background: hsla(var(--primary), 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+    font-weight: 700;
+    color: hsla(var(--primary), 0.55);
+    margin: 0 auto 8px;
+    box-shadow: 0 0 40px hsla(var(--primary), 0.2), inset 0 0 20px hsla(var(--primary), 0.1);
+    overflow: hidden;
+    position: relative;
+    animation: avatarPulse 4s ease-in-out infinite;
+}
+@keyframes avatarPulse {
+    0%, 100% { box-shadow: 0 0 40px hsla(var(--primary), 0.2), inset 0 0 20px hsla(var(--primary), 0.1); }
+    50% { box-shadow: 0 0 60px hsla(var(--primary), 0.4), inset 0 0 30px hsla(var(--primary), 0.2); }
+}
+.ring-avatar img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    display: block;
+    cursor: pointer;
+    border-radius: 50%;
+}
+.ring-name {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: hsl(var(--text-main));
+}
+.ring-sub {
+    font-family: 'SF Mono', 'Consolas', monospace;
+    font-size: 7px;
+    letter-spacing: 2px;
+    color: hsla(var(--primary), 0.6);
+    margin-top: 2px;
+}
+
+/* 环上的数值标签 */
+.ring-label {
+    position: absolute;
+    font-family: 'SF Mono', 'Consolas', monospace;
+    font-size: 9px;
+    letter-spacing: 1px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 8px;
+    background: hsla(var(--bg-deep), 0.85);
+    border-radius: 12px;
+    backdrop-filter: blur(8px);
+    white-space: nowrap;
+    z-index: 6;
+}
+.ring-label .dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+}
+.ring-label .name { color: hsla(var(--text-main), 0.7); }
+.ring-label .num { color: hsl(var(--text-main)); font-weight: 700; }
+.ring-label-moral {
+    top: 12px; left: 50%;
+    transform: translateX(-50%);
+}
+.ring-label-moral .dot { background: hsla(var(--danger), 0.9); box-shadow: 0 0 6px hsla(var(--danger), 0.8); }
+.ring-label-fallen {
+    top: 50%; right: 4px;
+    transform: translateY(-50%);
+}
+.ring-label-fallen .dot { background: hsla(var(--desire), 0.9); box-shadow: 0 0 6px hsla(var(--desire), 0.8); }
+.ring-label-lust {
+    bottom: 12px; left: 50%;
+    transform: translateX(-50%);
+}
+.ring-label-lust .dot { background: hsla(var(--primary), 0.9); box-shadow: 0 0 6px hsla(var(--primary), 0.8); }
+.ring-label-lonely {
+    top: 50%; left: 4px;
+    transform: translateY(-50%);
+}
+.ring-label-lonely .dot { background: hsla(var(--accent), 0.9); box-shadow: 0 0 6px hsla(var(--accent), 0.8); }
+
+/* 中心下方当前阶段 */
+.ring-stage-text {
+    position: absolute;
+    bottom: -4px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'SF Mono', 'Consolas', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: hsla(var(--primary), 0.8);
+    padding: 4px 12px;
+    background: hsla(var(--bg-deep), 0.9);
+    border: 1px solid hsla(var(--primary), 0.2);
+    border-radius: 12px;
+    white-space: nowrap;
+    z-index: 6;
+}
+
+/* ============ 孕期时间线区 ============ */
+.preg-section {
+    padding: 16px 20px 20px;
+    border-top: 1px solid hsla(var(--secondary), 0.08);
+    background: hsla(var(--bg-deep), 0.4);
+}
+.preg-header {
+    font-family: 'SF Mono', 'Consolas', monospace;
+    font-size: 8px;
+    letter-spacing: 2px;
+    color: hsla(var(--secondary), 0.6);
+    margin-bottom: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.preg-header .dot {
+    width: 3px; height: 3px; border-radius: 50%;
+    background: hsla(var(--secondary), 0.6);
+    box-shadow: 0 0 6px hsla(var(--secondary), 0.8);
+}
+.preg-timeline {
+    padding: 8px 4px 0;
+}
+.preg-stage {
+    font-family: 'SF Mono', 'Consolas', monospace;
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: hsl(var(--secondary));
+    text-align: center;
+    margin-bottom: 12px;
+    font-weight: 700;
+    text-shadow: 0 0 20px hsla(var(--secondary), 0.3);
+}
+.preg-nodes {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    margin-bottom: 10px;
+    padding: 0 8px;
+}
+.preg-nodes::before {
+    content: '';
+    position: absolute;
+    top: 50%; left: 8px; right: 8px;
+    height: 1px;
+    background: hsla(var(--secondary), 0.15);
+    transform: translateY(-50%);
+}
+.preg-node {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: hsla(var(--bg-deep), 1);
+    border: 1px solid hsla(var(--secondary), 0.3);
+    position: relative;
+    z-index: 1;
+    transition: all 0.4s;
+}
+.preg-node.active {
+    background: hsl(var(--secondary));
+    border-color: hsl(var(--secondary));
+    box-shadow: 0 0 14px hsla(var(--secondary), 0.9), 0 0 4px hsl(var(--secondary));
+    transform: scale(1.4);
+}
+.preg-node.done {
+    background: hsla(var(--secondary), 0.6);
+    border-color: hsla(var(--secondary), 0.6);
+}
+.preg-labels {
+    display: flex;
+    justify-content: space-between;
+    font-family: 'SF Mono', 'Consolas', monospace;
+    font-size: 8px;
+    color: hsl(var(--text-dim));
+    letter-spacing: 0.5px;
+    padding: 0 8px;
+    margin-bottom: 14px;
+}
+.preg-progress {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'SF Mono', 'Consolas', monospace;
+    font-size: 9px;
+    padding: 0 8px;
+}
+.preg-progress .bar {
+    flex: 1;
+    height: 3px;
+    background: hsla(var(--secondary), 0.1);
+    border-radius: 2px;
+    overflow: hidden;
+    position: relative;
+}
+.preg-progress .bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, hsla(var(--secondary), 0.5), hsl(var(--secondary)));
+    width: 0%;
+    transition: width 1s cubic-bezier(0.25, 0.8, 0.25, 1);
+    box-shadow: 0 0 8px hsla(var(--secondary), 0.5);
+    border-radius: 2px;
+}
+.preg-progress .text {
+    color: hsl(var(--secondary));
+    letter-spacing: 1.5px;
+    font-weight: 700;
+    font-size: 9px;
+}
+
+/* ============ 身体状态区 ============ */
+.body-section {
+    padding: 14px 20px 16px;
+    border-top: 1px solid hsla(var(--secondary), 0.08);
+    background: hsla(var(--bg-deep), 0.5);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px 16px;
+}
+.body-cell {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+.body-cell .k {
+    font-family: 'SF Mono', 'Consolas', monospace;
+    font-size: 7px;
+    letter-spacing: 1.5px;
+    color: hsla(var(--primary), 0.6);
+}
+.body-cell .v {
+    font-size: 10px;
+    color: hsl(var(--text-main), 0.85);
+    line-height: 1.5;
+}
+
+/* ============ 底部信息区 ============ */
+.footer-section {
+    border-top: 1px solid hsla(var(--secondary), 0.08);
+    background: hsla(var(--bg-deep), 0.6);
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    gap: 1px;
+    background-color: hsla(var(--secondary), 0.08);
+}
+.footer-cell {
+    padding: 12px 16px;
+    background: hsla(var(--bg-deep), 0.6);
+}
+.footer-cell-tag {
+    font-family: 'SF Mono', 'Consolas', monospace;
+    font-size: 8px;
+    letter-spacing: 2px;
+    color: hsla(var(--secondary), 0.6);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+.footer-cell-tag .dot {
+    width: 3px; height: 3px; border-radius: 50%;
+    background: hsla(var(--secondary), 0.6);
+    box-shadow: 0 0 6px hsla(var(--secondary), 0.8);
+}
+
+.outfit-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+.outfit-item {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+.outfit-item .who {
+    font-family: 'SF Mono', 'Consolas', monospace;
+    font-size: 7px;
+    letter-spacing: 1.5px;
+    color: hsla(var(--primary), 0.6);
+}
+.outfit-item .desc {
+    font-size: 10px;
+    color: hsl(var(--text-main), 0.8);
+    line-height: 1.5;
+}
+
+.intimacy-list {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+.intimacy-item {
+    font-size: 10px;
+    color: hsl(var(--text-main), 0.75);
+    padding: 5px 8px;
+    background: hsla(var(--primary), 0.05);
+    border-left: 2px solid hsla(var(--primary), 0.35);
+    border-radius: 2px;
+    line-height: 1.4;
+}
+
+/* ============ {{user}} 信息条 ============ */
+.user-bar {
+    border-top: 1px solid hsla(var(--secondary), 0.08);
+    background: hsla(var(--accent), 0.04);
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+.user-bar-avatar {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    border: 1px solid hsla(var(--accent), 0.4);
+    background: hsla(var(--accent), 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 700;
+    color: hsla(var(--accent), 0.7);
+    flex-shrink: 0;
+    overflow: hidden;
+    box-shadow: 0 0 16px hsla(var(--accent), 0.15);
+}
+.user-bar-avatar img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    display: block;
+    cursor: pointer;
+    border-radius: 50%;
+}
+.user-bar-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+}
+.user-bar-name {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: hsl(var(--text-main));
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.user-bar-name .tag {
+    font-family: 'SF Mono', 'Consolas', monospace;
+    font-size: 7px;
+    letter-spacing: 1.5px;
+    color: hsla(var(--accent), 0.7);
+    padding: 1px 6px;
+    border: 1px solid hsla(var(--accent), 0.25);
+    border-radius: 8px;
+}
+.user-bar-stats {
+    display: flex;
+    gap: 14px;
+    font-family: 'SF Mono', 'Consolas', monospace;
+    font-size: 9px;
+    color: hsl(var(--text-muted));
+    flex-wrap: wrap;
+}
+.user-bar-stats .item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+.user-bar-stats .item .k { color: hsl(var(--text-dim)); }
+.user-bar-stats .item .v { color: hsl(var(--text-main), 0.9); font-weight: 600; }
+
+/* ============ 图片放大 ============ */
+.img-overlay {
+    position: fixed;
+    inset: 0;
+    background: hsla(var(--bg-deep), 0.94);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    z-index: 999999;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    opacity: 0;
+    transition: opacity 0.3s;
+    cursor: pointer;
+}
+.img-overlay.open { display: flex; opacity: 1; }
+.img-overlay img {
+    max-width: 85vw;
+    max-height: 80vh;
+    object-fit: contain;
+    border-radius: 6px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.9), 0 0 0 1px hsla(var(--secondary), 0.3);
+}
+.img-overlay .close-hint {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: hsla(var(--secondary), 0.4);
+    font-family: 'SF Mono', 'Consolas', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    pointer-events: none;
+}
+
+/* ============ 移动端 ============ */
+@media (max-width: 640px) {
+    .uterine-root { padding: 0 4px; }
+    .uterine-header { padding: 10px 12px; gap: 6px; font-size: 9px; flex-wrap: wrap; }
+    .uterine-tag { font-size: 9px; letter-spacing: 2px; }
+    .uterine-time, .uterine-loc { font-size: 9px; }
+    .uterine-info-grid { grid-template-columns: 1fr; }
+    .ring-section { padding: 16px 12px; min-height: 340px; }
+    .ring-stage { width: 290px; height: 290px; }
+    .ring-avatar { width: 68px; height: 68px; font-size: 24px; }
+    .ring-name { font-size: 11px; }
+    .ring-label { font-size: 8px; padding: 2px 6px; }
+    .ring-label-moral { top: 4px; }
+    .ring-label-fallen { right: 0; }
+    .ring-label-lust { bottom: 4px; }
+    .ring-label-lonely { left: 0; }
+    .ring-stage-text { font-size: 8px; bottom: -8px; }
+    .preg-section { padding: 14px 14px 16px; }
+    .preg-stage { font-size: 10px; letter-spacing: 2px; }
+    .body-section { padding: 12px 14px; grid-template-columns: 1fr 1fr; gap: 8px 12px; }
+    .body-cell .v { font-size: 9px; }
+    .footer-section { grid-template-columns: 1fr; }
+    .user-bar { padding: 10px 12px; gap: 10px; }
+    .user-bar-avatar { width: 38px; height: 38px; font-size: 14px; }
+    .user-bar-stats { font-size: 8px; gap: 10px; }
+    .unsaid-text { font-size: 10px; }
+}
+
+@media (max-width: 400px) {
+    .ring-stage { width: 260px; height: 260px; }
+    .ring-avatar { width: 60px; height: 60px; font-size: 22px; }
+    .ring-label { font-size: 7px; padding: 2px 5px; }
+    .ring-label .name { display: none; }
+}
+</style>
+</head>
+<body>
+
+<div class="uterine-root" id="uterineRoot">
+
+    <div class="uterine-panel">
+
+        <!-- 顶栏 -->
+        <div class="uterine-header">
+            <span class="uterine-tag">UTERINE FIELD</span>
+            <span class="uterine-time">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                <span id="display-time">...</span>
+            </span>
+            <span class="uterine-loc">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                <span id="display-loc">...</span>
+            </span>
+            <span class="uterine-spacer"></span>
+            <button class="fold-btn" id="toggleFold" aria-label="折叠">
+                <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+        </div>
+
+        <div id="status-data" style="display:none;">$1</div>
+
+        <div class="uterine-body">
+
+            <!-- 上层信息：未言 + 优月状态 -->
+            <div class="uterine-info-grid">
+                <div class="info-cell">
+                    <div class="info-cell-tag">
+                        <span>UNSAID · 未言</span>
+                        <span class="dot"></span>
+                    </div>
+                    <div class="unsaid-text" id="yuUnsaid">她正在看着你……</div>
+                </div>
+                <div class="info-cell">
+                    <div class="info-cell-tag">
+                        <span>SUBJECT · 藤原优月</span>
+                        <span class="dot"></span>
+                    </div>
+                    <div class="meta-list">
+                        <div class="row"><span class="k">情绪</span><span class="v" id="yuEmotion">平静</span></div>
+                        <div class="row"><span class="k">依赖</span><span class="v" id="yuDepend">低</span></div>
+                        <div class="row"><span class="k">占有</span><span class="v" id="yuPossess">无</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 环形数值区 -->
+            <div class="ring-section">
+                <div class="ring-stage" id="ringStage">
+
+                    <svg class="ring-svg" viewBox="0 0 360 360">
+                        <!-- 道德防线（最外） -->
+                        <circle class="ring-circle ring-circle-moral" id="ringMoral"
+                                cx="180" cy="180" r="155"
+                                stroke-dasharray="0 974" stroke-dashoffset="0"
+                                transform="rotate(-90 180 180)"/>
+                        <!-- 沦陷值 -->
+                        <circle class="ring-circle ring-circle-fallen" id="ringFallen"
+                                cx="180" cy="180" r="125"
+                                stroke-dasharray="0 785" stroke-dashoffset="0"
+                                transform="rotate(-90 180 180)"/>
+                        <!-- 肉欲值 -->
+                        <circle class="ring-circle ring-circle-lust" id="ringLust"
+                                cx="180" cy="180" r="95"
+                                stroke-dasharray="0 597" stroke-dashoffset="0"
+                                transform="rotate(-90 180 180)"/>
+                        <!-- 寂寞感 -->
+                        <circle class="ring-circle ring-circle-lonely" id="ringLonely"
+                                cx="180" cy="180" r="65"
+                                stroke-dasharray="0 408" stroke-dashoffset="0"
+                                transform="rotate(-90 180 180)"/>
+                    </svg>
+
+                    <!-- 中心：头像 + 名字 -->
+                    <div class="ring-center">
+                        <div class="ring-avatar" id="yuAvatar"><span>優</span></div>
+                        <div class="ring-name">藤原 优月</div>
+                        <div class="ring-sub">FUJIWARA YUZUKI</div>
+                    </div>
+
+                    <!-- 环上的数值标签 -->
+                    <div class="ring-label ring-label-moral">
+                        <span class="dot"></span>
+                        <span class="name">道德</span>
+                        <span class="num" id="labelMoral">135</span>
+                    </div>
+                    <div class="ring-label ring-label-fallen">
+                        <span class="dot"></span>
+                        <span class="name">沦陷</span>
+                        <span class="num" id="labelFallen">5</span>
+                    </div>
+                    <div class="ring-label ring-label-lust">
+                        <span class="dot"></span>
+                        <span class="name">肉欲</span>
+                        <span class="num" id="labelLust">12</span>
+                    </div>
+                    <div class="ring-label ring-label-lonely">
+                        <span class="dot"></span>
+                        <span class="name">寂寞</span>
+                        <span class="num" id="labelLonely">45</span>
+                    </div>
+
+                    <!-- 当前阶段 -->
+                    <div class="ring-stage-text" id="ringStageText">高道德感期</div>
+                </div>
+            </div>
+
+            <!-- 孕期时间线 -->
+            <div class="preg-section">
+                <div class="preg-header">
+                    <span>GESTATION · 孕期</span>
+                    <span class="dot"></span>
+                </div>
+                <div class="preg-timeline">
+                    <div class="preg-stage" id="pregStage">未怀孕</div>
+                    <div class="preg-nodes">
+                        <div class="preg-node active" id="pregN0"></div>
+                        <div class="preg-node" id="pregN1"></div>
+                        <div class="preg-node" id="pregN2"></div>
+                        <div class="preg-node" id="pregN3"></div>
+                        <div class="preg-node" id="pregN4"></div>
+                    </div>
+                    <div class="preg-labels">
+                        <span>0</span><span>90</span><span>180</span><span>280</span><span>产后</span>
+                    </div>
+                    <div class="preg-progress">
+                        <span class="text">DAY</span>
+                        <div class="bar"><div class="bar-fill" id="pregBar"></div></div>
+                        <span class="text" id="pregDay">0 / 280</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 身体状态 -->
+            <div class="body-section">
+                <div class="body-cell"><span class="k">CHEST · 胸部</span><span class="v" id="yuChest">—</span></div>
+                <div class="body-cell"><span class="k">PUSSY · 小穴</span><span class="v" id="yuPussy">—</span></div>
+                <div class="body-cell"><span class="k">CLIT · 阴蒂</span><span class="v" id="yuClit">—</span></div>
+                <div class="body-cell"><span class="k">ANUS · 肛门</span><span class="v" id="yuAsshole">—</span></div>
+                <div class="body-cell"><span class="k">BELLY · 肚子</span><span class="v" id="yuBelly">—</span></div>
+                <div class="body-cell"><span class="k">INTIMACY · 最近亲密</span><span class="v" id="yuIntimacyInline">—</span></div>
+            </div>
+
+            <!-- 底部：穿搭 + 亲密 -->
+            <div class="footer-section">
+                <div class="footer-cell">
+                    <div class="footer-cell-tag"><span>OUTFIT · 穿搭</span><span class="dot"></span></div>
+                    <div class="outfit-list">
+                        <div class="outfit-item">
+                            <span class="who">藤原优月</span>
+                            <span class="desc" id="yuOutfit">—</span>
+                        </div>
+                        <div class="outfit-item">
+                            <span class="who">{{user}}</span>
+                            <span class="desc" id="userOutfit">—</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="footer-cell">
+                    <div class="footer-cell-tag"><span>RECENT · 最近亲密</span><span class="dot"></span></div>
+                    <div class="intimacy-list">
+                        <div class="intimacy-item" id="int1">无</div>
+                        <div class="intimacy-item" id="int2">无</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- {{user}} 信息条 -->
+            <div class="user-bar">
+                <div class="user-bar-avatar" id="userAvatar"><span>你</span></div>
+                <div class="user-bar-info">
+                    <div class="user-bar-name">
+                        <span id="userName">{{user}}</span>
+                        <span class="tag">TRAVELER</span>
+                    </div>
+                    <div class="user-bar-stats">
+                        <div class="item"><span class="k">精神</span><span class="v" id="userMind">正常</span></div>
+                        <div class="item"><span class="k">阳具</span><span class="v" id="userCock">平静</span></div>
+                        <div class="item"><span class="k">睾丸</span><span class="v" id="userBalls">正常</span></div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="img-overlay" id="imgOverlay">
+    <img id="overlayImg" src="" alt="">
+    <div class="close-hint">✦ 点击任意处关闭 ✦</div>
+</div>
+
+<script>
+(function() {
+    'use strict';
+
+    var dataContainer = document.getElementById('status-data');
+    if (!dataContainer) return;
+    var rawYaml = dataContainer.textContent.trim();
+
+    function extractVal(lines, key) {
+        for (var i = 0; i < lines.length; i++) {
+            var t = lines[i].trim();
+            if (t.startsWith(key + ':')) {
+                var val = t.substring(key.length + 1).trim();
+                if (val.startsWith('"') && val.endsWith('"')) val = val.substring(1, val.length - 1);
+                if (val.startsWith("'") && val.endsWith("'")) val = val.substring(1, val.length - 1);
+                return val;
+            }
+        }
+        return '';
+    }
+
+    function parseAllBlocks(lines) {
+        var blocks = [];
+        var currentBlock = null;
+        var blockStart = -1;
+
+        for (var i = 0; i < lines.length; i++) {
+            var line = lines[i];
+            if (line.trim().startsWith('- 用户:')) {
+                if (currentBlock) blocks.push(currentBlock);
+                currentBlock = {};
+                blockStart = i;
+                continue;
+            }
+
+            if (currentBlock && blockStart !== -1) {
+                var tLine = line.trim();
+                if (i > blockStart && !line.startsWith(' ') && tLine !== '' && !tLine.startsWith('-')) {
+                    blockStart = -1;
+                    continue;
+                }
+
+                var fieldMap = {
+                    '名字':'name','头像':'avatar','行动':'action','内心':'inner',
+                    '情绪状态':'emotion','道德防线':'moral','沦陷值':'fallen',
+                    '肉欲值':'lust','寂寞感':'lonely','孕期阶段':'pregStage',
+                    '孕期进度':'pregDay','胸部':'chest','小穴':'pussy','阴蒂':'clit',
+                    '肛门':'asshole','肚子':'belly','情感依赖度':'depend',
+                    '占有欲':'possess','穿搭':'outfit','精神状态':'mind',
+                    '阳具':'cock','睾丸':'balls'
+                };
+
+                for (var k in fieldMap) {
+                    if (tLine.startsWith(k + ':')) {
+                        var v = extractVal([line], k);
+                        var key = fieldMap[k];
+                        if (['moral','fallen','lust','lonely','pregDay'].indexOf(key) !== -1) {
+                            currentBlock[key] = parseInt(v || 0);
+                        } else {
+                            currentBlock[key] = v;
+                        }
+                        break;
+                    }
+                }
+
+                if (tLine.startsWith('- 亲密行为:')) {
+                    var iv = tLine.substring('- 亲密行为:'.length).trim();
+                    if (iv.startsWith('"') && iv.endsWith('"')) iv = iv.substring(1, iv.length - 1);
+                    if (!currentBlock.intimacy) currentBlock.intimacy = [];
+                    currentBlock.intimacy.push(iv || '无');
+                }
+            }
+        }
+        if (currentBlock) blocks.push(currentBlock);
+
+        function fill(b) {
+            if (!b) return {};
+            var d = {
+                name:'未知', action:'...', inner:'...', emotion:'平静',
+                moral:120, fallen:5, lust:12, lonely:45,
+                pregStage:'未怀孕', pregDay:0,
+                chest:'正常', pussy:'正常', clit:'正常', asshole:'正常', belly:'平坦柔软',
+                depend:'低', possess:'无', outfit:'常服',
+                mind:'正常', cock:'平静', balls:'正常',
+                intimacy:['无','无']
+            };
+            for (var k in d) { if (b[k] === undefined || b[k] === '') b[k] = d[k]; }
+            if (!b.intimacy || b.intimacy.length === 0) b.intimacy = ['无','无'];
+            return b;
+        }
+
+        var userBlock = null, npcBlock = null;
+        for (var j = 0; j < blocks.length; j++) {
+            if (blocks[j].name === '{{user}}' || blocks[j].name === '你' || blocks[j].name === '玩家') {
+                userBlock = fill(blocks[j]);
+                break;
+            }
+        }
+        if (!userBlock && blocks.length > 0) userBlock = fill(blocks[blocks.length - 1]);
+        if (blocks.length > 0) {
+            if (blocks[0] === userBlock && blocks.length > 1) npcBlock = fill(blocks[1]);
+            else npcBlock = fill(blocks[0]);
+        }
+
+        return { npc: npcBlock, user: userBlock };
+    }
+
+    var lines = rawYaml.split('\n');
+    var dateTime = extractVal(lines, '日期和时间') || '...';
+    var location = extractVal(lines, '地点') || '...';
+
+    var result = parseAllBlocks(lines);
+    var yu = result.npc || {};
+    var usr = result.user || {};
+
+    function setText(id, v) {
+        var el = document.getElementById(id);
+        if (el) el.textContent = v || '—';
+    }
+
+    document.getElementById('display-time').textContent = dateTime;
+    document.getElementById('display-loc').textContent = location;
+
+    // 未言与元信息
+    setText('yuUnsaid', yu.inner);
+    setText('yuEmotion', yu.emotion);
+    setText('yuDepend', yu.depend);
+    setText('yuPossess', yu.possess);
+    setText('yuOutfit', yu.outfit);
+
+    // 数值标签
+    setText('labelMoral', yu.moral);
+    setText('labelFallen', yu.fallen);
+    setText('labelLust', yu.lust);
+    setText('labelLonely', yu.lonely);
+
+    // 环形数值
+    var CIRC_MORAL = 2 * Math.PI * 155; // ≈ 973.89
+    var CIRC_FALLEN = 2 * Math.PI * 125; // ≈ 785.40
+    var CIRC_LUST = 2 * Math.PI * 95;   // ≈ 596.90
+    var CIRC_LONELY = 2 * Math.PI * 65; // ≈ 408.41
+
+    function setRing(id, val, max, circumference) {
+        var el = document.getElementById(id);
+        if (!el) return;
+        var ratio = Math.min(1, Math.max(0, val / max));
+        var arc = ratio * circumference;
+        el.setAttribute('stroke-dasharray', arc + ' ' + circumference);
+    }
+
+    var lustMax = (yu.pregStage && yu.pregStage !== '未怀孕' && yu.pregStage !== '产后') ? 120 : 80;
+    setRing('ringMoral', yu.moral, 150, CIRC_MORAL);
+    setRing('ringFallen', yu.fallen, 100, CIRC_FALLEN);
+    setRing('ringLust', yu.lust, lustMax, CIRC_LUST);
+    setRing('ringLonely', yu.lonely, 60, CIRC_LONELY);
+
+    // 阶段文字
+    var stageText = '高道德感期';
+    if (yu.fallen >= 80) stageText = '彻底接受期';
+    else if (yu.fallen >= 60) stageText = '深度依赖期';
+    else if (yu.fallen >= 40) stageText = '反复沉沦期';
+    else if (yu.fallen >= 20) stageText = '第一次之后';
+    setText('ringStageText', stageText);
+
+    // 身体
+    setText('yuChest', yu.chest);
+    setText('yuPussy', yu.pussy);
+    setText('yuClit', yu.clit);
+    setText('yuAsshole', yu.asshole);
+    setText('yuBelly', yu.belly);
+
+    // 孕期
+    var pregStageMap = {
+        '未怀孕': 0,
+        '怀孕1-3月': 1,
+        '怀孕4-6月': 2,
+        '怀孕7-9月': 3,
+        '产后': 4
+    };
+    var stageIdx = pregStageMap[yu.pregStage] !== undefined ? pregStageMap[yu.pregStage] : 0;
+    setText('pregStage', yu.pregStage);
+    setText('pregDay', yu.pregDay + ' / 280');
+    var pregBar = document.getElementById('pregBar');
+    if (pregBar) pregBar.style.width = Math.min(100, (yu.pregDay / 280) * 100) + '%';
+
+    for (var i = 0; i < 5; i++) {
+        var n = document.getElementById('pregN' + i);
+        if (!n) continue;
+        n.classList.remove('active', 'done');
+        if (i < stageIdx) n.classList.add('done');
+        else if (i === stageIdx) n.classList.add('active');
+    }
+
+    // 亲密
+    if (yu.intimacy && yu.intimacy.length >= 2) {
+        setText('int1', yu.intimacy[0]);
+        setText('int2', yu.intimacy[1]);
+        setText('yuIntimacyInline', yu.intimacy[0]);
+    }
+
+    // {{user}}
+    setText('userName', usr.name || '{{user}}');
+    setText('userMind', usr.mind);
+    setText('userCock', usr.cock);
+    setText('userBalls', usr.balls);
+    setText('userOutfit', usr.outfit);
+
+    // 头像
+    function bindAvatar(containerId, avatarUrl, placeholderChar, name) {
+        var box = document.getElementById(containerId);
+        if (!box) return;
+        if (avatarUrl) {
+            box.innerHTML = '<img src="' + avatarUrl + '" alt="' + name + '">';
+            var img = box.querySelector('img');
+            if (img) img.addEventListener('click', function(e) { e.stopPropagation(); openImg(this.src); });
+        } else {
+            box.innerHTML = '<span>' + placeholderChar + '</span>';
+        }
+    }
+    bindAvatar('yuAvatar', yu.avatar, '優', '藤原优月');
+    bindAvatar('userAvatar', usr.avatar, '你', '{{user}}');
+
+    // 折叠
+    var foldBtn = document.getElementById('toggleFold');
+    var root = document.getElementById('uterineRoot');
+    if (foldBtn && root) {
+        if (localStorage.getItem('uterine_folded') === 'true') root.classList.add('collapsed');
+        foldBtn.addEventListener('click', function() {
+            root.classList.toggle('collapsed');
+            localStorage.setItem('uterine_folded', root.classList.contains('collapsed') ? 'true' : 'false');
+        });
+    }
+
+    // 图片放大
+    var overlay = document.getElementById('imgOverlay');
+    var overlayImg = document.getElementById('overlayImg');
+    window.openImg = function(src) {
+        if (src && overlay && overlayImg) {
+            overlayImg.src = src;
+            overlay.classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+    };
+    function closeImg() {
+        if (overlay) { overlay.classList.remove('open'); document.body.style.overflow = ''; }
+    }
+    if (overlay) {
+        overlay.addEventListener('click', closeImg);
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && overlay.classList.contains('open')) closeImg();
+        });
+    }
+
+})();
+</script>
+
+</body>
+</html>
