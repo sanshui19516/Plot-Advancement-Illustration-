@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>从未来穿越到过去的我让妈妈怀孕 · 作者介绍</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet" />
+
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+    --primary: 340, 45%, 62%;
+    --secondary: 38, 55%, 58%;
+    --accent: 210, 35%, 55%;
+    --danger: 0, 50%, 55%;
+    --bg-deep: 240, 18%, 6%;
+    --bg-panel: 240, 14%, 11%;
+    --text-main: 240, 10%, 92%;
+    --text-muted: 240, 8%, 58%;
+    --text-dim: 240, 8%, 38%;
+}
+
+body {
+    min-height: 100vh;
+    background: transparent;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Inter', 'PingFang SC', system-ui, -apple-system, sans-serif;
+    padding: 20px;
+    overflow-x: hidden;
+}
+
+.archive-cover {
+    max-width: 620px;
+    width: 100%;
+    background:
+        radial-gradient(circle at 20% 0%, hsla(var(--primary), 0.06), transparent 50%),
+        radial-gradient(circle at 80% 100%, hsla(var(--secondary), 0.05), transparent 50%),
+        hsla(var(--bg-deep), 0.78);
+    backdrop-filter: blur(28px) saturate(1.5);
+    -webkit-backdrop-filter: blur(28px) saturate(1.5);
+    border-radius: 14px;
+    border: 1px solid hsla(var(--secondary), 0.12);
+    box-shadow:
+        0 40px 100px rgba(0, 0, 0, 0.6),
+        inset 0 0 0 1px hsla(var(--secondary), 0.04),
+        0 0 120px -60px hsla(var(--primary), 0.1);
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(24px) scale(0.98);
+    animation: coverIn 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+@keyframes coverIn {
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+.archive-cover::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+        linear-gradient(hsla(var(--secondary), 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, hsla(var(--secondary), 0.02) 1px, transparent 1px);
+    background-size: 32px 32px;
+    pointer-events: none;
+    mask-image: radial-gradient(ellipse at center, black 30%, transparent 90%);
+    -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 90%);
+    z-index: 0;
+}
+
+/* ============ 顶部标签条 ============ */
+.top-strip {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 20px;
+    border-bottom: 1px solid hsla(var(--secondary), 0.08);
+    background: hsla(var(--bg-deep), 0.5);
+    position: relative;
+    z-index: 2;
+    font-family: 'JetBrains Mono', 'SF Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2.5px;
+}
+.top-strip .tag {
+    color: hsl(var(--secondary));
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.top-strip .tag::before {
+    content: '';
+    width: 5px; height: 5px;
+    background: hsl(var(--secondary));
+    border-radius: 50%;
+    box-shadow: 0 0 10px hsla(var(--secondary), 0.9);
+    animation: pulseTag 1.8s ease-in-out infinite;
+}
+@keyframes pulseTag {
+    0%, 100% { opacity: 0.3; transform: scale(0.8); }
+    50% { opacity: 1; transform: scale(1.2); }
+}
+.top-strip .spacer { flex: 1; }
+.top-strip .stat {
+    color: hsl(var(--text-dim));
+    font-size: 8px;
+    letter-spacing: 2px;
+}
+
+/* ============ 标题区 ============ */
+.title-region {
+    position: relative;
+    padding: 34px 24px 26px;
+    text-align: center;
+    z-index: 1;
+    overflow: hidden;
+}
+.title-region::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: -20px;
+    right: -20px;
+    height: 1px;
+    background: linear-gradient(90deg,
+        transparent,
+        hsla(var(--danger), 0.3) 20%,
+        hsla(var(--secondary), 0.5) 50%,
+        hsla(var(--accent), 0.3) 80%,
+        transparent);
+    z-index: 0;
+}
+.title-region::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 6px;
+    height: 6px;
+    background: hsl(var(--secondary));
+    border-radius: 50%;
+    box-shadow: 0 0 20px hsla(var(--secondary), 0.8);
+    z-index: 0;
+}
+
+.title-inner {
+    position: relative;
+    z-index: 1;
+    display: inline-block;
+    padding: 0 16px;
+    background: hsla(var(--bg-deep), 0.9);
+}
+
+.title-main {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: clamp(1.1rem, 4vw, 1.6rem);
+    letter-spacing: 0.04em;
+    color: hsl(var(--text-main));
+    line-height: 1.3;
+    text-shadow: 0 2px 30px rgba(0, 0, 0, 0.6), 0 0 20px hsla(var(--primary), 0.15);
+    margin-bottom: 6px;
+}
+.title-main .hl {
+    color: hsl(var(--secondary));
+}
+
+.title-sub {
+    font-size: clamp(0.5rem, 1.4vw, 0.68rem);
+    font-weight: 300;
+    color: hsla(var(--text-muted), 0.8);
+    letter-spacing: 6px;
+    font-style: italic;
+    margin-bottom: 8px;
+}
+
+.title-author-line {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 3px;
+    color: hsla(var(--text-dim), 0.8);
+}
+.title-author-line strong {
+    color: hsl(var(--secondary));
+    font-weight: 700;
+    letter-spacing: 2px;
+}
+
+/* ============ 时间线视觉条 ============ */
+.timeline-strip {
+    position: relative;
+    z-index: 1;
+    margin: 0 20px 18px;
+    padding: 14px 16px;
+    background: hsla(var(--bg-deep), 0.5);
+    border: 1px solid hsla(var(--secondary), 0.08);
+    border-radius: 4px;
+    display: grid;
+    grid-template-columns: 1fr 40px 1fr;
+    align-items: center;
+    gap: 0;
+}
+.tl-side {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8px;
+    letter-spacing: 1.5px;
+    line-height: 1.5;
+}
+.tl-side.left {
+    text-align: right;
+    color: hsla(var(--danger), 0.55);
+}
+.tl-side.right {
+    text-align: left;
+    color: hsla(var(--secondary), 0.85);
+}
+.tl-side .tl-k {
+    font-size: 7px;
+    letter-spacing: 2px;
+    opacity: 0.5;
+    margin-bottom: 2px;
+}
+.tl-side .tl-line {
+    text-decoration: line-through;
+    text-decoration-color: hsla(var(--danger), 0.3);
+    text-decoration-thickness: 1px;
+}
+.tl-center {
+    position: relative;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.tl-center::before {
+    content: '';
+    position: absolute;
+    top: 0; bottom: 0;
+    left: 50%;
+    width: 1px;
+    background: linear-gradient(180deg,
+        transparent,
+        hsla(var(--secondary), 0.5) 30%,
+        hsla(var(--secondary), 0.8) 50%,
+        hsla(var(--secondary), 0.5) 70%,
+        transparent);
+    transform: translateX(-50%);
+    box-shadow: 0 0 10px hsla(var(--secondary), 0.4);
+}
+.tl-center::after {
+    content: '';
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 8px; height: 8px;
+    background: hsl(var(--secondary));
+    border-radius: 50%;
+    box-shadow: 0 0 16px hsla(var(--secondary), 0.9);
+    animation: tlPulse 2.5s ease-in-out infinite;
+}
+@keyframes tlPulse {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+    50% { transform: translate(-50%, -50%) scale(1.3); opacity: 0.7; }
+}
+
+/* ============ 信息区通用 ============ */
+.info-region {
+    position: relative;
+    z-index: 1;
+    padding: 0 20px;
+    margin-bottom: 14px;
+}
+
+.section-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8px;
+    letter-spacing: 2.5px;
+    color: hsla(var(--secondary), 0.6);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.section-tag::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, hsla(var(--secondary), 0.15), transparent);
+}
+
+/* ============ 双列信息网格 ============ */
+.info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 14px;
+}
+.info-card {
+    position: relative;
+    padding: 12px 14px;
+    background: hsla(var(--bg-panel), 0.55);
+    border: 1px solid hsla(var(--secondary), 0.08);
+    border-radius: 3px;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+.info-card::before {
+    content: '';
+    position: absolute;
+    top: -1px; left: -1px;
+    width: 10px; height: 10px;
+    border-top: 1px solid hsla(var(--secondary), 0.4);
+    border-left: 1px solid hsla(var(--secondary), 0.4);
+}
+.info-card::after {
+    content: '';
+    position: absolute;
+    bottom: -1px; right: -1px;
+    width: 10px; height: 10px;
+    border-bottom: 1px solid hsla(var(--accent), 0.3);
+    border-right: 1px solid hsla(var(--accent), 0.3);
+}
+.info-card:hover {
+    border-color: hsla(var(--secondary), 0.2);
+    background: hsla(var(--bg-panel), 0.75);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+.info-card-head {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8px;
+    letter-spacing: 2px;
+    color: hsla(var(--secondary), 0.7);
+    margin-bottom: 8px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid hsla(var(--secondary), 0.06);
+    text-transform: uppercase;
+}
+.info-card-head svg {
+    width: 12px; height: 12px;
+    fill: none;
+    stroke: hsla(var(--secondary), 0.5);
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    flex-shrink: 0;
+}
+.info-card-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+.info-card-list li {
+    font-size: 10px;
+    color: hsla(var(--text-main), 0.72);
+    line-height: 1.6;
+    padding-left: 10px;
+    position: relative;
+}
+.info-card-list li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.7em;
+    width: 3px; height: 3px;
+    background: hsla(var(--secondary), 0.3);
+    border-radius: 50%;
+}
+.info-card-list .allow { color: hsla(140, 40%, 62%, 0.85); }
+.info-card-list .warn { color: hsla(var(--danger), 0.75); }
+
+/* ============ 全宽卡片 ============ */
+.info-wide {
+    margin-bottom: 14px;
+    padding: 14px 16px;
+    background: hsla(var(--bg-panel), 0.55);
+    border: 1px solid hsla(var(--secondary), 0.08);
+    border-radius: 3px;
+    position: relative;
+}
+.info-wide::before {
+    content: '';
+    position: absolute;
+    top: -1px; left: -1px;
+    width: 10px; height: 10px;
+    border-top: 1px solid hsla(var(--secondary), 0.4);
+    border-left: 1px solid hsla(var(--secondary), 0.4);
+}
+.info-wide::after {
+    content: '';
+    position: absolute;
+    bottom: -1px; right: -1px;
+    width: 10px; height: 10px;
+    border-bottom: 1px solid hsla(var(--accent), 0.3);
+    border-right: 1px solid hsla(var(--accent), 0.3);
+}
+
+/* ============ 故事标签 ============ */
+.tags-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 4px 0;
+}
+.tag-pill {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 1.5px;
+    color: hsla(var(--secondary), 0.85);
+    padding: 4px 12px;
+    border: 1px solid hsla(var(--secondary), 0.2);
+    border-radius: 12px;
+    background: hsla(var(--secondary), 0.04);
+    transition: all 0.3s;
+}
+.tag-pill:hover {
+    background: hsla(var(--secondary), 0.1);
+    border-color: hsla(var(--secondary), 0.4);
+    color: hsl(var(--secondary));
+}
+
+/* ============ 作者卡 ============ */
+.author-card {
+    margin-bottom: 14px;
+    padding: 20px 16px 16px;
+    background:
+        radial-gradient(circle at 50% 0%, hsla(var(--primary), 0.06), transparent 60%),
+        hsla(var(--bg-panel), 0.55);
+    border: 1px solid hsla(var(--primary), 0.12);
+    border-radius: 3px;
+    text-align: center;
+    position: relative;
+}
+.author-card::before {
+    content: '';
+    position: absolute;
+    top: -1px; left: -1px;
+    width: 10px; height: 10px;
+    border-top: 1px solid hsla(var(--primary), 0.5);
+    border-left: 1px solid hsla(var(--primary), 0.5);
+}
+.author-card::after {
+    content: '';
+    position: absolute;
+    bottom: -1px; right: -1px;
+    width: 10px; height: 10px;
+    border-bottom: 1px solid hsla(var(--primary), 0.5);
+    border-right: 1px solid hsla(var(--primary), 0.5);
+}
+
+.author-avatar-wrap {
+    width: 76px;
+    height: 76px;
+    margin: 0 auto 10px;
+    position: relative;
+    display: block;
+}
+.author-avatar-wrap::before,
+.author-avatar-wrap::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    border: 1px solid hsla(var(--primary), 0.3);
+    animation: avatarRing 4s ease-in-out infinite;
+}
+.author-avatar-wrap::after {
+    inset: -6px;
+    border-color: hsla(var(--secondary), 0.15);
+    animation-delay: 1s;
+}
+@keyframes avatarRing {
+    0%, 100% { transform: scale(1); opacity: 0.6; }
+    50% { transform: scale(1.05); opacity: 1; }
+}
+.author-avatar {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid hsla(var(--primary), 0.3);
+    display: block;
+    position: relative;
+    z-index: 1;
+    transition: all 0.4s;
+}
+.author-avatar:hover {
+    transform: scale(1.04);
+    border-color: hsla(var(--primary), 0.55);
+}
+
+.author-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    color: hsl(var(--text-main));
+    margin-bottom: 2px;
+}
+.author-badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8px;
+    letter-spacing: 3px;
+    color: hsla(var(--primary), 0.7);
+    margin-bottom: 14px;
+}
+
+.author-links {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+.author-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 9px 14px;
+    background: hsla(var(--bg-deep), 0.5);
+    border: 1px solid hsla(var(--secondary), 0.08);
+    border-radius: 3px;
+    color: hsla(var(--text-main), 0.75);
+    text-decoration: none;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 1.5px;
+    transition: all 0.3s;
+}
+.author-link:hover {
+    background: hsla(var(--bg-deep), 0.7);
+    border-color: hsla(var(--secondary), 0.25);
+    color: hsl(var(--text-main));
+    transform: translateY(-1px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+}
+.author-link svg {
+    width: 14px; height: 14px;
+    fill: none;
+    stroke: hsla(var(--secondary), 0.6);
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    flex-shrink: 0;
+    transition: stroke 0.3s;
+}
+.author-link:hover svg {
+    stroke: hsla(var(--secondary), 0.9);
+}
+.author-link .label {
+    color: hsla(var(--secondary), 0.75);
+    font-weight: 700;
+}
+.author-link .url {
+    opacity: 0.4;
+    font-size: 8px;
+    letter-spacing: 0.5px;
+    max-width: 140px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* ============ 公益声明 ============ */
+.notice-block {
+    margin-bottom: 14px;
+    padding: 14px 16px;
+    background: hsla(var(--danger), 0.03);
+    border: 1px solid hsla(var(--danger), 0.12);
+    border-radius: 3px;
+    position: relative;
+}
+.notice-block::before {
+    content: '';
+    position: absolute;
+    top: -1px; left: -1px;
+    width: 10px; height: 10px;
+    border-top: 1px solid hsla(var(--danger), 0.4);
+    border-left: 1px solid hsla(var(--danger), 0.4);
+}
+.notice-head {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8px;
+    letter-spacing: 2.5px;
+    color: hsla(var(--danger), 0.7);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+}
+.notice-head svg {
+    width: 12px; height: 12px;
+    fill: none;
+    stroke: hsla(var(--danger), 0.6);
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+.notice-text {
+    font-size: 10px;
+    line-height: 1.8;
+    color: hsla(var(--text-main), 0.6);
+    letter-spacing: 0.3px;
+}
+.notice-text .hl {
+    color: hsla(var(--danger), 0.8);
+    font-weight: 600;
+}
+
+/* ============ 按钮 ============ */
+.action-region {
+    padding: 0 20px 20px;
+    position: relative;
+    z-index: 1;
+}
+.btn-enter {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    width: 100%;
+    padding: 16px 28px;
+    background: hsla(var(--primary), 0.06);
+    border: 1px solid hsla(var(--primary), 0.2);
+    border-radius: 40px;
+    color: hsl(var(--text-main));
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 4px;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+    backdrop-filter: blur(8px);
+    overflow: hidden;
+}
+.btn-enter::before {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, hsla(var(--primary), 0.15), transparent);
+    transition: left 0.7s;
+}
+.btn-enter:hover::before {
+    left: 100%;
+}
+.btn-enter:hover {
+    background: hsla(var(--primary), 0.12);
+    border-color: hsla(var(--primary), 0.4);
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px hsla(var(--primary), 0.15), inset 0 0 0 1px hsla(var(--primary), 0.1);
+}
+.btn-enter:active {
+    transform: scale(0.98) translateY(0);
+}
+.btn-enter .btn-text {
+    position: relative;
+    z-index: 1;
+}
+.btn-enter .btn-icon {
+    width: 18px; height: 18px;
+    fill: none;
+    stroke: hsla(var(--primary), 0.9);
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: transform 0.4s;
+    position: relative;
+    z-index: 1;
+}
+.btn-enter:hover .btn-icon {
+    transform: translateX(4px);
+}
+
+/* ============ 底部 ============ */
+.footer-region {
+    padding: 16px 20px 20px;
+    border-top: 1px solid hsla(var(--secondary), 0.06);
+    text-align: center;
+    position: relative;
+    z-index: 1;
+}
+.footer-deco {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 5px;
+    color: hsla(var(--secondary), 0.4);
+    margin-bottom: 4px;
+    animation: decoPulse 3s ease-in-out infinite;
+}
+@keyframes decoPulse {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 0.8; }
+}
+.footer-by {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8px;
+    letter-spacing: 3px;
+    color: hsla(var(--text-dim), 0.6);
+}
+
+/* ============ 移动端 ============ */
+@media (max-width: 640px) {
+    body { padding: 8px; align-items: flex-start; padding-top: 10px; }
+    .archive-cover { border-radius: 10px; }
+    .top-strip { padding: 10px 14px; font-size: 8px; gap: 6px; }
+    .top-strip .stat { font-size: 7px; }
+    .title-region { padding: 26px 16px 22px; }
+    .title-main { font-size: 1.05rem; letter-spacing: 0.02em; }
+    .title-sub { font-size: 0.5rem; letter-spacing: 3px; }
+    .title-author-line { font-size: 8px; letter-spacing: 2px; }
+    .timeline-strip { margin: 0 14px 14px; padding: 12px 12px; grid-template-columns: 1fr 30px 1fr; gap: 0; }
+    .tl-side { font-size: 7px; }
+    .tl-side .tl-k { font-size: 6px; }
+    .tl-center { height: 34px; }
+    .info-region { padding: 0 14px; }
+    .info-grid { grid-template-columns: 1fr; gap: 6px; margin-bottom: 10px; }
+    .info-card { padding: 10px 12px; }
+    .info-card-list li { font-size: 9px; }
+    .info-wide { padding: 12px 14px; margin-bottom: 10px; }
+    .tag-pill { font-size: 8px; padding: 3px 10px; }
+    .author-card { padding: 16px 14px 14px; margin-bottom: 10px; }
+    .author-avatar-wrap { width: 64px; height: 64px; }
+    .author-name { font-size: 14px; }
+    .author-link { font-size: 8px; padding: 8px 12px; }
+    .author-link .url { max-width: 90px; font-size: 7px; }
+    .notice-block { padding: 12px 14px; margin-bottom: 10px; }
+    .notice-text { font-size: 9px; line-height: 1.7; }
+    .action-region { padding: 0 14px 16px; }
+    .btn-enter { padding: 14px 20px; font-size: 11px; letter-spacing: 3px; gap: 10px; }
+    .footer-region { padding: 12px 14px 16px; }
+    .footer-deco { font-size: 8px; letter-spacing: 4px; }
+    .footer-by { font-size: 7px; letter-spacing: 2px; }
+}
+</style>
+</head>
+<body>
+
+<div class="archive-cover">
+
+    <!-- 顶部标签条 -->
+    <div class="top-strip">
+        <span class="tag">PARADOX ARCHIVE</span>
+        <span class="spacer"></span>
+        <span class="stat">AUTHOR · RELEASE v1.0</span>
+    </div>
+
+    <!-- 标题区 -->
+    <div class="title-region">
+        <div class="title-inner">
+            <div class="title-main">
+                从未来穿越到过去的我<br>
+                让<span class="hl">妈妈</span>怀孕
+            </div>
+            <div class="title-sub">—— 38岁母亲 · 来自未来的儿子 ——</div>
+            <div class="title-author-line">作者 · <strong>三年的水</strong></div>
+        </div>
+    </div>
+
+    <!-- 时间线视觉条 -->
+    <div class="timeline-strip">
+        <div class="tl-side left">
+            <div class="tl-k">ORIGINAL</div>
+            <div class="tl-line">二婚 · 石田诚</div>
+            <div class="tl-line">小百合 · 7岁</div>
+            <div class="tl-line">悲剧已定</div>
+        </div>
+        <div class="tl-center"></div>
+        <div class="tl-side right">
+            <div class="tl-k">REWRITTEN</div>
+            <div>当前时间线</div>
+            <div>未怀孕</div>
+            <div>正在改写</div>
+        </div>
+    </div>
+
+    <!-- 双列信息区 -->
+    <div class="info-region">
+
+        <div class="info-grid">
+
+            <!-- 发布信息 -->
+            <div class="info-card">
+                <div class="info-card-head">
+                    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+                    发布信息
+                </div>
+                <ul class="info-card-list">
+                    <li>仅发布于 <span style="color:hsla(var(--secondary),0.85)">Discord 类脑</span></li>
+                    <li>作者 · <span style="color:hsla(var(--secondary),0.85)">三年的水</span></li>
+                </ul>
+            </div>
+
+            <!-- 授权说明 -->
+            <div class="info-card">
+                <div class="info-card-head">
+                    <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
+                    授权说明
+                </div>
+                <ul class="info-card-list">
+                    <li class="allow">允许二改（署名）</li>
+                    <li class="allow">二改后需标注出处</li>
+                    <li class="warn">禁止商用</li>
+                    <li class="warn">禁止墙内二传</li>
+                </ul>
+            </div>
+
+            <!-- 本卡包含 -->
+            <div class="info-card">
+                <div class="info-card-head">
+                    <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="18" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                    本卡包含
+                </div>
+                <ul class="info-card-list">
+                    <li>完整时间线大纲</li>
+                    <li>孕期全阶段条目</li>
+                    <li>状态栏 / 选项栏 UI</li>
+                    <li>五阶段文风联动</li>
+                </ul>
+            </div>
+
+            <!-- 使用说明 -->
+            <div class="info-card">
+                <div class="info-card-head">
+                    <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+                    使用说明
+                </div>
+                <ul class="info-card-list">
+                    <li>导入角色卡到 SillyTavern</li>
+                    <li>启用角色卡局部正则</li>
+                    <li>确认世界书已激活</li>
+                    <li>开始对话体验</li>
+                </ul>
+            </div>
+
+        </div>
+
+        <!-- 故事标签 -->
+        <div class="info-wide">
+            <div class="info-card-head" style="border-bottom:none;padding-bottom:0;margin-bottom:10px;">
+                <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                故事标签
+            </div>
+            <div class="tags-row">
+                <span class="tag-pill">时间穿越</span>
+                <span class="tag-pill">母子乱伦</span>
+                <span class="tag-pill">怀孕沉沦</span>
+                <span class="tag-pill">背德日常</span>
+                <span class="tag-pill">道德防线</span>
+            </div>
+        </div>
+
+        <!-- 作者卡 -->
+        <div class="author-card">
+            <div class="author-avatar-wrap">
+                <img class="author-avatar" src="https://cdn.jsdelivr.net/gh/sanshui19516/CG@main/%E5%A4%B4%E5%83%8F.png" alt="作者头像" />
+            </div>
+            <div class="author-name">三年的水</div>
+            <div class="author-badge">✦ 从未来穿越到过去的我让妈妈怀孕 ✦</div>
+            <div class="author-links">
+                <a class="author-link" href="{{原帖链接}}" target="_blank" rel="noopener noreferrer">
+                    <svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+                    <span class="label">原帖链接</span>
+                    <span class="url">Discord 原帖</span>
+                </a>
+                <a class="author-link" href="{{作品集锦链接}}" target="_blank" rel="noopener noreferrer">
+                    <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+                    <span class="label">作品集锦</span>
+                    <span class="url">Discord 频道</span>
+                </a>
+                <a class="author-link" href="{{关注作者链接}}" target="_blank" rel="noopener noreferrer">
+                    <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                    <span class="label">关注作者</span>
+                    <span class="url">Discord 频道</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- 公益声明 -->
+        <div class="notice-block">
+            <div class="notice-head">
+                <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><circle cx="12" cy="12" r="2"/></svg>
+                禁止商用 · 公益声明
+            </div>
+            <div class="notice-text">
+                本角色卡为作者 <span class="hl">三年的水</span> 免费分享的公益作品，仅供个人娱乐与创作交流使用。<br />
+                严禁任何形式的商业用途，包括转卖、收费下载、打包售卖或用于盈利性直播 / 视频。<br />
+                如通过付费渠道获得，请立即退款并举报贩卖者。<br />
+                感谢您的支持与理解。
+            </div>
+        </div>
+
+    </div>
+
+    <!-- 按钮区 -->
+    <div class="action-region">
+        <button class="btn-enter" onclick="switchOpening(2)">
+            <span class="btn-text">开始体验</span>
+            <svg class="btn-icon" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </button>
+    </div>
+
+    <!-- 底部 -->
+    <div class="footer-region">
+        <div class="footer-deco">✦ 请多多评论 ✦</div>
+        <div class="footer-by">by 三年的水</div>
+    </div>
+
+</div>
+
+<script>
+async function switchOpening(swipeId) {
+    var clickedCard = event.currentTarget;
+    clickedCard.style.opacity = '0.6';
+    clickedCard.style.pointerEvents = 'none';
+    try {
+        var messages;
+        try {
+            messages = await getChatMessages?.('0', { include_swipe: true });
+        } catch (e) {
+            var context = window.SillyTavern?.getContext?.();
+            messages = context?.chat?.messages;
+        }
+        if (!messages || messages.length === 0) throw new Error('没有找到聊天消息。');
+        var userMessage = messages[0];
+        if (!userMessage.swipes) throw new Error('第一条消息没有滑动条。');
+        if (userMessage.swipes.length <= swipeId) throw new Error('滑动条 ' + swipeId + ' 不存在。');
+        var targetSwipe = userMessage.swipes[swipeId];
+        var setChatMessage = window.setChatMessage || window.SillyTavern?.getContext?.()?.setChatMessage;
+        if (typeof setChatMessage === 'function') {
+            await setChatMessage(targetSwipe, 0, { swipe_id: swipeId, refresh: 'display_and_render_current' });
+        } else if (typeof userMessage.setSwipe === 'function') {
+            userMessage.setSwipe(swipeId);
+        }
+    } catch (error) {
+        console.error('切换失败:', error);
+    } finally {
+        clickedCard.style.opacity = '1';
+        clickedCard.style.pointerEvents = 'auto';
+    }
+}
+</script>
+
+</body>
+</html>
