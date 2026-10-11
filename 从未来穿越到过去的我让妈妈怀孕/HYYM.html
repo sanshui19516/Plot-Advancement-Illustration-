@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>PARADOX · 欢迎</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Serif+JP:wght@400;700;900&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet" />
+
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+    --primary: 340, 45%, 62%;
+    --secondary: 38, 55%, 58%;
+    --accent: 210, 35%, 55%;
+    --danger: 0, 50%, 55%;
+    --bg-deep: 240, 18%, 6%;
+    --bg-panel: 240, 14%, 11%;
+    --text-main: 240, 10%, 92%;
+    --text-muted: 240, 8%, 58%;
+    --text-dim: 240, 8%, 38%;
+}
+
+body {
+    min-height: 100vh;
+    background: transparent;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Inter', 'PingFang SC', 'Noto Serif JP', system-ui, sans-serif;
+    padding: 20px;
+    overflow-x: hidden;
+    color: hsl(var(--text-main));
+}
+
+.welcome-root {
+    max-width: 660px;
+    width: 100%;
+    background:
+        radial-gradient(circle at 50% 0%, hsla(var(--primary), 0.05), transparent 50%),
+        radial-gradient(circle at 50% 100%, hsla(var(--accent), 0.04), transparent 50%),
+        hsla(var(--bg-deep), 0.85);
+    backdrop-filter: blur(28px) saturate(1.5);
+    -webkit-backdrop-filter: blur(28px) saturate(1.5);
+    border-radius: 14px;
+    border: 1px solid hsla(var(--secondary), 0.1);
+    box-shadow:
+        0 40px 100px rgba(0, 0, 0, 0.65),
+        inset 0 0 0 1px hsla(var(--secondary), 0.04),
+        0 0 140px -60px hsla(var(--primary), 0.12);
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(24px) scale(0.98);
+    animation: welcomeIn 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+@keyframes welcomeIn {
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+.welcome-root::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+        linear-gradient(hsla(var(--secondary), 0.018) 1px, transparent 1px),
+        linear-gradient(90deg, hsla(var(--secondary), 0.018) 1px, transparent 1px);
+    background-size: 32px 32px;
+    pointer-events: none;
+    mask-image: radial-gradient(ellipse at center, black 25%, transparent 90%);
+    -webkit-mask-image: radial-gradient(ellipse at center, black 25%, transparent 90%);
+    z-index: 0;
+}
+
+/* ============ 顶部标签条 ============ */
+.top-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 20px;
+    border-bottom: 1px solid hsla(var(--secondary), 0.08);
+    background: hsla(var(--bg-deep), 0.5);
+    position: relative;
+    z-index: 2;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2.5px;
+}
+.top-bar .tag {
+    color: hsl(var(--secondary));
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.top-bar .tag::before {
+    content: '';
+    width: 5px; height: 5px;
+    background: hsl(var(--secondary));
+    border-radius: 50%;
+    box-shadow: 0 0 10px hsla(var(--secondary), 0.9);
+    animation: pulseDot 1.8s ease-in-out infinite;
+}
+@keyframes pulseDot {
+    0%, 100% { opacity: 0.3; transform: scale(0.8); }
+    50% { opacity: 1; transform: scale(1.2); }
+}
+.top-bar .spacer { flex: 1; }
+.top-bar .jpy {
+    color: hsla(var(--primary), 0.7);
+    font-size: 8px;
+    letter-spacing: 2px;
+}
+
+/* ============ 主视觉 ============ */
+.hero {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    border-bottom: 1px solid hsla(var(--secondary), 0.08);
+}
+.hero-bg {
+    position: absolute;
+    inset: 0;
+    background-image: url('{{主视觉图片链接}}');
+    background-size: cover;
+    background-position: center 30%;
+    background-repeat: no-repeat;
+    transform: scale(1.05);
+    animation: heroZoom 20s ease-in-out infinite alternate;
+}
+@keyframes heroZoom {
+    0% { transform: scale(1.05); }
+    100% { transform: scale(1.15); }
+}
+.hero-overlay {
+    position: absolute;
+    inset: 0;
+    background:
+        linear-gradient(180deg,
+            hsla(var(--bg-deep), 0.3) 0%,
+            hsla(var(--bg-deep), 0.1) 40%,
+            hsla(var(--bg-deep), 0.85) 100%),
+        radial-gradient(circle at center, transparent 30%, hsla(var(--bg-deep), 0.6) 100%);
+}
+.hero-glitch {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg,
+        transparent 0%,
+        hsla(var(--danger), 0.08) 48%,
+        hsla(var(--accent), 0.08) 52%,
+        transparent 100%);
+    mix-blend-mode: screen;
+    opacity: 0.4;
+    animation: glitch 6s steps(1) infinite;
+    pointer-events: none;
+}
+@keyframes glitch {
+    0%, 92% { opacity: 0.3; transform: translateX(0); }
+    93% { opacity: 0.7; transform: translateX(-4px); }
+    94% { opacity: 0.2; transform: translateX(6px); }
+    95% { opacity: 0.6; transform: translateX(-2px); }
+    96%, 100% { opacity: 0.3; transform: translateX(0); }
+}
+
+.hero-content {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 24px 28px;
+    z-index: 2;
+}
+
+.hero-topline {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8px;
+    letter-spacing: 2px;
+    color: hsla(var(--text-main), 0.4);
+}
+.hero-topline .corner {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+.hero-topline .corner.right { text-align: right; }
+.hero-topline .corner .k {
+    color: hsla(var(--secondary), 0.6);
+    font-size: 7px;
+}
+.hero-topline .corner .v {
+    color: hsla(var(--text-main), 0.7);
+}
+
+.hero-title-block {
+    text-align: left;
+    margin-bottom: 8px;
+}
+.hero-jp {
+    font-family: 'Noto Serif JP', serif;
+    font-weight: 900;
+    font-size: clamp(0.7rem, 2vw, 0.9rem);
+    color: hsla(var(--primary), 0.9);
+    letter-spacing: 4px;
+    margin-bottom: 6px;
+    text-shadow: 0 2px 20px rgba(0, 0, 0, 0.8);
+}
+.hero-main {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: clamp(1.4rem, 5.5vw, 2.4rem);
+    line-height: 1.15;
+    color: hsl(var(--text-main));
+    letter-spacing: 0.02em;
+    text-shadow: 0 4px 30px rgba(0, 0, 0, 0.9), 0 0 40px hsla(var(--primary), 0.15);
+}
+.hero-main .hl {
+    color: hsl(var(--secondary));
+    font-style: italic;
+}
+.hero-en {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 5px;
+    color: hsla(var(--text-main), 0.5);
+    margin-top: 8px;
+    text-transform: uppercase;
+}
+
+/* ============ 中部信息流 ============ */
+.info-flow {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: hsla(var(--secondary), 0.08);
+    border-bottom: 1px solid hsla(var(--secondary), 0.08);
+}
+.flow-cell {
+    padding: 18px 20px;
+    background: hsla(var(--bg-deep), 0.6);
+    position: relative;
+    min-height: 100px;
+}
+.flow-cell-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8px;
+    letter-spacing: 2px;
+    color: hsla(var(--secondary), 0.65);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.flow-cell-tag::before {
+    content: '';
+    width: 8px; height: 1px;
+    background: hsla(var(--secondary), 0.5);
+}
+.flow-cell-jp {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: hsla(var(--primary), 0.9);
+    letter-spacing: 3px;
+    margin-bottom: 6px;
+    line-height: 1.4;
+}
+.flow-cell-en {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: hsla(var(--text-muted), 0.7);
+    line-height: 1.7;
+}
+
+/* ============ 故事简介（打字机） ============ */
+.story-section {
+    position: relative;
+    padding: 24px 26px 20px;
+    background: hsla(var(--bg-deep), 0.4);
+    border-bottom: 1px solid hsla(var(--secondary), 0.08);
+    min-height: 220px;
+    cursor: pointer;
+    transition: background 0.4s;
+}
+.story-section:hover {
+    background: hsla(var(--bg-deep), 0.55);
+}
+.story-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8px;
+    letter-spacing: 2.5px;
+    color: hsla(var(--secondary), 0.6);
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.story-label .left {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.story-label .left::before {
+    content: '';
+    width: 8px; height: 1px;
+    background: hsla(var(--secondary), 0.5);
+}
+.story-label .skip {
+    color: hsla(var(--text-dim), 0.5);
+    font-size: 7px;
+    opacity: 0;
+    transition: opacity 0.6s;
+}
+.story-section:hover .story-label .skip { opacity: 0.6; }
+.story-section.done .story-label .skip { opacity: 0.3; }
+
+.typewriter {
+    font-family: 'Inter', 'PingFang SC', sans-serif;
+    font-size: clamp(0.78rem, 1.6vw, 0.92rem);
+    font-weight: 300;
+    line-height: 2.0;
+    letter-spacing: 0.4px;
+    color: hsla(var(--text-main), 0.85);
+    position: relative;
+    min-height: 140px;
+}
+.typewriter .para {
+    display: block;
+    margin-bottom: 0.9em;
+    text-indent: 2em;
+}
+.typewriter .para:last-child { margin-bottom: 0; }
+
+.typewriter .jp-inline {
+    font-family: 'Noto Serif JP', serif;
+    color: hsla(var(--primary), 0.85);
+    font-weight: 700;
+    letter-spacing: 1px;
+    font-style: normal;
+}
+.typewriter .en-inline {
+    font-family: 'JetBrains Mono', monospace;
+    color: hsla(var(--secondary), 0.8);
+    font-size: 0.85em;
+    letter-spacing: 1px;
+}
+
+.typewriter .divider {
+    display: block;
+    text-align: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 8px;
+    color: hsla(var(--secondary), 0.25);
+    margin: 0.4em 0 0.8em 0;
+    opacity: 0;
+    transition: opacity 0.8s;
+}
+.typewriter .divider.show { opacity: 1; }
+
+.typewriter .cursor {
+    display: inline-block;
+    width: 6px;
+    height: 1em;
+    background: hsl(var(--primary));
+    margin-left: 3px;
+    vertical-align: text-bottom;
+    animation: cursorBlink 0.9s step-end infinite;
+    box-shadow: 0 0 8px hsla(var(--primary), 0.7);
+}
+@keyframes cursorBlink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+}
+.typewriter .cursor.done {
+    animation: cursorBlink 1.2s step-end infinite;
+    opacity: 0.5;
+}
+
+/* ============ 氛围文字区 ============ */
+.mood-section {
+    position: relative;
+    padding: 28px 26px;
+    background:
+        radial-gradient(circle at 50% 50%, hsla(var(--primary), 0.04), transparent 70%),
+        hsla(var(--bg-deep), 0.5);
+    border-bottom: 1px solid hsla(var(--secondary), 0.08);
+    text-align: center;
+    overflow: hidden;
+}
+.mood-section::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg,
+        transparent,
+        hsla(var(--secondary), 0.15) 30%,
+        hsla(var(--secondary), 0.3) 50%,
+        hsla(var(--secondary), 0.15) 70%,
+        transparent);
+    transform: translateY(-50%);
+    pointer-events: none;
+}
+.mood-jp {
+    position: relative;
+    font-family: 'Noto Serif JP', serif;
+    font-size: clamp(1rem, 3vw, 1.3rem);
+    font-weight: 900;
+    color: hsl(var(--text-main));
+    letter-spacing: 8px;
+    margin-bottom: 8px;
+    text-shadow: 0 2px 30px rgba(0, 0, 0, 0.6), 0 0 30px hsla(var(--primary), 0.2);
+    display: inline-block;
+    padding: 0 12px;
+    background: hsla(var(--bg-deep), 0.5);
+}
+.mood-jp .accent {
+    color: hsl(var(--secondary));
+}
+.mood-en {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 6px;
+    color: hsla(var(--text-muted), 0.65);
+    margin-top: 6px;
+    text-transform: uppercase;
+}
+
+/* ============ 按钮区 ============ */
+.action-region {
+    padding: 22px 26px 24px;
+    position: relative;
+    z-index: 1;
+}
+.btn-enter {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    width: 100%;
+    padding: 18px 30px;
+    background: hsla(var(--primary), 0.05);
+    border: 1px solid hsla(var(--primary), 0.22);
+    border-radius: 44px;
+    color: hsl(var(--text-main));
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 4px;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+    backdrop-filter: blur(8px);
+    overflow: hidden;
+    text-transform: uppercase;
+}
+.btn-enter::before {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, hsla(var(--primary), 0.18), transparent);
+    transition: left 0.8s;
+}
+.btn-enter:hover::before { left: 100%; }
+.btn-enter:hover {
+    background: hsla(var(--primary), 0.12);
+    border-color: hsla(var(--primary), 0.5);
+    transform: translateY(-3px);
+    box-shadow: 0 16px 50px hsla(var(--primary), 0.2), inset 0 0 0 1px hsla(var(--primary), 0.12);
+}
+.btn-enter:active {
+    transform: scale(0.98) translateY(0);
+}
+.btn-enter .btn-text {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+}
+.btn-enter .btn-jp {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 6px;
+    color: hsl(var(--text-main));
+}
+.btn-enter .btn-en {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8px;
+    letter-spacing: 4px;
+    color: hsla(var(--secondary), 0.7);
+    font-weight: 400;
+}
+.btn-enter .btn-icon {
+    width: 20px; height: 20px;
+    fill: none;
+    stroke: hsla(var(--primary), 0.9);
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: transform 0.4s;
+    position: relative;
+    z-index: 1;
+}
+.btn-enter:hover .btn-icon { transform: translateX(6px); }
+
+/* ============ 底部 ============ */
+.footer-region {
+    padding: 14px 26px 18px;
+    border-top: 1px solid hsla(var(--secondary), 0.06);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    position: relative;
+    z-index: 1;
+}
+.footer-jp {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 10px;
+    letter-spacing: 4px;
+    color: hsla(var(--secondary), 0.4);
+    animation: decoPulse 3s ease-in-out infinite;
+}
+@keyframes decoPulse {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 0.8; }
+}
+.footer-by {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8px;
+    letter-spacing: 3px;
+    color: hsla(var(--text-dim), 0.55);
+}
+
+/* ============ 移动端 ============ */
+@media (max-width: 640px) {
+    body { padding: 8px; align-items: flex-start; padding-top: 10px; }
+    .welcome-root { border-radius: 10px; }
+    .top-bar { padding: 10px 14px; font-size: 8px; gap: 6px; }
+    .top-bar .jpy { font-size: 7px; }
+    .hero { aspect-ratio: 4 / 3; }
+    .hero-content { padding: 16px 18px; }
+    .hero-topline { font-size: 7px; }
+    .hero-topline .corner .k { font-size: 6px; }
+    .hero-jp { font-size: 0.65rem; letter-spacing: 3px; }
+    .hero-main { font-size: 1.35rem; }
+    .hero-en { font-size: 7px; letter-spacing: 3px; }
+    .info-flow { grid-template-columns: 1fr; }
+    .flow-cell { padding: 14px 16px; min-height: auto; }
+    .flow-cell-jp { font-size: 12px; letter-spacing: 2px; }
+    .flow-cell-en { font-size: 8px; }
+    .story-section { padding: 18px 18px 16px; min-height: 180px; }
+    .typewriter { font-size: 0.75rem; line-height: 1.9; }
+    .mood-section { padding: 22px 18px; }
+    .mood-jp { font-size: 0.95rem; letter-spacing: 5px; }
+    .mood-en { font-size: 7px; letter-spacing: 4px; }
+    .action-region { padding: 18px 18px 20px; }
+    .btn-enter { padding: 15px 22px; gap: 12px; }
+    .btn-enter .btn-jp { font-size: 13px; letter-spacing: 4px; }
+    .btn-enter .btn-en { font-size: 7px; letter-spacing: 3px; }
+    .btn-enter .btn-icon { width: 16px; height: 16px; }
+    .footer-region { padding: 12px 18px 14px; }
+    .footer-jp { font-size: 9px; letter-spacing: 3px; }
+    .footer-by { font-size: 7px; letter-spacing: 2px; }
+}
+
+@media (max-width: 400px) {
+    .hero { aspect-ratio: 1 / 1; }
+    .hero-main { font-size: 1.15rem; }
+    .mood-jp { font-size: 0.85rem; letter-spacing: 4px; }
+    .btn-enter .btn-jp { font-size: 12px; }
+}
+</style>
+</head>
+<body>
+
+<div class="welcome-root">
+
+    <!-- 顶部标签条 -->
+    <div class="top-bar">
+        <span class="tag">PARADOX ARCHIVE</span>
+        <span class="spacer"></span>
+        <span class="jpy">未来から、母へ</span>
+    </div>
+
+    <!-- 主视觉 -->
+    <div class="hero">
+        <div class="hero-bg"></div>
+        <div class="hero-overlay"></div>
+        <div class="hero-glitch"></div>
+
+        <div class="hero-content">
+            <div class="hero-topline">
+                <div class="corner">
+                    <span class="k">TIMELINE</span>
+                    <span class="v">REWRITING · 001</span>
+                </div>
+                <div class="corner right">
+                    <span class="k">STATUS</span>
+                    <span class="v">ACTIVE</span>
+                </div>
+            </div>
+
+            <div class="hero-title-block">
+                <div class="hero-jp">未来から来た息子</div>
+                <div class="hero-main">
+                    从未来穿越到过去的我<br>
+                    让<span class="hl">妈妈</span>怀孕
+                </div>
+                <div class="hero-en">A PARADOX · TO REWRITE THE FUTURE</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 中部信息流 -->
+    <div class="info-flow">
+        <div class="flow-cell">
+            <div class="flow-cell-tag">MISSION · 使命</div>
+            <div class="flow-cell-jp">妹を、救う</div>
+            <div class="flow-cell-en">
+                Save the sister who died at seven.<br>
+                Rewrite the timeline. At any cost.
+            </div>
+        </div>
+        <div class="flow-cell">
+            <div class="flow-cell-tag">PARADOX · 悖论</div>
+            <div class="flow-cell-jp">母を、孕ませる</div>
+            <div class="flow-cell-en">
+                Make the mother pregnant.<br>
+                A forbidden act to prevent a tragedy.
+            </div>
+        </div>
+    </div>
+
+    <!-- 故事简介（打字机） -->
+    <div class="story-section" id="storySection">
+        <div class="story-label">
+            <span class="left">STORY · 简介</span>
+            <span class="skip" id="skipHint">✦ 点击跳过 ✦</span>
+        </div>
+        <div class="typewriter" id="typewriter"></div>
+    </div>
+
+    <!-- 氛围文字 -->
+    <div class="mood-section">
+        <div class="mood-jp">
+            禁断の<span class="accent">記憶</span>、消えない
+        </div>
+        <div class="mood-en">FORBIDDEN MEMORY · NEVER FADES</div>
+    </div>
+
+    <!-- 按钮 -->
+    <div class="action-region">
+        <button class="btn-enter" onclick="switchOpening(1)">
+            <span class="btn-text">
+                <span class="btn-jp">物語を始める</span>
+                <span class="btn-en">ENTER THE STORY</span>
+            </span>
+            <svg class="btn-icon" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </button>
+    </div>
+
+    <!-- 底部 -->
+    <div class="footer-region">
+        <div class="footer-jp">✦ どうか、良い夢を ✦</div>
+        <div class="footer-by">by 三年的水</div>
+    </div>
+
+</div>
+
+<script>
+async function switchOpening(swipeId) {
+    var clickedCard = event.currentTarget;
+    clickedCard.style.opacity = '0.6';
+    clickedCard.style.pointerEvents = 'none';
+    try {
+        var messages;
+        try {
+            messages = await getChatMessages?.('0', { include_swipe: true });
+        } catch (e) {
+            var context = window.SillyTavern?.getContext?.();
+            messages = context?.chat?.messages;
+        }
+        if (!messages || messages.length === 0) throw new Error('没有找到聊天消息。');
+        var userMessage = messages[0];
+        if (!userMessage.swipes) throw new Error('第一条消息没有滑动条。');
+        if (userMessage.swipes.length <= swipeId) throw new Error('滑动条 ' + swipeId + ' 不存在。');
+        var targetSwipe = userMessage.swipes[swipeId];
+        var setChatMessage = window.setChatMessage || window.SillyTavern?.getContext?.()?.setChatMessage;
+        if (typeof setChatMessage === 'function') {
+            await setChatMessage(targetSwipe, 0, { swipe_id: swipeId, refresh: 'display_and_render_current' });
+        } else if (typeof userMessage.setSwipe === 'function') {
+            userMessage.setSwipe(swipeId);
+        }
+    } catch (error) {
+        console.error('切换失败:', error);
+    } finally {
+        clickedCard.style.opacity = '1';
+        clickedCard.style.pointerEvents = 'auto';
+    }
+}
+
+// ============ 打字机 ============
+(function() {
+    var storyHTML = [
+        '他回到了过去。<br>不是为了改变世界，也不是为了让自己过得更好。<br>只是为了让一个<span class="jp-inline">七岁的女孩</span>，不用死在公路上。',
+        '时间线偏了。本来应该回到妹妹出事前两天，却提前了好几年。<br>母亲还没有再婚，妹妹还<span class="en-inline">not born yet</span>。<br>那么，就从源头开始。',
+        '他要让母亲怀孕。<br>不是别人，是他自己。<br>只有彻底改写她的命运，才能切断那条通往悲剧的路。',
+        '<span class="jp-inline">「お母さん、ごめん。」</span><br>这句话他不会说出口。他只会走进厨房，站在她身后，看着她切菜的手。<br>然后，伸出手。'
+    ];
+
+    var CHAR_INTERVAL = 22;
+    var PARA_PAUSE = 450;
+    var DIVIDER_DELAY = 180;
+
+    var typeEl = document.getElementById('typewriter');
+    var storySection = document.getElementById('storySection');
+    var skipHint = document.getElementById('skipHint');
+
+    if (!typeEl) return;
+
+    var isTyping = false;
+    var isDone = false;
+    var timer = null;
+
+    // 把 HTML 转成字符队列（保留标签整体）
+    function buildQueue(html) {
+        var queue = [];
+        var i = 0;
+        while (i < html.length) {
+            if (html[i] === '<') {
+                var end = html.indexOf('>', i);
+                if (end !== -1) {
+                    queue.push({ type: 'tag', value: html.substring(i, end + 1) });
+                    i = end + 1;
+                    continue;
+                }
+            }
+            if (html[i] === '\n') {
+                i++;
+                continue;
+            }
+            queue.push({ type: 'char', value: html[i] });
+            i++;
+        }
+        return queue;
+    }
+
+    function buildFullHTML() {
+        var html = '';
+        for (var i = 0; i < storyHTML.length; i++) {
+            html += '<span class="para">' + storyHTML[i] + '</span>';
+            if (i < storyHTML.length - 1) {
+                html += '<span class="divider show">· · · ✦ · · ·</span>';
+            }
+        }
+        return html;
+    }
+
+    function startTypewriter() {
+        if (!typeEl) return;
+        if (isTyping || isDone) return;
+
+        isTyping = true;
+        typeEl.innerHTML = '';
+        if (skipHint) skipHint.textContent = '✦ 点击跳过 ✦';
+
+        var fullQueue = [];
+        for (var pIdx = 0; pIdx < storyHTML.length; pIdx++) {
+            var paragraph = storyHTML[pIdx];
+            fullQueue.push({ type: 'para-start' });
+            var queue = buildQueue(paragraph);
+            for (var q = 0; q < queue.length; q++) fullQueue.push(queue[q]);
+            fullQueue.push({ type: 'para-end', index: pIdx });
+        }
+
+        var idx = 0;
+        var currentPara = null;
+        var currentTag = null;
+
+        function typeNext() {
+            if (idx >= fullQueue.length) {
+                isTyping = false;
+                isDone = true;
+                if (storySection) storySection.classList.add('done');
+
+                var cursor = document.createElement('span');
+                cursor.className = 'cursor done';
+                cursor.textContent = ' ';
+                typeEl.appendChild(cursor);
+                if (skipHint) skipHint.textContent = '✦ 已完成 ✦';
+                return;
+            }
+
+            var item = fullQueue[idx];
+
+            if (item.type === 'para-start') {
+                currentPara = document.createElement('span');
+                currentPara.className = 'para';
+                typeEl.appendChild(currentPara);
+                idx++;
+                timer = setTimeout(typeNext, 60);
+                return;
+            }
+
+            if (item.type === 'para-end') {
+                if (item.index < storyHTML.length - 1) {
+                    var d = document.createElement('span');
+                    d.className = 'divider';
+                    d.textContent = '· · · ✦ · · ·';
+                    typeEl.appendChild(d);
+                    setTimeout(function() { d.classList.add('show'); }, 80);
+                    idx++;
+                    timer = setTimeout(typeNext, PARA_PAUSE);
+                    return;
+                } else {
+                    idx++;
+                    timer = setTimeout(typeNext, 40);
+                    return;
+                }
+            }
+
+            if (item.type === 'tag') {
+                if (currentPara) {
+                    currentPara.insertAdjacentHTML('beforeend', item.value);
+                }
+                idx++;
+                timer = setTimeout(typeNext, CHAR_INTERVAL);
+                return;
+            }
+
+            if (item.type === 'char') {
+                if (currentPara) {
+                    currentPara.appendChild(document.createTextNode(item.value));
+                }
+                idx++;
+                timer = setTimeout(typeNext, CHAR_INTERVAL);
+                return;
+            }
+
+            idx++;
+            timer = setTimeout(typeNext, CHAR_INTERVAL);
+        }
+
+        timer = setTimeout(typeNext, 400);
+    }
+
+    function skipTypewriter() {
+        if (!isTyping && isDone) return;
+        if (timer) { clearTimeout(timer); timer = null; }
+        isTyping = false;
+        isDone = true;
+        if (storySection) storySection.classList.add('done');
+
+        typeEl.innerHTML = buildFullHTML();
+
+        var cursor = document.createElement('span');
+        cursor.className = 'cursor done';
+        cursor.textContent = ' ';
+        typeEl.appendChild(cursor);
+        if (skipHint) skipHint.textContent = '✦ 已完成 ✦';
+    }
+
+    if (storySection) {
+        storySection.addEventListener('click', function() {
+            if (isTyping) skipTypewriter();
+        });
+    }
+
+    setTimeout(startTypewriter, 600);
+})();
+</script>
+
+</body>
+</html>
