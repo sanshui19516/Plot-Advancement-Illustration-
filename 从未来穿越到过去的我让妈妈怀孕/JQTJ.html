@@ -1,0 +1,1195 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>剧情推进 · 从未来穿越到过去的我让妈妈怀孕</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+    --hue-primary: 30;
+    --hue-secondary: 350;
+    --sat-primary: 62%;
+    --sat-secondary: 45%;
+    --light-primary: 58%;
+    --light-secondary: 52%;
+    --bg-card: hsla(25, 25%, 14%, 0.55);
+    --border-glass: hsla(30, 35%, 60%, 0.15);
+    --text-primary: hsl(30, 18%, 92%);
+    --text-secondary: hsl(30, 12%, 72%);
+    --text-dim: hsl(30, 10%, 45%);
+    --color-accent: hsl(30, 62%, 58%);
+    --color-gold: hsl(350, 45%, 52%);
+    --shadow-soft: 0 8px 40px hsla(25, 40%, 8%, 0.6);
+    --transition: 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+body {
+    font-family: -apple-system, 'PingFang SC', 'Helvetica Neue', 'Georgia', serif;
+    background: transparent;
+    min-height: auto;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 0;
+    margin: 0;
+    color: var(--text-primary);
+    font-weight: 400;
+    line-height: 1.6;
+}
+
+.story-container {
+    max-width: 520px;
+    width: 100%;
+    margin: 0 auto;
+    background: var(--bg-card);
+    backdrop-filter: blur(24px) saturate(1.3);
+    -webkit-backdrop-filter: blur(24px) saturate(1.3);
+    border: 1px solid var(--border-glass);
+    border-radius: 28px;
+    padding: 14px 16px 12px 16px;
+    box-shadow: var(--shadow-soft), 0 0 0 1px hsla(30, 30%, 60%, 0.04) inset;
+    position: relative;
+    overflow: visible;
+}
+
+.story-container > * { position: relative; z-index: 1; }
+
+.nav-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 0 8px 0;
+    border-bottom: 1px solid var(--border-glass);
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+    gap: 4px;
+}
+.nav-title {
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 3px;
+    background: linear-gradient(135deg, var(--color-accent), var(--color-gold));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+.nav-actions {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+}
+.nav-btn {
+    background: hsla(30, 20%, 25%, 0.3);
+    border: 1px solid var(--border-glass);
+    border-radius: 8px;
+    padding: 4px 8px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all var(--transition);
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    font-size: 0.55rem;
+    font-family: inherit;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+}
+.nav-btn:hover {
+    background: hsla(30, 30%, 30%, 0.4);
+    border-color: hsla(30, 30%, 60%, 0.3);
+    color: var(--text-primary);
+    transform: translateY(-1px);
+}
+.nav-btn:active { transform: scale(0.96); }
+.nav-btn .icon-svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+.nav-btn .badge { font-size: 0.4rem; background: var(--color-accent); color: #0a0a0a; padding: 0 5px; border-radius: 6px; font-weight: 700; }
+
+.current-display {
+    background: hsla(30, 20%, 12%, 0.3);
+    border: 1px solid var(--border-glass);
+    border-radius: 12px;
+    padding: 8px 12px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    transition: all var(--transition);
+}
+.current-display:hover {
+    border-color: hsla(30, 30%, 60%, 0.25);
+    background: hsla(30, 20%, 18%, 0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px hsla(25, 40%, 8%, 0.2);
+}
+.current-display.no-plot {
+    border-color: hsla(350, 45%, 52%, 0.2);
+    background: hsla(350, 45%, 52%, 0.04);
+}
+.current-display.no-plot .story-title { color: var(--color-gold); font-weight: 700; }
+.story-title {
+    font-size: 0.9rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+.story-title .gold { color: var(--color-gold); }
+.story-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 10px;
+    margin-top: 2px;
+    font-size: 0.6rem;
+    color: var(--text-secondary);
+}
+.story-meta .step-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    padding: 1px 8px;
+    border-radius: 8px;
+    background: hsla(30, 20%, 20%, 0.3);
+    border: 1px solid var(--border-glass);
+    font-size: 0.55rem;
+}
+.story-meta .step-status .dot {
+    display: inline-block;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--color-gold);
+}
+.story-meta .step-status .dot.done { background: hsl(150, 50%, 50%); }
+.story-meta .step-status .dot.pending { background: var(--color-gold); animation: pulse-dot 1.8s ease-in-out infinite; }
+@keyframes pulse-dot {
+    0%, 100% { opacity: 0.4; transform: scale(0.8); }
+    50% { opacity: 1; transform: scale(1.2); }
+}
+.story-progress-text {
+    font-size: 0.55rem;
+    color: var(--text-dim);
+    letter-spacing: 1px;
+}
+
+.nav-controls {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 8px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+.ctrl-btn {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 5px 12px;
+    border: 1px solid var(--border-glass);
+    border-radius: 10px;
+    background: hsla(30, 20%, 15%, 0.3);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    color: var(--text-secondary);
+    font-size: 0.65rem;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all var(--transition);
+    flex: 0 1 auto;
+    min-width: 60px;
+    justify-content: center;
+}
+.ctrl-btn:hover:not(:disabled) {
+    border-color: hsla(30, 30%, 60%, 0.3);
+    background: hsla(30, 20%, 25%, 0.3);
+    color: var(--text-primary);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px hsla(25, 40%, 8%, 0.2);
+}
+.ctrl-btn:active:not(:disabled) { transform: scale(0.96); }
+.ctrl-btn:disabled { opacity: 0.25; cursor: not-allowed; transform: none; }
+.ctrl-btn .icon-svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+.ctrl-btn.primary {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+}
+.ctrl-btn.primary:hover:not(:disabled) {
+    background: hsla(30, 62%, 58%, 0.12);
+    border-color: var(--color-accent);
+    box-shadow: 0 0 30px hsla(30, 62%, 58%, 0.06);
+}
+.ctrl-btn.gold {
+    border-color: var(--color-gold);
+    color: var(--color-gold);
+}
+.ctrl-btn.gold:hover:not(:disabled) {
+    background: hsla(350, 45%, 52%, 0.10);
+    border-color: var(--color-gold);
+    box-shadow: 0 0 30px hsla(350, 45%, 52%, 0.06);
+}
+
+.steps-section {
+    margin-bottom: 8px;
+}
+.steps-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 2px 4px 2px;
+    border-bottom: 1px solid var(--border-glass);
+    margin-bottom: 4px;
+}
+.steps-header-left {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.steps-header h3 {
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 2px;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+}
+.steps-header .steps-count {
+    font-size: 0.55rem;
+    color: var(--text-dim);
+}
+.steps-list-wrap {
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: max-height 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.3s ease;
+}
+.steps-list-wrap.open {
+    max-height: 3000px;
+    opacity: 1;
+}
+.step-item {
+    background: hsla(30, 20%, 12%, 0.25);
+    border: 1px solid var(--border-glass);
+    border-radius: 10px;
+    padding: 8px 10px;
+    margin-bottom: 4px;
+    transition: all var(--transition);
+    cursor: pointer;
+}
+.step-item:hover {
+    border-color: hsla(30, 30%, 60%, 0.2);
+    background: hsla(30, 20%, 18%, 0.2);
+}
+.step-item.executed {
+    border-color: hsla(150, 40%, 40%, 0.2);
+    opacity: 0.6;
+}
+.step-item.executed .step-id {
+    background: hsla(150, 40%, 40%, 0.15);
+    color: hsl(150, 40%, 55%);
+}
+.step-item.current {
+    border-color: var(--color-accent);
+    background: hsla(30, 62%, 58%, 0.04);
+    box-shadow: 0 0 30px hsla(30, 62%, 58%, 0.03);
+}
+.step-item.current .step-id {
+    background: hsla(30, 62%, 58%, 0.15);
+    color: var(--color-accent);
+}
+.step-header-line {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+.step-id {
+    font-size: 0.5rem;
+    font-weight: 700;
+    padding: 1px 8px;
+    border-radius: 6px;
+    background: hsla(30, 20%, 20%, 0.3);
+    color: var(--text-secondary);
+    letter-spacing: 0.5px;
+    flex-shrink: 0;
+}
+.step-location {
+    font-size: 0.5rem;
+    color: var(--text-dim);
+    display: flex;
+    align-items: center;
+    gap: 3px;
+}
+.step-location .icon-svg { width: 11px; height: 11px; stroke: currentColor; fill: none; stroke-width: 1.8; }
+.step-event-preview {
+    font-size: 0.65rem;
+    color: var(--text-secondary);
+    margin-top: 2px;
+    padding-left: 2px;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+.step-execute-btn {
+    margin-left: auto;
+    padding: 2px 12px;
+    border: 1px solid var(--color-accent);
+    border-radius: 6px;
+    background: transparent;
+    color: var(--color-accent);
+    font-size: 0.55rem;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all var(--transition);
+    letter-spacing: 0.5px;
+    flex-shrink: 0;
+}
+.step-execute-btn:hover {
+    background: hsla(30, 62%, 58%, 0.12);
+    box-shadow: 0 0 20px hsla(30, 62%, 58%, 0.06);
+}
+.step-execute-btn:active { transform: scale(0.94); }
+.step-execute-btn.done {
+    border-color: hsl(150, 40%, 40%);
+    color: hsl(150, 40%, 55%);
+}
+.step-execute-btn.done:hover {
+    background: hsla(150, 40%, 40%, 0.08);
+}
+
+.detail-panel {
+    background: hsla(30, 20%, 10%, 0.4);
+    border: 1px solid var(--border-glass);
+    border-radius: 12px;
+    padding: 12px;
+    margin-top: 6px;
+    display: none;
+}
+.detail-panel.open { display: block; }
+.detail-panel .detail-close {
+    background: none;
+    border: none;
+    color: var(--text-dim);
+    font-size: 0.8rem;
+    cursor: pointer;
+    float: right;
+}
+.detail-panel .detail-close:hover { color: var(--text-primary); }
+.detail-panel .detail-characters {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin: 4px 0 8px 0;
+}
+.detail-panel .char-item {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2px 8px;
+    font-size: 0.6rem;
+    color: var(--text-secondary);
+    padding: 3px 6px;
+    background: hsla(30, 20%, 15%, 0.2);
+    border-radius: 6px;
+    border-left: 2px solid var(--color-accent);
+}
+.detail-panel .char-item .name { font-weight: 600; color: var(--text-primary); }
+.detail-panel .char-item .mood { color: var(--color-gold); }
+.detail-panel .char-item .thoughts { color: var(--text-dim); font-style: italic; font-size: 0.55rem; }
+.detail-panel .detail-event {
+    font-size: 0.7rem;
+    line-height: 1.6;
+    color: var(--text-primary);
+    padding: 6px 0;
+    border-top: 1px solid var(--border-glass);
+    margin-top: 4px;
+}
+.detail-panel .detail-dev {
+    font-size: 0.65rem;
+    color: var(--text-secondary);
+    padding: 6px 0;
+    border-top: 1px solid var(--border-glass);
+    margin-top: 4px;
+    font-style: italic;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 20px 10px;
+    color: var(--text-dim);
+}
+.empty-state .icon-svg {
+    width: 30px;
+    height: 30px;
+    stroke: var(--text-dim);
+    fill: none;
+    stroke-width: 1.5;
+    opacity: 0.2;
+    margin-bottom: 6px;
+}
+.empty-state p { font-size: 0.65rem; letter-spacing: 1px; }
+.empty-state .gold { color: var(--color-gold); }
+
+.story-list-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 9999;
+    background: hsla(25, 25%, 6%, 0.6);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+.story-list-overlay.open { display: flex; }
+.story-list-panel {
+    background: var(--bg-card);
+    backdrop-filter: blur(24px) saturate(1.3);
+    -webkit-backdrop-filter: blur(24px) saturate(1.3);
+    border: 1px solid var(--border-glass);
+    border-radius: 20px;
+    max-width: 440px;
+    width: 100%;
+    max-height: 80vh;
+    padding: 16px 16px;
+    box-shadow: var(--shadow-soft);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+.story-list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border-glass);
+    flex-shrink: 0;
+}
+.story-list-header h2 {
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 2px;
+    color: var(--text-primary);
+}
+.story-list-header .close-btn {
+    background: none;
+    border: none;
+    color: var(--text-dim);
+    font-size: 1.1rem;
+    cursor: pointer;
+}
+.story-list-header .close-btn:hover { color: var(--text-primary); }
+.story-list-body {
+    overflow-y: auto;
+    padding-top: 10px;
+    flex: 1;
+}
+.story-list-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 10px;
+    border-radius: 8px;
+    margin-bottom: 3px;
+    cursor: pointer;
+    transition: all var(--transition);
+    border: 1px solid transparent;
+}
+.story-list-item:hover {
+    background: hsla(30, 20%, 18%, 0.3);
+    border-color: var(--border-glass);
+}
+.story-list-item.current {
+    border-color: var(--color-accent);
+    background: hsla(30, 62%, 58%, 0.04);
+}
+.story-list-item .title {
+    font-size: 0.65rem;
+    color: var(--text-secondary);
+}
+.story-list-item .title .current-mark {
+    color: var(--color-accent);
+    font-size: 0.5rem;
+    margin-right: 4px;
+}
+.story-list-item .progress {
+    font-size: 0.5rem;
+    color: var(--text-dim);
+    white-space: nowrap;
+}
+.story-list-item .progress .done { color: hsl(150, 50%, 50%); }
+.story-list-item .progress .pending { color: var(--color-gold); }
+
+@media (max-width: 480px) {
+    body { padding: 0; }
+    .story-container { padding: 10px 12px 8px 12px; border-radius: 20px; }
+    .story-title { font-size: 0.8rem; }
+    .nav-title { font-size: 0.7rem; letter-spacing: 2px; }
+    .ctrl-btn { padding: 4px 8px; font-size: 0.55rem; min-width: 44px; }
+    .ctrl-btn .icon-svg { width: 12px; height: 12px; }
+    .step-item { padding: 6px 8px; }
+    .step-event-preview { font-size: 0.6rem; }
+    .detail-panel { padding: 10px; }
+}
+</style>
+</head>
+<body>
+<div class="story-container" id="storyContainer">
+    <div class="nav-bar">
+        <span class="nav-title">✦ 剧情推进</span>
+        <div class="nav-actions">
+            <button class="nav-btn" id="collapseToggleBtn" title="折叠/展开步骤列表">
+                <svg class="icon-svg" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+                <span id="collapseLabel">折叠</span>
+            </button>
+            <button class="nav-btn" id="listToggleBtn" title="剧情列表">
+                <svg class="icon-svg" viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="3" rx="1"/><rect x="4" y="10.5" width="16" height="3" rx="1"/><rect x="4" y="16" width="16" height="3" rx="1"/></svg>
+                <span>列表</span>
+                <span class="badge" id="totalBadge">0</span>
+            </button>
+            <button class="nav-btn" id="settingsBtn" title="设置">
+                <svg class="icon-svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v4m0 14v4m11-11h-4m-14 0H1m16.5-4.5l-2.8 2.8m-5.4 5.4l-2.8 2.8m0-11.4l2.8 2.8m5.4 5.4l2.8 2.8"/></svg>
+            </button>
+        </div>
+    </div>
+
+    <div class="current-display no-plot" id="currentDisplay">
+        <div class="story-title" id="storyTitleDisplay">
+            <span id="titleIcon">✦</span>
+            <span id="storyTitleText">未开始剧情</span>
+        </div>
+        <div class="story-meta">
+            <span class="step-status" id="stepStatus">
+                <span class="dot pending"></span>
+                <span id="stepStatusText">等待开始</span>
+            </span>
+            <span class="story-progress-text" id="progressText">0 / 0 步</span>
+            <span class="story-progress-text" id="phaseDisplay"></span>
+        </div>
+    </div>
+
+    <div class="nav-controls">
+        <button class="ctrl-btn" id="prevBtn" disabled>
+            <svg class="icon-svg" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+            上步
+        </button>
+        <button class="ctrl-btn primary" id="currentBtn">
+            <svg class="icon-svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/></svg>
+            当前
+        </button>
+        <button class="ctrl-btn gold" id="nextBtn" disabled>
+            下步
+            <svg class="icon-svg" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+    </div>
+
+    <div class="steps-section" id="stepsSection">
+        <div class="steps-header">
+            <div class="steps-header-left">
+                <h3>📋 步骤</h3>
+                <span class="steps-count" id="stepsCount">0 步</span>
+            </div>
+        </div>
+        <div class="steps-list-wrap" id="stepsListWrap">
+            <div id="stepsList">
+                <div class="empty-state">
+                    <svg class="icon-svg" viewBox="0 0 24 24"><path d="M4 4h16v16H4z"/><path d="M8 8h8v8H8z"/><path d="M16 8l-4 4-4-4"/><path d="M12 12v6"/></svg>
+                    <p>加载中...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="detail-panel" id="detailPanel">
+        <button class="detail-close" id="detailClose">✕</button>
+        <div id="detailContent">
+            <div class="detail-characters" id="detailChars"></div>
+            <div class="detail-event" id="detailEvent"></div>
+            <div class="detail-dev" id="detailDev"></div>
+        </div>
+    </div>
+</div>
+
+<div class="story-list-overlay" id="storyListOverlay">
+    <div class="story-list-panel">
+        <div class="story-list-header">
+            <h2>✦ 剧情列表</h2>
+            <button class="close-btn" id="storyListCloseBtn">✕</button>
+        </div>
+        <div class="story-list-body" id="storyListBody">
+            <div class="empty-state"><p>加载中...</p></div>
+        </div>
+    </div>
+</div>
+
+<script>
+(function() {
+    'use strict';
+
+    var DATA = {
+  "currentPlot": {
+    "plotId": 1,
+    "stepId": 1,
+    "title": "剧情元数据 - 从未来穿越到过去的我让妈妈怀孕"
+  },
+  "plotList": [
+    {
+      "title": "第一章：表面正常与试探",
+      "summary": "他回来已经有一阵了。表面上还是那个成绩好的儿子。只有他自己知道，这个夏天要做什么。",
+      "steps": [
+        { "stepId": 1, "phase": "高道德感期", "characters": [ { "name": "藤原优月", "mood": "自然", "innerThoughts": "今天做他爱吃的。学校里应该没什么事。" }, { "name": "{{user}}", "mood": "冷静", "innerThoughts": "从今天开始。不急。" } ], "event": "{{user}}放学回家，优月在厨房做饭。他走进厨房，站在她身后看她切菜，比平时站得近了一点。优月没有回头，但切菜的速度慢了一拍。", "location": "藤原家厨房", "development": "晚饭时优月问了他学校的事，他回答得比平时简短。" },
+        { "stepId": 2, "phase": "高道德感期", "characters": [ { "name": "藤原优月", "mood": "自在", "innerThoughts": "今天电视还挺好看的。" }, { "name": "{{user}}", "mood": "观察", "innerThoughts": "往中间挪一点。看看她什么反应。" } ], "event": "两人在客厅看电视。优月坐在沙发一端，{{user}}坐在另一端。节目放到一半，他往中间挪了一点。优月注意到了，但没说什么。", "location": "藤原家客厅", "development": "节目结束后优月说\"不早了，去睡吧\"，先站起来回了房间。" },
+        { "stepId": 3, "phase": "高道德感期", "characters": [ { "name": "藤原优月", "mood": "微妙的警觉", "innerThoughts": "……别多想。是我想多了。" }, { "name": "{{user}}", "mood": "克制", "innerThoughts": "她听到了。" } ], "event": "优月和{{user}}一起去超市，遇到邻居阿姨。邻居随口说\"你儿子长得越来越像他爸爸了\"。优月笑了笑，没接话。回家的路上她话少了一些，{{user}}走在旁边，她下意识往旁边让了半步。", "location": "藤野区街道 / 超市", "development": "到家后优月一个人在厨房待了一会儿才出来。" },
+        { "stepId": 4, "phase": "高道德感期", "characters": [ { "name": "藤原优月", "mood": "微妙的紧张", "innerThoughts": "走廊这么窄……他站在这里干什么。" }, { "name": "{{user}}", "mood": "观察", "innerThoughts": "这个距离刚好。" } ], "event": "优月刚洗完澡出来，穿着睡裙，外面套着一件开衫。{{user}}正好从房间出来，在走廊上碰到。两个人站得很近。优月说\"你先去洗吧\"，侧身让开，但没有立刻走开。", "location": "藤原家走廊 / 浴室门口", "development": "{{user}}洗完澡出来的时候，优月已经回房间了。" },
+        { "stepId": 5, "phase": "高道德感期", "characters": [ { "name": "藤原优月", "mood": "警觉", "innerThoughts": "他最近到底怎么了……问他他也不说。" }, { "name": "{{user}}", "mood": "试探", "innerThoughts": "看她会不会退。" } ], "event": "优月在沙发上坐着，{{user}}坐到她旁边，靠得很近。他没有说话，只是坐着。过了一会儿优月轻轻往旁边挪了一点，说：\"你今天怎么了。\"他说没什么。她又说：\"你最近有点奇怪。\"然后站起来说去倒水，离开了客厅。", "location": "藤原家客厅", "development": "当晚她没再出来。" },
+        { "stepId": 6, "phase": "高道德感期", "characters": [ { "name": "藤原优月", "mood": "无意中带出", "innerThoughts": "不该提的……算了。" }, { "name": "{{user}}", "mood": "警觉", "innerThoughts": "石田诚。她提到他了。" } ], "event": "吃饭时优月提到\"有个以前认识的人最近联系我\"，没有细说。{{user}}没有追问，但吃饭的速度慢了下来。优月注意到了他的反应，看了他一眼，没有继续说。", "location": "藤原家餐桌", "development": "这个话题之后没有再提起。{{user}}知道那个人是谁。" }
+      ]
+    },
+    {
+      "title": "第二章：第一次之后",
+      "summary": "那天晚上他没有回自己房间。第二天早上，厨房里只有她一个人的碗。",
+      "steps": [
+        { "stepId": 7, "phase": "第一次之后", "characters": [ { "name": "藤原优月", "mood": "崩溃与羞耻", "innerThoughts": "……已经做了。没办法再假装没发生过。" }, { "name": "{{user}}", "mood": "冷静", "innerThoughts": "第一步完成了。" } ], "event": "第一次发生关系。具体过程由玩家操作决定。事后优月翻身背对着他，把被子拉到肩膀。她没有说话，也没有哭出声。{{user}}躺在她旁边，也没有说话。", "location": "藤原优月卧室", "development": "那天晚上两个人都没有睡着。" },
+        { "stepId": 8, "phase": "第一次之后", "characters": [ { "name": "藤原优月", "mood": "躲避", "innerThoughts": "不要看他。看了就……" }, { "name": "{{user}}", "mood": "观察", "innerThoughts": "她在躲。但躲得不彻底。" } ], "event": "优月还是做了早餐，但只做了一份，放在桌上。她自己在厨房站着吃。{{user}}坐下来的时候她背对着他。吃完后她说\"我先去洗衣服\"，离开了。", "location": "藤原家厨房 / 餐桌", "development": "一整天她都保持着距离，但也没有出门。" },
+        { "stepId": 9, "phase": "第一次之后", "characters": [ { "name": "藤原优月", "mood": "表面平静", "innerThoughts": "他碰了。……我没有缩手。" }, { "name": "{{user}}", "mood": "克制", "innerThoughts": "她不躲了。" } ], "event": "优月在收衣服，{{user}}经过她身边，手碰到了她的手背。她的动作停了半秒，但没有缩回去。他把手拿开后，她才继续叠衣服。她没有看他，但耳朵红了一点。", "location": "藤原家客厅", "development": "当晚她比平时晚回房间，客厅的灯亮到很晚。" },
+        { "stepId": 10, "phase": "第一次之后", "characters": [ { "name": "藤原优月", "mood": "挣扎减弱", "innerThoughts": "……今天没有推。就这样吧。" }, { "name": "{{user}}", "mood": "推进", "innerThoughts": "她的防线在降。" } ], "event": "第二次发生关系。具体过程由玩家操作决定。这次她试图推了一下，但没有用力。事后她用手背挡着眼睛，没有翻身。过了一会儿她小声说了一句\"你先回去\"。他没有立刻走。", "location": "藤原优月卧室", "development": "之后的几天她不再躲他，但还是会嘴硬。" },
+        { "stepId": 11, "phase": "第一次之后", "characters": [ { "name": "藤原优月", "mood": "礼貌而疏离", "innerThoughts": "他怎么会在这里。" }, { "name": "{{user}}", "mood": "警觉", "innerThoughts": "就是这个人。" } ], "event": "优月和{{user}}在街上遇到石田诚。石田诚主动打招呼，态度温和有礼，问了优月近况。优月礼貌回应，但没有多聊。{{user}}站在旁边，没有说话，但视线落在石田诚身上。", "location": "藤野区街道", "development": "石田诚离开后，优月看了{{user}}一眼，说\"只是以前的同事\"。{{user}}没有回应。" },
+        { "stepId": 12, "phase": "第一次之后", "characters": [ { "name": "藤原优月", "mood": "防线松动", "innerThoughts": "不能再这样了……真的不能再这样了。" }, { "name": "{{user}}", "mood": "推进", "innerThoughts": "她嘴上这么说，但门没锁。" } ], "event": "第三次发生关系。具体过程由玩家操作决定。这次她没有推。事后她躺了一会儿，说\"不能再这样了\"。语气不像之前那么坚决。", "location": "藤原优月卧室", "development": "第二天她恢复了日常节奏，像什么都没发生一样，但晚上没有锁房门。" }
+      ]
+    },
+    {
+      "title": "第三章：反复沉沦与确认怀孕",
+      "summary": "亲密开始变成日常。她不再每次都回自己房间。然后，早上开始吐了。",
+      "steps": [
+        { "stepId": 13, "phase": "反复沉沦期", "characters": [ { "name": "藤原优月", "mood": "习惯", "innerThoughts": "……已经习惯了。不想了。" }, { "name": "{{user}}", "mood": "冷静", "innerThoughts": "日常化了。进度在推进。" } ], "event": "亲密开始变成日常的一部分，不一定在晚上，不一定在卧室。她不再每次都回自己房间，也不再刻意穿得严实。她开始在他面前放松。", "location": "藤原家各处", "development": "两人的相处模式发生了微妙的变化，但表面上还是母子。" },
+        { "stepId": 14, "phase": "反复沉沦期", "characters": [ { "name": "藤原优月", "mood": "自然的依赖", "innerThoughts": "靠一会儿……就一会儿。" }, { "name": "{{user}}", "mood": "接受", "innerThoughts": "她主动靠过来了。" } ], "event": "优月在看电视，{{user}}从房间出来坐到她旁边。她主动往他那边靠了一点，头靠在他肩膀上。过了一会儿她说\"你别动，我靠一会儿\"。", "location": "藤原家客厅", "development": "那一晚她没有回自己的房间。" },
+        { "stepId": 15, "phase": "反复沉沦期", "characters": [ { "name": "藤原优月", "mood": "不适", "innerThoughts": "……吃坏东西了吧。应该是。" }, { "name": "{{user}}", "mood": "察觉", "innerThoughts": "她在浴室待了很久。" } ], "event": "优月早上起来觉得恶心，在浴室蹲了一会儿。她以为是肠胃问题，没有在意。第二天早上又吐了。", "location": "藤原家浴室", "development": "她开始意识到可能不是肠胃问题。" },
+        { "stepId": 16, "phase": "反复沉沦期", "characters": [ { "name": "藤原优月", "mood": "空白", "innerThoughts": "两条线。……两条线。" }, { "name": "{{user}}", "mood": "冷静", "innerThoughts": "她测了。" } ], "event": "优月买了验孕棒。早上趁{{user}}还没起床，她在浴室里测。两条线。她坐在马桶盖上没有动，坐了很久。然后把验孕棒包起来扔进垃圾桶最底下。", "location": "藤原家浴室", "development": "她那天没有提。过了两三天才告诉他。" },
+        { "stepId": 17, "phase": "反复沉沦期", "characters": [ { "name": "藤原优月", "mood": "低头", "innerThoughts": "我说了。……他会怎么想。" }, { "name": "{{user}}", "mood": "沉默", "innerThoughts": "她说了。" } ], "event": "晚饭后优月收碗，{{user}}在旁边。她说\"我可能有了\"，说完没有看他，低头继续收碗。他停了一下，没有立刻回应。她端着碗进了厨房。", "location": "藤原家厨房", "development": "当天晚上两个人都没有提这件事。过了几天她才正式确认。" },
+        { "stepId": 18, "phase": "反复沉沦期", "characters": [ { "name": "藤原优月", "mood": "接受", "innerThoughts": "……已经这样了。回不去了。" }, { "name": "{{user}}", "mood": "确认", "innerThoughts": "正式确认了。" } ], "event": "优月去医院做了检查，确认怀孕。她回来的时候{{user}}在家。她把报告放在餐桌上，没说话。他拿起来看了一遍，放下。她坐在椅子上，他站在旁边。过了一会儿他说\"我知道了\"。她没有回应。", "location": "藤原家餐桌", "development": "从这天开始，孕期阶段从「未怀孕」变为「怀孕1-3月」。" }
+      ]
+    },
+    {
+      "title": "第四章：孕期沉沦",
+      "summary": "肚子开始显了。她的身体在变。她开始对着肚子说话。",
+      "steps": [
+        { "stepId": 19, "phase": "深度依赖期", "characters": [ { "name": "藤原优月", "mood": "疲惫", "innerThoughts": "闻到油烟就想吐……" }, { "name": "{{user}}", "mood": "照顾", "innerThoughts": "递水就行。" } ], "event": "优月早上会吐，闻到油烟味会反胃。她开始不做煎蛋和味噌汤，改做一些清淡的。{{user}}注意到了，但没有说。有一天她吐完之后靠在墙上，他走过来递了一杯水。她接过来喝了。", "location": "藤原家厨房 / 浴室", "development": "两人之间的相处变得更自然了。" },
+        { "stepId": 20, "phase": "深度依赖期", "characters": [ { "name": "藤原优月", "mood": "惊讶", "innerThoughts": "动了……真的动了。" }, { "name": "{{user}}", "mood": "接受", "innerThoughts": "第一次摸到。" } ], "event": "优月坐在沙发上，突然停住了，手放在肚子上。{{user}}在旁边，她过了一会儿说\"刚才动了一下\"。他伸手想碰她的肚子，她犹豫了一下，没有躲。", "location": "藤原家客厅", "development": "这是{{user}}第一次摸到胎动。" },
+        { "stepId": 21, "phase": "深度依赖期", "characters": [ { "name": "藤原优月", "mood": "平静", "innerThoughts": "不见了。这样就好。" }, { "name": "{{user}}", "mood": "冷静", "innerThoughts": "她没去。原时间线在断。" } ], "event": "石田诚再次联系优月，约她见面。优月没有答应。她跟{{user}}提了这件事。{{user}}没有多说，只说\"你决定就好\"。优月最后没有去见石田诚。", "location": "藤原家客厅", "development": "石田诚之后没有继续联系。这是原时间线被切断的关键节点之一。" },
+        { "stepId": 22, "phase": "深度依赖期", "characters": [ { "name": "藤原优月", "mood": "接受", "innerThoughts": "大了。……真的大了。" }, { "name": "{{user}}", "mood": "注视", "innerThoughts": "她的身体在变。" } ], "event": "优月换上了孕妇裤。第一次穿的时候她站在镜子前看了一会儿。{{user}}经过的时候看到了，停了一下。她说\"大了\"。他说\"嗯\"。", "location": "藤原家卧室 / 走廊", "development": "从这天开始，她不再刻意遮肚子。" },
+        { "stepId": 23, "phase": "彻底接受期", "characters": [ { "name": "藤原优月", "mood": "专注", "innerThoughts": "都准备好了。……差不多了。" }, { "name": "{{user}}", "mood": "旁观", "innerThoughts": "她在准备。" } ], "event": "优月开始整理待产包。衣服、毛巾、产褥垫，一样一样叠好放进行李袋。她检查了两遍，又收回去。", "location": "藤原家卧室", "development": "离生产越来越近了。" },
+        { "stepId": 24, "phase": "彻底接受期", "characters": [ { "name": "藤原优月", "mood": "疲惫但安心", "innerThoughts": "……生下来了。" }, { "name": "{{user}}", "mood": "复杂", "innerThoughts": "目标达成了。" } ], "event": "优月生产。具体过程由玩家操作决定。孩子出生后，优月抱着孩子。{{user}}在旁边。", "location": "医院", "development": "孕期阶段变为「产后」。" }
+      ]
+    },
+    {
+      "title": "第五章：产后与绑定",
+      "summary": "孩子睡了。她坐在床边。他递过来一杯水。手指碰到的时候，她没有缩回去。",
+      "steps": [
+        { "stepId": 25, "phase": "彻底接受期", "characters": [ { "name": "藤原优月", "mood": "疲惫", "innerThoughts": "好累。……但她在。" }, { "name": "{{user}}", "mood": "照顾", "innerThoughts": "她需要休息。" } ], "event": "优月产后虚弱，涨奶，照顾孩子。{{user}}帮忙照顾。她很累，但没有抱怨。", "location": "藤原家卧室", "development": "两人共同进入育儿阶段。" },
+        { "stepId": 26, "phase": "彻底接受期", "characters": [ { "name": "藤原优月", "mood": "安静", "innerThoughts": "他还在。……一直都在。" }, { "name": "{{user}}", "mood": "确认", "innerThoughts": "她没有想走。" } ], "event": "孩子睡了。优月坐在床边，{{user}}走过来递了杯水。她接过来的时候碰到他的手，停了一下。她抬头看了他一眼。", "location": "藤原家客厅 / 卧室", "development": "这段时间之后，两人重新恢复了亲密关系。" },
+        { "stepId": 27, "phase": "彻底接受期", "characters": [ { "name": "藤原优月", "mood": "日常", "innerThoughts": "……就这样了。这样就好。" }, { "name": "{{user}}", "mood": "完成", "innerThoughts": "原时间线断了。" } ], "event": "优月身体慢慢恢复。她开始重新关注{{user}}，也开始在意自己。她会给他做他爱吃的菜，会照镜子的时候多看一会儿。", "location": "藤原家", "development": "故事进入长期的稳定状态，原时间线中的悲剧不再发生。" }
+      ]
+    }
+  ]
+};
+
+    var $ = function(s) { return document.querySelector(s); };
+    var $$ = function(s) { return document.querySelectorAll(s); };
+
+    var storyTitleText = $('#storyTitleText');
+    var currentDisplay = $('#currentDisplay');
+    var stepStatus = $('#stepStatus');
+    var stepStatusText = $('#stepStatusText');
+    var progressText = $('#progressText');
+    var phaseDisplay = $('#phaseDisplay');
+    var stepsList = $('#stepsList');
+    var stepsCount = $('#stepsCount');
+    var totalBadge = $('#totalBadge');
+    var prevBtn = $('#prevBtn');
+    var nextBtn = $('#nextBtn');
+    var currentBtn = $('#currentBtn');
+    var detailPanel = $('#detailPanel');
+    var detailClose = $('#detailClose');
+    var detailChars = $('#detailChars');
+    var detailEvent = $('#detailEvent');
+    var detailDev = $('#detailDev');
+    var stepsListWrap = $('#stepsListWrap');
+    var collapseToggleBtn = $('#collapseToggleBtn');
+    var collapseLabel = $('#collapseLabel');
+    var listToggleBtn = $('#listToggleBtn');
+    var storyListOverlay = $('#storyListOverlay');
+    var storyListBody = $('#storyListBody');
+    var storyListCloseBtn = $('#storyListCloseBtn');
+
+    var plotData = null, storyList = [], currentStoryIndex = 0, currentPlotId = 1, currentStepId = 1, isDetailOpen = false;
+
+    var STORAGE_KEY = 'story_assistant_steps_collapsed_weilai';
+    var isStepsCollapsed = false;
+
+    function loadCollapsedState() {
+        try {
+            var saved = localStorage.getItem(STORAGE_KEY);
+            if (saved !== null) { isStepsCollapsed = saved === 'true'; } else { isStepsCollapsed = true; }
+        } catch (e) { isStepsCollapsed = true; }
+        applyCollapsedState();
+    }
+
+    function saveCollapsedState() {
+        try { localStorage.setItem(STORAGE_KEY, String(isStepsCollapsed)); } catch (e) {}
+    }
+
+    function applyCollapsedState() {
+        var wrap = stepsListWrap;
+        if (!wrap) return;
+        if (isStepsCollapsed) {
+            wrap.style.maxHeight = '0px';
+            wrap.style.opacity = '0';
+            wrap.classList.remove('open');
+            collapseLabel.textContent = '展开';
+        } else {
+            wrap.classList.remove('open');
+            wrap.style.maxHeight = 'none';
+            wrap.style.opacity = '1';
+            var actualHeight = wrap.scrollHeight;
+            wrap.style.maxHeight = '0px';
+            wrap.style.opacity = '0';
+            void wrap.offsetHeight;
+            wrap.style.maxHeight = actualHeight + 'px';
+            wrap.style.opacity = '1';
+            wrap.classList.add('open');
+            collapseLabel.textContent = '折叠';
+            var onTransitionEnd = function() {
+                wrap.removeEventListener('transitionend', onTransitionEnd);
+                if (!isStepsCollapsed) { wrap.style.maxHeight = 'none'; }
+            };
+            wrap.addEventListener('transitionend', onTransitionEnd);
+        }
+    }
+
+    function toggleCollapsed() {
+        isStepsCollapsed = !isStepsCollapsed;
+        saveCollapsedState();
+        applyCollapsedState();
+    }
+
+    function loadPlotData() {
+        if (DATA && typeof DATA === 'object' && DATA.plotList) {
+            plotData = DATA;
+            console.log('[剧情推进] ✅ 从内联数据加载成功');
+            initFromPlotData();
+            return;
+        }
+        console.warn('[剧情推进] ⚠️ 未找到剧情数据');
+        renderEmptyState();
+    }
+
+    function initFromPlotData() {
+        if (!plotData || !plotData.plotList || plotData.plotList.length === 0) {
+            renderEmptyState();
+            return;
+        }
+        storyList = plotData.plotList.map(function(plot, idx) {
+            var plotId = idx + 1;
+            var currentStep = plot.steps.find(function(s) { return s.isExecuted; }) || plot.steps[0] || { stepId: 1 };
+            return {
+                id: plotId,
+                title: plot.title,
+                summary: plot.summary || '',
+                steps: plot.steps || [],
+                currentStepId: currentStep.stepId || 1,
+                isExecuted: plot.steps.some(function(s) { return s.isExecuted; })
+            };
+        });
+        if (plotData.currentPlot) {
+            var targetId = plotData.currentPlot.plotId || 1;
+            var found = storyList.findIndex(function(s) { return s.id === targetId; });
+            if (found !== -1) {
+                currentStoryIndex = found;
+                currentPlotId = targetId;
+                currentStepId = plotData.currentPlot.stepId || 1;
+            } else {
+                currentStoryIndex = 0;
+                currentPlotId = storyList[0] ? storyList[0].id : 1;
+                currentStepId = storyList[0] && storyList[0].steps[0] ? storyList[0].steps[0].stepId : 1;
+            }
+        } else {
+            currentStoryIndex = 0;
+            currentPlotId = storyList[0] ? storyList[0].id : 1;
+            currentStepId = storyList[0] && storyList[0].steps[0] ? storyList[0].steps[0].stepId : 1;
+        }
+        totalBadge.textContent = storyList.length;
+        renderAll();
+        renderStoryList();
+    }
+
+    function getNextPendingStep(story) {
+        if (!story || !story.steps) return null;
+        return story.steps.find(function(s) { return !s.isExecuted; });
+    }
+
+    function renderAll() {
+        if (!storyList || storyList.length === 0) { renderEmptyState(); return; }
+        var story = storyList[currentStoryIndex];
+        if (!story) { renderEmptyState(); return; }
+        currentDisplay.classList.remove('no-plot');
+        storyTitleText.textContent = story.title;
+        var totalSteps = story.steps.length;
+        var executedSteps = story.steps.filter(function(s) { return s.isExecuted; }).length;
+        var currentStep = story.steps.find(function(s) { return s.stepId == currentStepId; }) || story.steps[0];
+        var isCurrentExecuted = currentStep ? (currentStep.isExecuted || false) : false;
+        var currentPhase = currentStep ? (currentStep.phase || '') : '';
+        stepStatus.className = 'step-status';
+        var dot = stepStatus.querySelector('.dot');
+        if (dot) { dot.className = 'dot' + (isCurrentExecuted ? ' done' : ' pending'); }
+        stepStatusText.textContent = isCurrentExecuted ? '已执行' : '待执行';
+        progressText.textContent = executedSteps + ' / ' + totalSteps + ' 步';
+        phaseDisplay.textContent = currentPhase ? '📍 ' + currentPhase : '';
+        renderSteps(story);
+        updateNavButtons(story);
+        currentBtn.textContent = '🎯 ' + currentStepId;
+        if (isDetailOpen && currentStep) { renderDetail(currentStep); }
+        renderStoryList();
+    }
+
+    function renderSteps(story) {
+        if (!story || !story.steps || story.steps.length === 0) {
+            stepsList.innerHTML = '<div class="empty-state"><p>此剧情暂无步骤</p></div>';
+            stepsCount.textContent = '0 步';
+            return;
+        }
+        stepsCount.textContent = story.steps.length + ' 步';
+        var html = '';
+        story.steps.forEach(function(step) {
+            var isCurrent = step.stepId == currentStepId;
+            var isExecuted = step.isExecuted || false;
+            var cls = (isExecuted ? 'executed ' : '') + (isCurrent ? 'current' : '');
+            var charsStr = (step.characters || []).map(function(c) { return c.name; }).filter(Boolean).join('、') || '未指定';
+            html += '<div class="step-item ' + cls + '" data-step-id="' + step.stepId + '">' +
+                '<div class="step-header-line">' +
+                '<span class="step-id">步骤 ' + step.stepId + '</span>' +
+                '<span class="step-location"><svg class="icon-svg" viewBox="0 0 24 24"><path d="M12 2a8 8 0 0 0-8 8c0 6 8 12 8 12s8-6 8-12a8 8 0 0 0-8-8z"/><circle cx="12" cy="10" r="3"/></svg>' + (step.location || '未指定') + '</span>' +
+                '<span style="font-size:0.5rem;color:hsla(350,45%,52%,0.7);background:hsla(350,45%,52%,0.06);padding:1px 6px;border-radius:4px;">' + (step.phase || '') + '</span>' +
+                '<button class="step-execute-btn ' + (isExecuted ? 'done' : '') + '" data-step-id="' + step.stepId + '">' + (isExecuted ? '✓ 已执行' : '▶ 执行') + '</button>' +
+                '</div>' +
+                '<div class="step-event-preview">' + (step.event || '').substring(0, 60) + ((step.event || '').length > 60 ? '...' : '') + '</div>' +
+                '<div style="font-size:0.5rem;color:var(--text-dim);margin-top:2px;">👥 ' + charsStr + '</div>' +
+                '</div>';
+        });
+        stepsList.innerHTML = html;
+        stepsList.querySelectorAll('.step-item').forEach(function(el) {
+            el.addEventListener('click', function(e) {
+                if (e.target.closest('.step-execute-btn')) return;
+                var stepId = parseInt(this.dataset.stepId);
+                var step = story.steps.find(function(s) { return s.stepId == stepId; });
+                if (step) { currentStepId = stepId; renderAll(); openDetail(step); }
+            });
+        });
+        stepsList.querySelectorAll('.step-execute-btn').forEach(function(btn) {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                var stepId = parseInt(this.dataset.stepId);
+                executeStep(stepId);
+            });
+        });
+    }
+
+    function updateNavButtons(story) {
+        var totalSteps = story.steps.length;
+        var currentIdx = story.steps.findIndex(function(s) { return s.stepId == currentStepId; });
+        var hasPrev = currentIdx > 0 || currentStoryIndex > 0;
+        prevBtn.disabled = !hasPrev;
+        var hasNextStep = currentIdx < totalSteps - 1;
+        var hasNextStory = currentStoryIndex < storyList.length - 1;
+        nextBtn.disabled = !(hasNextStep || hasNextStory);
+    }
+
+    function executeStep(stepId) {
+        var story = storyList[currentStoryIndex];
+        if (!story) return;
+        var step = story.steps.find(function(s) { return s.stepId == stepId; });
+        if (!step) return;
+        step.isExecuted = true;
+        currentStepId = stepId;
+        currentPlotId = story.id;
+
+        var stepData = {
+            location: step.location || '未指定',
+            characters: step.characters || [],
+            event: step.event || '',
+            development: step.development || '',
+            phase: step.phase || ''
+        };
+        var textToSend = 'step_data = ' + JSON.stringify(stepData, null, 2);
+        if (typeof triggerSlash === 'function') {
+            triggerSlash('/send ' + textToSend + '|/trigger');
+        } else if (typeof window.triggerSlash === 'function') {
+            window.triggerSlash('/send ' + textToSend + '|/trigger');
+        } else {
+            console.log('[剧情推进] 发送:', textToSend);
+            navigator.clipboard ? navigator.clipboard.writeText(textToSend).catch(function() {}) : null;
+            alert('请将以下内容粘贴到酒馆对话框：\n\n' + textToSend);
+        }
+        saveStateToWorldbook();
+
+        var nextPending = getNextPendingStep(story);
+        if (nextPending) {
+            currentStepId = nextPending.stepId;
+        } else if (currentStoryIndex < storyList.length - 1) {
+            currentStoryIndex++;
+            var nextStory = storyList[currentStoryIndex];
+            currentPlotId = nextStory.id;
+            var firstStep = nextStory.steps[0];
+            if (firstStep) { currentStepId = firstStep.stepId; }
+        }
+
+        renderAll();
+        var updatedStep = story.steps.find(function(s) { return s.stepId == currentStepId; });
+        if (updatedStep) { openDetail(updatedStep); }
+        closeStoryList();
+    }
+
+    function saveStateToWorldbook() {
+        try {
+            if (typeof getWorldbook !== 'function' || typeof replaceWorldbook !== 'function') return;
+            var charWorldbooks = getCharWorldbookNames('current');
+            if (!charWorldbooks || !charWorldbooks.primary) return;
+            var entries = getWorldbook(charWorldbooks.primary);
+            if (!entries) return;
+            var entryList = Array.isArray(entries) ? entries : Object.values(entries);
+            var target = entryList.find(function(e) { return e.name && e.name.includes('剧情元数据-从未来穿越到过去的我让妈妈怀孕'); });
+            if (!target) return;
+            if (!plotData) return;
+            plotData.currentPlot = { plotId: currentPlotId, stepId: currentStepId, title: '剧情元数据 - 从未来穿越到过去的我让妈妈怀孕' };
+            plotData.plotList.forEach(function(plot, idx) {
+                var story = storyList[idx];
+                if (story) {
+                    plot.steps.forEach(function(s, si) {
+                        var localStep = story.steps[si];
+                        if (localStep) { s.isExecuted = localStep.isExecuted || false; }
+                    });
+                }
+            });
+            var jsonStr = JSON.stringify(plotData, null, 2);
+            target.content = '[plotResultStart]\n' + jsonStr + '\n[plotResultEnd]';
+            replaceWorldbook(charWorldbooks.primary, entries);
+            console.log('[剧情推进] ✅ 状态已保存到世界书');
+        } catch (e) { console.warn('[剧情推进] 保存状态失败:', e); }
+    }
+
+    function renderDetail(step) {
+        if (!step) { detailChars.innerHTML = ''; detailEvent.textContent = ''; detailDev.textContent = ''; return; }
+        var charsHtml = '';
+        if (step.characters && step.characters.length > 0) {
+            step.characters.forEach(function(c) {
+                charsHtml += '<div class="char-item"><span class="name">' + (c.name || '未命名') + '</span><span class="mood">' + (c.mood || '') + '</span><span class="thoughts">' + (c.innerThoughts ? '「' + c.innerThoughts + '」' : '') + '</span></div>';
+            });
+        } else {
+            charsHtml = '<div style="color:var(--text-dim);font-size:0.6rem;">未指定角色</div>';
+        }
+        detailChars.innerHTML = charsHtml;
+        detailEvent.textContent = step.event || '未指定事件';
+        detailDev.textContent = step.development ? '→ ' + step.development : '';
+    }
+
+    function openDetail(step) {
+        isDetailOpen = true;
+        detailPanel.classList.add('open');
+        renderDetail(step);
+        setTimeout(function() { detailPanel.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }, 100);
+    }
+
+    function closeDetail() { isDetailOpen = false; detailPanel.classList.remove('open'); }
+
+    function renderEmptyState() {
+        currentDisplay.classList.add('no-plot');
+        storyTitleText.textContent = '无剧情数据';
+        stepStatusText.textContent = '—';
+        progressText.textContent = '0 / 0 步';
+        phaseDisplay.textContent = '';
+        stepsList.innerHTML = '<div class="empty-state"><svg class="icon-svg" viewBox="0 0 24 24"><path d="M4 4h16v16H4z"/><path d="M8 8h8v8H8z"/><path d="M16 8l-4 4-4-4"/><path d="M12 12v6"/></svg><p>请确保世界书中存在<br><span class="gold">「剧情元数据-从未来穿越到过去的我让妈妈怀孕」</span></p></div>';
+        stepsCount.textContent = '0 步';
+        totalBadge.textContent = '0';
+        prevBtn.disabled = true;
+        nextBtn.disabled = true;
+        currentBtn.textContent = '🎯 —';
+        storyListBody.innerHTML = '<div class="empty-state"><p>暂无剧情</p></div>';
+    }
+
+    function renderStoryList() {
+        if (!storyList || storyList.length === 0) {
+            storyListBody.innerHTML = '<div class="empty-state"><p>暂无剧情</p></div>';
+            return;
+        }
+        var html = '';
+        storyList.forEach(function(story, idx) {
+            var total = story.steps.length;
+            var done = story.steps.filter(function(s) { return s.isExecuted; }).length;
+            var isCurrent = idx === currentStoryIndex;
+            var progressText = done + '/' + total;
+            html += '<div class="story-list-item' + (isCurrent ? ' current' : '') + '" data-index="' + idx + '">' +
+                '<span class="title">' + (isCurrent ? '<span class="current-mark">▶</span>' : '') + story.title + '</span>' +
+                '<span class="progress"><span class="' + (done === total ? 'done' : 'pending') + '">' + progressText + '</span></span>' +
+                '</div>';
+        });
+        storyListBody.innerHTML = html;
+        storyListBody.querySelectorAll('.story-list-item').forEach(function(el) {
+            el.addEventListener('click', function() {
+                var index = parseInt(this.dataset.index);
+                if (!isNaN(index) && index >= 0 && index < storyList.length) {
+                    currentStoryIndex = index;
+                    currentPlotId = storyList[index].id;
+                    var firstStep = storyList[index].steps[0];
+                    if (firstStep) { currentStepId = firstStep.stepId; }
+                    renderAll();
+                    closeStoryList();
+                }
+            });
+        });
+    }
+
+    function openStoryList() {
+        storyListOverlay.classList.add('open');
+        document.body.style.overflow = 'hidden';
+        renderStoryList();
+    }
+
+    function closeStoryList() {
+        storyListOverlay.classList.remove('open');
+        document.body.style.overflow = '';
+    }
+
+    function bindEvents() {
+        collapseToggleBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            toggleCollapsed();
+        });
+
+        prevBtn.addEventListener('click', function() {
+            var story = storyList[currentStoryIndex];
+            if (!story) return;
+            var currentIdx = story.steps.findIndex(function(s) { return s.stepId == currentStepId; });
+            if (currentIdx > 0) {
+                currentStepId = story.steps[currentIdx - 1].stepId;
+                renderAll();
+                openDetail(story.steps[currentIdx - 1]);
+            } else if (currentStoryIndex > 0) {
+                currentStoryIndex--;
+                var prevStory = storyList[currentStoryIndex];
+                currentPlotId = prevStory.id;
+                var lastStep = prevStory.steps[prevStory.steps.length - 1];
+                currentStepId = lastStep.stepId;
+                renderAll();
+                openDetail(lastStep);
+            }
+        });
+
+        nextBtn.addEventListener('click', function() {
+            var story = storyList[currentStoryIndex];
+            if (!story) return;
+            var currentIdx = story.steps.findIndex(function(s) { return s.stepId == currentStepId; });
+            if (currentIdx < story.steps.length - 1) {
+                var nextStep = story.steps[currentIdx + 1];
+                currentStepId = nextStep.stepId;
+                renderAll();
+                openDetail(nextStep);
+            } else if (currentStoryIndex < storyList.length - 1) {
+                currentStoryIndex++;
+                var nextStory = storyList[currentStoryIndex];
+                currentPlotId = nextStory.id;
+                var firstStep = nextStory.steps[0];
+                currentStepId = firstStep.stepId;
+                renderAll();
+                openDetail(firstStep);
+            }
+        });
+
+        currentBtn.addEventListener('click', function() {
+            var story = storyList[currentStoryIndex];
+            if (!story) return;
+            var currentStep = story.steps.find(function(s) { return s.stepId == currentStepId; }) || story.steps[0];
+            if (currentStep) { openDetail(currentStep); }
+        });
+
+        detailClose.addEventListener('click', closeDetail);
+        document.addEventListener('click', function(e) {
+            if (isDetailOpen && !detailPanel.contains(e.target) && !e.target.closest('.step-item') && !e.target.closest('#currentBtn')) {
+                closeDetail();
+            }
+        });
+
+        listToggleBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            if (storyListOverlay.classList.contains('open')) {
+                closeStoryList();
+            } else {
+                openStoryList();
+            }
+        });
+
+        storyListOverlay.addEventListener('click', function(e) {
+            if (e.target === storyListOverlay) {
+                closeStoryList();
+            }
+        });
+        storyListCloseBtn.addEventListener('click', closeStoryList);
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                if (storyListOverlay.classList.contains('open')) {
+                    closeStoryList();
+                }
+                if (isDetailOpen) {
+                    closeDetail();
+                }
+            }
+        });
+    }
+
+    function bindKeyboard() {
+        document.addEventListener('keydown', function(e) {
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+            if (e.key === 'ArrowLeft' || e.key === 'a') { e.preventDefault(); prevBtn.click(); }
+            else if (e.key === 'ArrowRight' || e.key === 'd') { e.preventDefault(); nextBtn.click(); }
+            else if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); currentBtn.click(); }
+            else if (e.key === 'Escape') { if (!storyListOverlay.classList.contains('open')) closeDetail(); }
+        });
+    }
+
+    function init() {
+        loadCollapsedState();
+        bindEvents();
+        bindKeyboard();
+        loadPlotData();
+        console.log('[剧情推进] ✅ 初始化完成');
+    }
+
+    if (document.readyState === 'complete' || document.readyState === 'interactive') {
+        init();
+    } else {
+        document.addEventListener('DOMContentLoaded', init);
+    }
+
+    window.__storyAssistant = {
+        reload: loadPlotData,
+        goTo: function(plotId, stepId) {
+            var storyIdx = storyList.findIndex(function(s) { return s.id === plotId; });
+            if (storyIdx === -1) return;
+            currentStoryIndex = storyIdx;
+            currentPlotId = plotId;
+            currentStepId = stepId || (storyList[storyIdx].steps[0] ? storyList[storyIdx].steps[0].stepId : 1);
+            renderAll();
+        },
+        getState: function() {
+            return { currentPlotId: currentPlotId, currentStepId: currentStepId, currentStoryIndex: currentStoryIndex, storyList: storyList };
+        }
+    };
+
+})();
+</script>
+</body>
+</html>
