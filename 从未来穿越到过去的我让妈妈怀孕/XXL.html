@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>藤原优月 · 选项栏</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+    --primary: 340, 45%, 62%;
+    --secondary: 38, 55%, 58%;
+    --accent: 210, 35%, 55%;
+    --danger: 0, 50%, 55%;
+    --desire: 330, 55%, 60%;
+    --bg-deep: 240, 18%, 6%;
+    --bg-panel: 240, 14%, 11%;
+    --text-main: 240, 10%, 92%;
+    --text-muted: 240, 8%, 58%;
+    --text-dim: 240, 8%, 38%;
+}
+
+.options-root {
+    max-width: 620px;
+    margin: 1.5rem auto;
+    padding: 0 8px;
+    font-family: 'Inter', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    color: hsl(var(--text-main));
+    background: transparent;
+}
+
+.options-panel {
+    position: relative;
+    background:
+        radial-gradient(circle at 20% 0%, hsla(var(--primary), 0.06), transparent 50%),
+        radial-gradient(circle at 80% 100%, hsla(var(--secondary), 0.04), transparent 50%),
+        hsla(var(--bg-deep), 0.7);
+    border-radius: 12px;
+    border: 1px solid hsla(var(--secondary), 0.1);
+    overflow: hidden;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), inset 0 0 0 1px hsla(var(--secondary), 0.04);
+    animation: panelIn 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    opacity: 0;
+    transform: translateY(12px);
+}
+@keyframes panelIn {
+    to { opacity: 1; transform: translateY(0); }
+}
+.options-panel::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+        linear-gradient(hsla(var(--secondary), 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, hsla(var(--secondary), 0.02) 1px, transparent 1px);
+    background-size: 28px 28px;
+    pointer-events: none;
+    mask-image: radial-gradient(ellipse at center, black 20%, transparent 85%);
+    -webkit-mask-image: radial-gradient(ellipse at center, black 20%, transparent 85%);
+    z-index: 0;
+}
+
+/* ============ 顶栏 ============ */
+.options-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    border-bottom: 1px solid hsla(var(--secondary), 0.08);
+    position: relative;
+    z-index: 2;
+    background: hsla(var(--bg-deep), 0.5);
+}
+.options-tag {
+    font-family: 'SF Mono', 'Consolas', monospace;
+    font-weight: 700;
+    color: hsl(var(--secondary));
+    letter-spacing: 3px;
+    font-size: 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.options-tag::before {
+    content: '';
+    width: 5px; height: 5px;
+    background: hsl(var(--secondary));
+    border-radius: 50%;
+    box-shadow: 0 0 10px hsla(var(--secondary), 0.9);
+    animation: pulseTag 1.8s ease-in-out infinite;
+}
+@keyframes pulseTag {
+    0%, 100% { opacity: 0.3; transform: scale(0.8); }
+    50% { opacity: 1; transform: scale(1.2); }
+}
+
+.options-hint {
+    font-family: 'SF Mono', 'Consolas', monospace;
+    font-size: 9px;
+    letter-spacing: 1.5px;
+    color: hsl(var(--text-dim));
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+.options-hint svg {
+    width: 11px; height: 11px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+/* ============ 选项列表 ============ */
+.options-list {
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    position: relative;
+    z-index: 1;
+}
+
+.opt-btn {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    padding: 14px 16px;
+    background: hsla(var(--bg-panel), 0.6);
+    border: 1px solid hsla(var(--secondary), 0.1);
+    border-radius: 4px;
+    color: hsl(var(--text-main));
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 450;
+    line-height: 1.5;
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.25, 0.8, 0.25, 1);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    overflow: hidden;
+    animation: optIn 0.5s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+}
+.opt-btn:nth-child(1) { animation-delay: 0.08s; }
+.opt-btn:nth-child(2) { animation-delay: 0.16s; }
+.opt-btn:nth-child(3) { animation-delay: 0.24s; }
+.opt-btn:nth-child(4) { animation-delay: 0.32s; }
+@keyframes optIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* 角标装饰 */
+.opt-btn::before {
+    content: '';
+    position: absolute;
+    top: -1px; left: -1px;
+    width: 10px; height: 10px;
+    border-top: 1px solid hsla(var(--secondary), 0.4);
+    border-left: 1px solid hsla(var(--secondary), 0.4);
+    transition: all 0.3s;
+}
+.opt-btn::after {
+    content: '';
+    position: absolute;
+    bottom: -1px; right: -1px;
+    width: 10px; height: 10px;
+    border-bottom: 1px solid hsla(var(--accent), 0.3);
+    border-right: 1px solid hsla(var(--accent), 0.3);
+    transition: all 0.3s;
+}
+
+/* 左侧发光条 */
+.opt-btn .beam {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 2px;
+    height: 0;
+    background: linear-gradient(180deg, transparent, hsla(var(--primary), 0.8), transparent);
+    transition: height 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+    box-shadow: 0 0 12px hsla(var(--primary), 0.6);
+}
+
+/* 序号 */
+.opt-btn .badge {
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 1px solid hsla(var(--secondary), 0.25);
+    background: hsla(var(--bg-deep), 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'SF Mono', 'Consolas', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    color: hsla(var(--secondary), 0.7);
+    transition: all 0.3s;
+    position: relative;
+}
+.opt-btn .badge::after {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: 50%;
+    border: 1px solid hsla(var(--secondary), 0.15);
+    animation: badgePulse 2.4s ease-in-out infinite;
+    opacity: 0;
+}
+@keyframes badgePulse {
+    0%, 100% { opacity: 0; transform: scale(1); }
+    50% { opacity: 0.6; transform: scale(1.15); }
+}
+
+/* 文本 */
+.opt-btn .text {
+    flex: 1;
+    min-width: 0;
+    letter-spacing: 0.3px;
+    color: hsla(var(--text-main), 0.92);
+    transition: color 0.3s;
+}
+
+/* 右侧箭头 */
+.opt-btn .arrow {
+    flex-shrink: 0;
+    width: 16px;
+    height: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transform: translateX(-6px);
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+.opt-btn .arrow svg {
+    width: 14px; height: 14px;
+    fill: none;
+    stroke: hsla(var(--secondary), 0.8);
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+/* 悬停 */
+.opt-btn:hover {
+    background: hsla(var(--bg-panel), 0.85);
+    border-color: hsla(var(--secondary), 0.25);
+    transform: translateX(3px);
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35), inset 0 0 0 1px hsla(var(--secondary), 0.05);
+}
+.opt-btn:hover::before {
+    border-color: hsla(var(--secondary), 0.8);
+    width: 14px; height: 14px;
+}
+.opt-btn:hover::after {
+    border-color: hsla(var(--accent), 0.7);
+    width: 14px; height: 14px;
+}
+.opt-btn:hover .beam {
+    height: 70%;
+}
+.opt-btn:hover .badge {
+    border-color: hsla(var(--secondary), 0.6);
+    color: hsl(var(--secondary));
+    background: hsla(var(--secondary), 0.08);
+    box-shadow: 0 0 16px hsla(var(--secondary), 0.3);
+}
+.opt-btn:hover .text {
+    color: hsl(var(--text-main));
+}
+.opt-btn:hover .arrow {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* 点击 */
+.opt-btn:active {
+    transform: scale(0.98) translateX(3px);
+    transition-duration: 0.05s;
+}
+
+/* 禁用 */
+.opt-btn.disabled {
+    opacity: 0.35;
+    pointer-events: none;
+    transform: none !important;
+}
+
+/* 空状态 */
+.options-empty {
+    padding: 30px 20px;
+    text-align: center;
+    font-family: 'SF Mono', 'Consolas', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: hsla(var(--text-dim), 0.5);
+}
+.options-empty::before {
+    content: '';
+    display: block;
+    width: 30px;
+    height: 1px;
+    margin: 0 auto 12px;
+    background: hsla(var(--secondary), 0.3);
+}
+
+/* ============ 底部装饰条 ============ */
+.options-footer {
+    padding: 10px 16px;
+    border-top: 1px solid hsla(var(--secondary), 0.08);
+    background: hsla(var(--bg-deep), 0.5);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: 'SF Mono', 'Consolas', monospace;
+    font-size: 8px;
+    letter-spacing: 2px;
+    color: hsla(var(--text-dim), 0.6);
+    position: relative;
+    z-index: 1;
+}
+.options-footer .left { display: flex; align-items: center; gap: 6px; }
+.options-footer .left .dot {
+    width: 3px; height: 3px;
+    border-radius: 50%;
+    background: hsla(var(--secondary), 0.5);
+    box-shadow: 0 0 6px hsla(var(--secondary), 0.6);
+}
+
+/* ============ 移动端 ============ */
+@media (max-width: 640px) {
+    .options-root { padding: 0 4px; }
+    .options-header { padding: 10px 12px; }
+    .options-tag { font-size: 9px; letter-spacing: 2px; }
+    .options-hint { font-size: 8px; }
+    .options-list { padding: 10px; gap: 6px; }
+    .opt-btn { padding: 12px 12px; font-size: 12px; gap: 10px; }
+    .opt-btn .badge { width: 24px; height: 24px; font-size: 10px; }
+    .options-footer { padding: 8px 12px; font-size: 7px; }
+}
+</style>
+</head>
+<body>
+
+<div class="options-root">
+    <div class="options-panel" id="optionsPanel">
+
+        <div class="options-header">
+            <span class="options-tag">CHOICE FIELD</span>
+            <span class="options-hint">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12.01" y2="16"/><line x1="12" y1="12" x2="12" y2="8"/></svg>
+                点击触发
+            </span>
+        </div>
+
+        <div class="options-list" id="optionsList"></div>
+
+        <div class="options-footer">
+            <span class="left"><span class="dot"></span> SELECT ACTION</span>
+            <span id="footerCount">0 / 0</span>
+        </div>
+    </div>
+</div>
+
+<div id="options-data" style="display:none;">$1</div>
+
+<script>
+(function() {
+    'use strict';
+
+    var dataContainer = document.getElementById('options-data');
+    var raw = dataContainer ? dataContainer.textContent.trim() : '';
+
+    var container = document.getElementById('optionsList');
+    if (!container) return;
+
+    function sendOption(text) {
+        if (!text) return;
+
+        if (typeof triggerSlash === 'function') {
+            triggerSlash('/send ' + text + '|/trigger');
+            return;
+        }
+
+        var textarea = document.querySelector('#send_textarea') ||
+            (window.parent && window.parent.document.querySelector('#send_textarea'));
+        if (textarea) {
+            textarea.value = text;
+            textarea.dispatchEvent(new Event('input', { bubbles: true }));
+            var sendBtn = document.querySelector('#send_button') ||
+                document.querySelector('#send_btn');
+            if (sendBtn) setTimeout(function() { sendBtn.click(); }, 80);
+        }
+    }
+
+    var items = raw ? raw.split('|').map(function(s) { return s.trim(); }).filter(function(s) { return s.length > 0; }) : [];
+
+    if (items.length === 0) {
+        container.innerHTML = '<div class="options-empty">等待选择</div>';
+        return;
+    }
+
+    var badges = ['Ⅰ', 'Ⅱ', 'Ⅲ', 'Ⅳ', 'Ⅴ', 'Ⅵ', 'Ⅶ', 'Ⅷ', 'Ⅸ', 'Ⅹ'];
+    var html = '';
+
+    items.forEach(function(opt, index) {
+        var safe = opt.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+        var badge = badges[index] || (index + 1);
+
+        html += '<button class="opt-btn" data-opt="' + safe + '">';
+        html += '<span class="beam"></span>';
+        html += '<span class="badge">' + badge + '</span>';
+        html += '<span class="text">' + safe + '</span>';
+        html += '<span class="arrow"><svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>';
+        html += '</button>';
+    });
+
+    container.innerHTML = html;
+
+    var footerCount = document.getElementById('footerCount');
+    if (footerCount) footerCount.textContent = '0 / ' + items.length;
+
+    container.addEventListener('click', function(e) {
+        var btn = e.target.closest('.opt-btn');
+        if (!btn || btn.classList.contains('disabled')) return;
+
+        var text = btn.getAttribute('data-opt');
+        if (!text) return;
+
+        var allBtns = container.querySelectorAll('.opt-btn');
+        allBtns.forEach(function(b) { b.classList.add('disabled'); });
+
+        var idx = Array.prototype.indexOf.call(allBtns, btn);
+        if (footerCount) footerCount.textContent = (idx + 1) + ' / ' + items.length;
+
+        sendOption(text);
+
+        setTimeout(function() {
+            allBtns.forEach(function(b) { b.classList.remove('disabled'); });
+            if (footerCount) footerCount.textContent = '0 / ' + items.length;
+        }, 5000);
+    });
+
+    container.addEventListener('touchstart', function(e) {
+        var btn = e.target.closest('.opt-btn');
+        if (!btn) return;
+        btn.style.transition = 'none';
+        btn.style.transform = 'scale(0.96) translateX(3px)';
+        setTimeout(function() {
+            btn.style.transition = '';
+            btn.style.transform = '';
+        }, 100);
+    }, { passive: true });
+
+})();
+</script>
+
+</body>
+</html>
