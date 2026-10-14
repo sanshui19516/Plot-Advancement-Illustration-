@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>推门</title>
+
+<style>
+/* ============================================================
+   全局重置
+   ============================================================ */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: transparent;
+  min-height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px 10px;
+  font-family: "Inter", "PingFang SC", "Microsoft YaHei", sans-serif;
+  -webkit-tap-highlight-color: transparent;
+}
+
+:root {
+  --night-void: hsl(232, 50%, 3%);
+  --night-deep: hsl(232, 45%, 6%);
+  --night-mid: hsl(232, 40%, 10%);
+  --lzx-blue: hsl(205, 60%, 72%);
+  --lzx-blue-glow: hsla(205, 65%, 75%, 0.5);
+  --jt-gold: hsl(35, 65%, 70%);
+  --jt-gold-glow: hsla(35, 70%, 75%, 0.5);
+  --gold-line: hsla(40, 55%, 65%, 0.4);
+  --gold-bright: hsl(40, 60%, 78%);
+  --text-main: hsl(40, 20%, 92%);
+  --text-muted: hsla(40, 15%, 65%, 0.7);
+  --text-dim: hsla(40, 10%, 45%, 0.5);
+}
+
+/* ============================================================
+   主容器
+   ============================================================ */
+.enter-hall {
+  width: 100%;
+  max-width: 560px;
+  position: relative;
+  border-radius: 20px;
+  overflow: hidden;
+  background: var(--night-void);
+  box-shadow:
+    0 30px 90px rgba(0, 0, 0, 0.85),
+    0 0 0 1px hsla(40, 40%, 50%, 0.08) inset,
+    0 0 160px hsla(35, 55%, 50%, 0.04);
+  padding: 30px 24px 24px;
+}
+
+/* 深空星点背景 */
+.enter-hall::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(1.2px 1.2px at 12% 8%, hsla(0,0%,100%,0.4), transparent),
+    radial-gradient(1px 1px at 28% 22%, hsla(0,0%,100%,0.3), transparent),
+    radial-gradient(1.2px 1.2px at 72% 6%, hsla(0,0%,100%,0.35), transparent),
+    radial-gradient(1px 1px at 88% 18%, hsla(0,0%,100%,0.28), transparent),
+    radial-gradient(1px 1px at 45% 55%, hsla(0,0%,100%,0.15), transparent),
+    radial-gradient(1px 1px at 78% 72%, hsla(0,0%,100%,0.2), transparent),
+    radial-gradient(1.2px 1.2px at 18% 88%, hsla(0,0%,100%,0.25), transparent);
+  pointer-events: none;
+  z-index: 0;
+  animation: starTwinkle 8s ease-in-out infinite;
+}
+@keyframes starTwinkle {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+
+/* 底部光晕（暖金+冷蓝混合） */
+.enter-hall::after {
+  content: '';
+  position: absolute;
+  bottom: -30%; left: 50%;
+  transform: translateX(-50%);
+  width: 140%;
+  height: 60%;
+  background: radial-gradient(ellipse at 50% 100%,
+    hsla(35, 60%, 55%, 0.06) 0%,
+    transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.enter-hall > * { position: relative; z-index: 1; }
+
+/* ============================================================
+   顶部 —— 星河区标识
+   ============================================================ */
+.hall-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 14px;
+  margin-bottom: 24px;
+  border-bottom: 1px solid hsla(40, 40%, 50%, 0.1);
+}
+
+.hall-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: "SF Mono", "Consolas", monospace;
+  font-size: 10px;
+  letter-spacing: 3px;
+  color: hsla(40, 25%, 60%, 0.6);
+  text-transform: uppercase;
+}
+
+.hall-brand .moon {
+  width: 14px; height: 14px;
+  opacity: 0.7;
+}
+.hall-brand .moon svg {
+  width: 100%; height: 100%;
+  fill: none;
+  stroke: var(--gold-bright);
+  stroke-width: 1.5;
+}
+
+.hall-date {
+  font-family: "SF Mono", "Consolas", monospace;
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: var(--text-dim);
+}
+
+/* ============================================================
+   两扇门
+   ============================================================ */
+.doors-stage {
+  display: grid;
+  grid-template-columns: 1fr 32px 1fr;
+  gap: 0;
+  align-items: stretch;
+  margin-bottom: 28px;
+  min-height: 260px;
+  position: relative;
+}
+
+/* 单扇门 */
+.door {
+  position: relative;
+  border-radius: 6px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  background: var(--night-mid);
+}
+
+.door:hover {
+  transform: translateY(-3px);
+}
+
+/* 门的内景（可替换为图片） */
+.door-scene {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  opacity: 0.35;
+  filter: blur(0.5px) saturate(1.2);
+  transition: opacity 0.5s ease, filter 0.5s ease, transform 0.8s ease;
+  z-index: 0;
+}
+
+.door:hover .door-scene {
+  opacity: 0.55;
+  filter: blur(0) saturate(1.4);
+  transform: scale(1.05);
+}
+
+/* 门内暗色覆盖 */
+.door::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* 左门（林芝夏）：冷蓝暗色 */
+.door.left::before {
+  background:
+    linear-gradient(180deg,
+      hsla(232, 50%, 4%, 0.7) 0%,
+      hsla(205, 40%, 15%, 0.5) 50%,
+      hsla(232, 50%, 4%, 0.85) 100%);
+}
+
+/* 右门（江棠）：暖金暗色 */
+.door.right::before {
+  background:
+    linear-gradient(180deg,
+      hsla(232, 50%, 4%, 0.7) 0%,
+      hsla(25, 40%, 18%, 0.5) 50%,
+      hsla(232, 50%, 4%, 0.85) 100%);
+}
+
+/* 门框（金色描边） */
+.door::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  border-radius: 6px;
+  pointer-events: none;
+  transition: box-shadow 0.5s ease;
+}
+
+.door.left::after {
+  border: 1px solid hsla(205, 55%, 60%, 0.25);
+}
+
+.door.right::after {
+  border: 1px solid hsla(35, 60%, 60%, 0.25);
+}
+
+.door.left:hover::after {
+  box-shadow:
+    inset 0 0 40px hsla(205, 65%, 65%, 0.15),
+    0 0 30px hsla(205, 65%, 65%, 0.2);
+}
+
+.door.right:hover::after {
+  box-shadow:
+    inset 0 0 40px hsla(35, 70%, 65%, 0.15),
+    0 0 30px hsla(35, 70%, 65%, 0.2);
+}
+
+/* 门缝中的光（在中间一栏表现） */
+.door-light-seam {
+  position: relative;
+  background: transparent;
+  z-index: 3;
+}
+
+.door-light-seam::before {
+  content: '';
+  position: absolute;
+  top: 15%;
+  bottom: 15%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 2px;
+  background: linear-gradient(180deg,
+    transparent 0%,
+    var(--lzx-blue-glow) 20%,
+    hsla(240, 50%, 75%, 0.5) 50%,
+    var(--jt-gold-glow) 80%,
+    transparent 100%);
+  box-shadow:
+    0 0 12px hsla(220, 60%, 75%, 0.4),
+    0 0 24px hsla(220, 50%, 70%, 0.2);
+  animation: seamBreath 4s ease-in-out infinite;
+}
+
+@keyframes seamBreath {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+/* 门缝中央的光核 */
+.door-light-seam::after {
+  content: '';
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 12px; height: 12px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(circle,
+    hsla(45, 60%, 85%, 0.6),
+    transparent 70%);
+  filter: blur(3px);
+  animation: corePulse 4s ease-in-out infinite;
+}
+
+@keyframes corePulse {
+  0%, 100% { opacity: 0.3; transform: translate(-50%, -50%) scale(0.8); }
+  50% { opacity: 1; transform: translate(-50%, -50%) scale(1.3); }
+}
+
+/* 门内的角色剪影信息 */
+.door-inset {
+  position: absolute;
+  bottom: 16px;
+  left: 0;
+  right: 0;
+  padding: 0 14px;
+  z-index: 4;
+  pointer-events: none;
+}
+
+.door-inset-label {
+  font-family: "SF Mono", "Consolas", monospace;
+  font-size: 9px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.door.left .door-inset-label { color: var(--lzx-blue); opacity: 0.8; text-shadow: 0 0 10px var(--lzx-blue-glow); }
+.door.right .door-inset-label { color: var(--jt-gold); opacity: 0.8; text-shadow: 0 0 10px var(--jt-gold-glow); }
+
+.door-inset-name {
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  color: var(--text-main);
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.8);
+  margin-bottom: 3px;
+}
+
+.door-inset-sub {
+  font-size: 10px;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.6);
+}
+
+/* ============================================================
+   标题区
+   ============================================================ */
+.title-block {
+  text-align: center;
+  margin-bottom: 26px;
+  padding: 0 8px;
+}
+
+/* 顶部装饰线 */
+.title-block::before {
+  content: '';
+  display: block;
+  width: 60px;
+  height: 1px;
+  margin: 0 auto 16px;
+  background: linear-gradient(90deg,
+    transparent,
+    var(--gold-line),
+    transparent);
+}
+
+.title-main {
+  font-size: 26px;
+  font-weight: 900;
+  letter-spacing: 8px;
+  color: var(--text-main);
+  text-shadow:
+    0 0 40px hsla(35, 60%, 55%, 0.25),
+    0 4px 20px rgba(0, 0, 0, 0.6);
+  line-height: 1.3;
+  margin-bottom: 8px;
+  background: linear-gradient(135deg,
+    hsl(40, 60%, 88%) 0%,
+    hsl(35, 70%, 72%) 40%,
+    hsl(35, 55%, 60%) 70%,
+    hsl(40, 60%, 82%) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.title-sub {
+  font-size: 11px;
+  letter-spacing: 6px;
+  color: var(--text-muted);
+  font-family: "SF Mono", "Consolas", monospace;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+
+.title-poem {
+  font-size: 12px;
+  line-height: 1.8;
+  letter-spacing: 1.5px;
+  color: hsla(40, 20%, 75%, 0.65);
+  font-style: italic;
+}
+
+.title-poem::before,
+.title-poem::after {
+  content: '';
+  display: inline-block;
+  width: 16px;
+  height: 1px;
+  vertical-align: middle;
+  background: var(--gold-line);
+  margin: 0 12px;
+}
+
+/* ============================================================
+   推门按钮
+   ============================================================ */
+.enter-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+  padding: 18px 24px;
+  border: none;
+  border-radius: 8px;
+  background:
+    linear-gradient(135deg,
+      hsla(35, 65%, 50%, 0.9) 0%,
+      hsla(35, 60%, 40%, 0.95) 100%);
+  cursor: pointer;
+  font-family: inherit;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow:
+    inset 0 1px 0 hsla(40, 70%, 80%, 0.4),
+    inset 0 -1px 0 hsla(30, 50%, 30%, 0.3),
+    0 6px 24px rgba(0, 0, 0, 0.5),
+    0 0 40px hsla(35, 65%, 55%, 0.2);
+}
+
+/* 金色描边光晕 */
+.enter-btn::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: 10px;
+  background: linear-gradient(135deg,
+    hsla(40, 70%, 75%, 0.4),
+    transparent 30%,
+    transparent 70%,
+    hsla(40, 70%, 75%, 0.3));
+  z-index: -1;
+  opacity: 0.8;
+}
+
+/* 流光动效 */
+.enter-btn::after {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 100%; height: 100%;
+  background: linear-gradient(90deg,
+    transparent,
+    hsla(40, 80%, 85%, 0.4),
+    transparent);
+  transition: left 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+}
+
+.enter-btn:hover::after {
+  left: 100%;
+}
+
+.enter-btn:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    inset 0 1px 0 hsla(40, 70%, 80%, 0.5),
+    inset 0 -1px 0 hsla(30, 50%, 30%, 0.3),
+    0 10px 32px rgba(0, 0, 0, 0.6),
+    0 0 60px hsla(35, 65%, 55%, 0.35);
+}
+
+.enter-btn:active {
+  transform: translateY(0) scale(0.98);
+  transition-duration: 0.1s;
+}
+
+.enter-btn .btn-label {
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 6px;
+  color: hsl(40, 30%, 15%);
+  text-shadow: 0 1px 0 hsla(40, 60%, 80%, 0.4);
+}
+
+.enter-btn .btn-arrow {
+  width: 16px; height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.enter-btn .btn-arrow svg {
+  width: 100%; height: 100%;
+  fill: none;
+  stroke: hsl(40, 30%, 15%);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  animation: arrowDrift 1.6s ease-in-out infinite;
+}
+@keyframes arrowDrift {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(4px); }
+}
+
+/* ============================================================
+   底部
+   ============================================================ */
+.hall-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 22px;
+  padding-top: 14px;
+  border-top: 1px solid hsla(40, 40%, 50%, 0.08);
+  flex-wrap: wrap;
+}
+
+.footer-author {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  color: var(--text-dim);
+  font-family: "SF Mono", "Consolas", monospace;
+}
+
+.footer-author::before {
+  content: '—';
+  color: var(--gold-line);
+}
+
+.footer-warning {
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: var(--text-dim);
+  font-family: "SF Mono", "Consolas", monospace;
+  text-transform: uppercase;
+}
+
+/* ============================================================
+   响应式
+   ============================================================ */
+@media (max-width: 480px) {
+  .enter-hall { padding: 22px 16px 18px; border-radius: 16px; }
+  .hall-header { padding-bottom: 10px; margin-bottom: 18px; }
+  .hall-brand { font-size: 9px; letter-spacing: 2px; }
+  .hall-date { font-size: 9px; }
+
+  .doors-stage {
+    grid-template-columns: 1fr 20px 1fr;
+    min-height: 220px;
+    margin-bottom: 22px;
+  }
+  .door-inset { padding: 0 10px; bottom: 12px; }
+  .door-inset-label { font-size: 8px; letter-spacing: 2px; }
+  .door-inset-name { font-size: 13px; letter-spacing: 2px; }
+  .door-inset-sub { font-size: 9px; }
+
+  .title-main { font-size: 20px; letter-spacing: 5px; }
+  .title-sub { font-size: 10px; letter-spacing: 4px; }
+  .title-poem { font-size: 11px; }
+  .title-poem::before,
+  .title-poem::after { width: 10px; margin: 0 8px; }
+
+  .enter-btn { padding: 15px 18px; }
+  .enter-btn .btn-label { font-size: 12px; letter-spacing: 4px; }
+
+  .hall-footer { margin-top: 18px; padding-top: 10px; }
+  .footer-author { font-size: 9px; }
+  .footer-warning { font-size: 8px; }
+}
+
+@media (min-width: 640px) {
+  .enter-hall { max-width: 600px; padding: 36px 30px 28px; }
+  .doors-stage { min-height: 300px; grid-template-columns: 1fr 40px 1fr; }
+  .title-main { font-size: 30px; letter-spacing: 10px; }
+  .title-sub { font-size: 12px; letter-spacing: 8px; }
+  .title-poem { font-size: 13px; }
+  .door-inset-name { font-size: 17px; }
+}
+</style>
+</head>
+
+<body>
+
+<div class="enter-hall" id="enterHall">
+
+  <!-- ===== 顶部标识 ===== -->
+  <div class="hall-header">
+    <div class="hall-brand">
+      <span class="moon">
+        <svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </span>
+      <span>星河区 · 秋夜</span>
+    </div>
+    <span class="hall-date">23:47</span>
+  </div>
+
+  <!-- ===== 两扇门 ===== -->
+  <div class="doors-stage">
+
+    <!-- 左门 · 林芝夏 -->
+    <div class="door left" onclick="previewDoor('lzx')">
+      <div class="door-scene" style="background-image: url('https://cdn.jsdelivr.net/gh/sanshui19516/CG@main/%E7%86%9F%E5%A5%B3%E4%BA%8C%E4%BA%BA/HY1.jpg');"></div>
+      <div class="door-inset">
+        <div class="door-inset-label">DOOR · 01</div>
+        <div class="door-inset-name">林芝夏</div>
+        <div class="door-inset-sub">母亲 · 37岁 · 端庄</div>
+      </div>
+    </div>
+
+    <!-- 中间光缝 -->
+    <div class="door-light-seam"></div>
+
+    <!-- 右门 · 江棠 -->
+    <div class="door right" onclick="previewDoor('jt')">
+      <div class="door-scene" style="background-image: url('https://cdn.jsdelivr.net/gh/sanshui19516/CG@main/%E7%86%9F%E5%A5%B3%E4%BA%8C%E4%BA%BA/HY2.jpg');"></div>
+      <div class="door-inset">
+        <div class="door-inset-label">DOOR · 02</div>
+        <div class="door-inset-name">江棠</div>
+        <div class="door-inset-sub">邻居 · 37岁 · 开放</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ===== 标题区 ===== -->
+  <div class="title-block">
+    <div class="title-main">熟 女 双 人 的 夜 恋</div>
+    <div class="title-sub">TWO WINDOWS · ONE NIGHT</div>
+    <div class="title-poem">酒是江棠的，茶是林芝夏的</div>
+  </div>
+
+  <!-- ===== 推门按钮 ===== -->
+  <button class="enter-btn" onclick="enterStory()">
+    <span class="btn-label">推 门 而 入</span>
+    <span class="btn-arrow">
+      <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+    </span>
+  </button>
+
+  <!-- ===== 底部 ===== -->
+  <div class="hall-footer">
+    <span class="footer-author">三年的水</span>
+    <span class="footer-warning">No Commercial Use</span>
+  </div>
+
+</div>
+
+<script>
+/* ============================================================
+   欢迎页 ·《推门》
+   底层逻辑：纯原生DOM + IIFE + 单一init + window挂载
+   ============================================================ */
+
+(function() {
+  'use strict';
+
+  /* ============================================================
+     推门而入 —— 跳转到开场白（swipe 1）
+     ============================================================ */
+  async function enterStory() {
+    console.log('[欢迎页] 尝试跳转到索引: 1');
+
+    try {
+      var messages;
+      try {
+        messages = await getChatMessages?.('0', { include_swipe: true });
+      } catch (e) {
+        var context = window.SillyTavern?.getContext?.();
+        messages = context?.chat?.messages;
+      }
+
+      if (messages && messages.length > 0) {
+        var userMessage = messages[0];
+        if (userMessage && userMessage.swipes && userMessage.swipes.length > 1) {
+          var targetSwipe = userMessage.swipes[1];
+          var setChatMessage = window.setChatMessage || window.SillyTavern?.getContext?.()?.setChatMessage;
+          if (typeof setChatMessage === 'function') {
+            await setChatMessage(targetSwipe, 0, { swipe_id: 1, refresh: 'display_and_render_current' });
+            console.log('[欢迎页] 跳转成功（setChatMessage）');
+            return;
+          }
+          if (typeof userMessage.setSwipe === 'function') {
+            userMessage.setSwipe(1);
+            console.log('[欢迎页] 跳转成功（setSwipe）');
+            return;
+          }
+        }
+      }
+    } catch (e) {
+      console.warn('[欢迎页] 方法1失败:', e);
+    }
+
+    try {
+      if (typeof window.parent.triggerSlash === 'function') {
+        window.parent.triggerSlash('/trigger');
+        console.log('[欢迎页] 跳转触发（triggerSlash）');
+        return;
+      }
+      if (typeof window.parent.fillInput === 'function') {
+        window.parent.fillInput('/trigger');
+        console.log('[欢迎页] 跳转触发（fillInput）');
+        return;
+      }
+      if (typeof window.triggerSlash === 'function') {
+        window.triggerSlash('/trigger');
+        console.log('[欢迎页] 跳转触发（本地triggerSlash）');
+        return;
+      }
+    } catch (e) {
+      console.warn('[欢迎页] 备用跳转失败:', e);
+    }
+
+    console.warn('[欢迎页] 所有跳转方式均失败');
+  }
+
+  /* ============================================================
+     门预览 —— 点击门后的反馈（可扩展为打开图片放大）
+     ============================================================ */
+  function previewDoor(who) {
+    console.log('[欢迎页] 预览门:', who);
+    /* 目前只是视觉反馈，后续可扩展 */
+  }
+
+  /* ============================================================
+     挂载到 window
+     ============================================================ */
+  window.enterStory = enterStory;
+  window.previewDoor = previewDoor;
+
+  /* ============================================================
+     初始化
+     ============================================================ */
+  function init() {
+    console.log('🚪 欢迎页《推门》已加载');
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
+</script>
+
+</body>
+</html>
