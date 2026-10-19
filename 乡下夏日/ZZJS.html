@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>乡下夏日 · 大姐姐的○○ · 作者介绍</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;600;700;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet" />
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --blue: 205, 70%, 55%;
+            --blue-deep: 210, 60%, 38%;
+            --sand: 35, 45%, 92%;
+            --sand-deep: 35, 35%, 86%;
+            --ink: 210, 30%, 22%;
+            --muted: 210, 18%, 48%;
+            --line: 205, 35%, 78%;
+        }
+
+        html, body {
+            background: hsl(var(--sand));
+            font-family: 'Zen Kaku Gothic New', 'PingFang SC', system-ui, sans-serif;
+            color: hsl(var(--ink));
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* ============ 背景纹理 ============ */
+        .grain {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            background-image:
+                repeating-linear-gradient(
+                    45deg,
+                    hsla(var(--blue), 0.035) 0px,
+                    hsla(var(--blue), 0.035) 1px,
+                    transparent 1px,
+                    transparent 9px
+                ),
+                radial-gradient(
+                    circle,
+                    hsla(var(--blue), 0.06) 1px,
+                    transparent 1px
+                );
+            background-size: auto, 22px 22px;
+            mix-blend-mode: multiply;
+        }
+
+        /* 顶部一条"海平线"色带 */
+        .horizon {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            height: 5px;
+            z-index: 3;
+            background: linear-gradient(90deg,
+                hsl(var(--blue-deep)),
+                hsl(var(--blue)),
+                hsl(var(--sand-deep)),
+                hsl(var(--blue))
+            );
+            background-size: 200% 100%;
+            animation: horizonMove 18s linear infinite;
+            pointer-events: none;
+        }
+        @keyframes horizonMove {
+            0% { background-position: 0% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        /* ============ 散落的照片 ============ */
+        .photo {
+            position: absolute;
+            z-index: 1;
+            background: #fdfcfa;
+            padding: 7px 7px 26px 7px;
+            box-shadow:
+                0 10px 28px rgba(30, 50, 80, 0.14),
+                0 3px 8px rgba(30, 50, 80, 0.08);
+            border-radius: 2px;
+            opacity: 0.72;
+            transition: opacity 0.5s ease, transform 0.5s ease;
+            pointer-events: none;
+        }
+        .photo:hover {
+            opacity: 1;
+            transform: translateY(-4px) rotate(var(--rot, 0deg)) scale(1.02) !important;
+            z-index: 10;
+        }
+        
+        /* 修改了这里的样式，适配真实图片 */
+        .photo .inner {
+            width: 100%;
+            aspect-ratio: 3 / 4;
+            background: linear-gradient(135deg, hsl(205, 40%, 90%), hsl(205, 45%, 82%));
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .photo .inner img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .photo .cap {
+            position: absolute;
+            bottom: 6px;
+            left: 0; right: 0;
+            text-align: center;
+            font-size: 0.5rem;
+            color: hsl(var(--muted));
+            letter-spacing: 1.5px;
+            font-family: 'Shippori Mincho', serif;
+        }
+
+        /* 10张照片的位置 */
+        .p1  { top: 6%;   left: 3%;   width: 108px; --rot: -9deg; }
+        .p2  { top: 3%;   right: 5%;  width: 96px;  --rot: 6deg; }
+        .p3  { top: 24%;  left: 1%;   width: 88px;  --rot: 4deg; }
+        .p4  { top: 22%;  right: 2%;  width: 112px; --rot: -7deg; }
+        .p5  { top: 46%;  left: 2%;   width: 100px; --rot: 11deg; }
+        .p6  { top: 44%;  right: 3%;  width: 90px;  --rot: -5deg; }
+        .p7  { top: 66%;  left: 4%;   width: 104px; --rot: -3deg; }
+        .p8  { top: 68%;  right: 1%;  width: 98px;  --rot: 8deg; }
+        .p9  { bottom: 4%; left: 6%;  width: 92px;  --rot: -11deg; }
+        .p10 { bottom: 6%; right: 4%; width: 106px; --rot: 3deg; }
+
+        /* ============ 内容主区 ============ */
+        .content {
+            position: relative;
+            z-index: 5;
+            max-width: 560px;
+            margin: 0 auto;
+            padding: 72px 24px 60px;
+        }
+
+        /* ---------- Hero ---------- */
+        .hero {
+            text-align: left;
+            margin-bottom: 44px;
+            position: relative;
+        }
+        .hero::before {
+            content: '';
+            position: absolute;
+            left: -24px; top: 8px;
+            width: 3px; height: 78px;
+            background: hsl(var(--blue));
+            border-radius: 2px;
+        }
+        .hero-eyebrow {
+            font-family: 'Shippori Mincho', serif;
+            font-size: 0.62rem;
+            letter-spacing: 6px;
+            color: hsl(var(--blue));
+            margin-bottom: 14px;
+            font-weight: 600;
+        }
+        .hero-title {
+            font-family: 'Shippori Mincho', serif;
+            font-size: clamp(2.1rem, 7vw, 3rem);
+            font-weight: 800;
+            line-height: 1.05;
+            letter-spacing: 0.02em;
+            color: hsl(var(--ink));
+        }
+        .hero-title .accent {
+            color: hsl(var(--blue));
+        }
+        .hero-sub {
+            font-family: 'Shippori Mincho', serif;
+            font-size: clamp(0.92rem, 2.6vw, 1.08rem);
+            font-weight: 600;
+            color: hsl(var(--muted));
+            letter-spacing: 4px;
+            margin-top: 12px;
+        }
+        .hero-rule {
+            width: 42px;
+            height: 1px;
+            background: hsl(var(--line));
+            margin: 22px 0 14px;
+        }
+        .hero-tagline {
+            font-size: 0.74rem;
+            color: hsl(var(--muted));
+            letter-spacing: 2.5px;
+            line-height: 1.9;
+        }
+
+        /* ---------- 分节标题（无衬线 + 竖线） ---------- */
+        .sec {
+            margin-bottom: 34px;
+        }
+        .sec-label {
+            display: flex;
+            align-items: baseline;
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+        .sec-num {
+            font-family: 'Shippori Mincho', serif;
+            font-size: 0.62rem;
+            font-weight: 700;
+            color: hsl(var(--blue));
+            letter-spacing: 2px;
+        }
+        .sec-name {
+            font-family: 'Shippori Mincho', serif;
+            font-size: 0.94rem;
+            font-weight: 700;
+            letter-spacing: 3px;
+            color: hsl(var(--ink));
+        }
+        .sec-name-en {
+            font-size: 0.55rem;
+            letter-spacing: 3px;
+            color: hsla(var(--muted), 0.75);
+            text-transform: uppercase;
+            margin-left: auto;
+            font-weight: 500;
+        }
+
+        /* ---------- 本卡包含：勾选清单 ---------- */
+        .include-list {
+            list-style: none;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px 16px;
+        }
+        .include-list li {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            font-size: 0.78rem;
+            color: hsl(var(--ink));
+            letter-spacing: 0.6px;
+            padding: 8px 0;
+            border-bottom: 1px dashed hsla(var(--line), 0.7);
+        }
+        .include-list li::before {
+            content: '';
+            width: 14px; height: 14px;
+            flex-shrink: 0;
+            border: 1.5px solid hsl(var(--blue));
+            border-radius: 3px;
+            position: relative;
+            background: hsla(var(--blue), 0.06);
+        }
+        .include-list li::after {
+            content: '';
+            position: absolute;
+            width: 6px; height: 3px;
+            border-left: 1.5px solid hsl(var(--blue));
+            border-bottom: 1.5px solid hsl(var(--blue));
+            transform: rotate(-45deg) translate(-1px, -1px);
+            margin-left: 3px;
+        }
+
+        /* ---------- 双栏卡片：发布信息 / 授权说明 ---------- */
+        .dual {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+        .card {
+            background: #fdfcfa;
+            border: 1px solid hsla(var(--line), 0.8);
+            border-radius: 4px;
+            padding: 16px 15px 14px;
+            position: relative;
+        }
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 26px; height: 2px;
+            background: hsl(var(--blue));
+        }
+        .card-t {
+            font-family: 'Shippori Mincho', serif;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 2.5px;
+            color: hsl(var(--blue));
+            margin-bottom: 10px;
+        }
+        .card ul { list-style: none; }
+        .card ul li {
+            font-size: 0.7rem;
+            line-height: 1.95;
+            color: hsl(var(--muted));
+            letter-spacing: 0.4px;
+        }
+        .card ul li .hl {
+            color: hsl(var(--ink));
+            font-weight: 500;
+        }
+        .card ul li .ok { color: hsl(150, 40%, 40%); }
+        .card ul li .no { color: hsl(0, 45%, 55%); }
+
+        /* ---------- 使用说明：横排 ---------- */
+        .steps {
+            display: flex;
+            gap: 0;
+            align-items: stretch;
+        }
+        .step {
+            flex: 1;
+            padding: 0 12px;
+            border-left: 1px solid hsla(var(--line), 0.8);
+            position: relative;
+        }
+        .step:first-child { border-left: none; padding-left: 0; }
+        .step-n {
+            font-family: 'Shippori Mincho', serif;
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: hsla(var(--blue), 0.35);
+            line-height: 1;
+            margin-bottom: 8px;
+        }
+        .step-t {
+            font-size: 0.72rem;
+            color: hsl(var(--ink));
+            line-height: 1.7;
+            letter-spacing: 0.3px;
+        }
+
+        /* ---------- 作者区 ---------- */
+        .author {
+            background: #fdfcfa;
+            border: 1px solid hsla(var(--line), 0.8);
+            border-radius: 4px;
+            padding: 20px 18px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            position: relative;
+        }
+        .author::after {
+            content: 'AUTHOR';
+            position: absolute;
+            top: 12px; right: 14px;
+            font-family: 'Shippori Mincho', serif;
+            font-size: 0.5rem;
+            letter-spacing: 3px;
+            color: hsla(var(--muted), 0.4);
+        }
+        .author-av {
+            width: 56px; height: 56px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid hsla(var(--blue), 0.3);
+            flex-shrink: 0;
+        }
+        .author-info { flex: 1; min-width: 0; }
+        .author-name {
+            font-family: 'Shippori Mincho', serif;
+            font-size: 0.98rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: hsl(var(--ink));
+            margin-bottom: 3px;
+        }
+        .author-work {
+            font-size: 0.62rem;
+            color: hsl(var(--muted));
+            letter-spacing: 1.5px;
+            margin-bottom: 10px;
+        }
+        .author-links {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .alink {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.66rem;
+            color: hsl(var(--muted));
+            text-decoration: none;
+            letter-spacing: 0.8px;
+            padding: 5px 0;
+            border-bottom: 1px dashed hsla(var(--line), 0.6);
+            transition: color 0.25s ease;
+        }
+        .alink:last-child { border-bottom: none; }
+        .alink:hover { color: hsl(var(--blue)); }
+        .alink svg {
+            width: 13px; height: 13px;
+            fill: none; stroke: currentColor;
+            stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round;
+            flex-shrink: 0;
+        }
+        .alink .lbl {
+            font-weight: 700;
+            color: hsl(var(--blue-deep));
+            letter-spacing: 1.5px;
+            font-size: 0.6rem;
+        }
+
+        /* ---------- 故事标签：便签 ---------- */
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .tag {
+            font-family: 'Shippori Mincho', serif;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 2px;
+            padding: 6px 14px;
+            background: hsl(var(--sand-deep));
+            border: 1px solid hsla(var(--blue), 0.2);
+            color: hsl(var(--blue-deep));
+            border-radius: 2px;
+            position: relative;
+        }
+        .tag:nth-child(1) { transform: rotate(-1.5deg); }
+        .tag:nth-child(2) { transform: rotate(1deg); }
+        .tag:nth-child(3) { transform: rotate(-0.8deg); }
+
+        /* ---------- 公益声明 ---------- */
+        .notice {
+            background: hsla(var(--blue), 0.05);
+            border-left: 3px solid hsl(var(--blue));
+            padding: 14px 16px;
+            font-size: 0.66rem;
+            line-height: 1.95;
+            color: hsl(var(--muted));
+            letter-spacing: 0.4px;
+        }
+        .notice .nt {
+            font-family: 'Shippori Mincho', serif;
+            font-size: 0.68rem;
+            font-weight: 700;
+            color: hsl(var(--blue-deep));
+            letter-spacing: 2px;
+            margin-bottom: 6px;
+            display: block;
+        }
+        .notice .hl {
+            color: hsl(var(--blue-deep));
+            font-weight: 600;
+        }
+
+        /* ---------- 票根按钮 ---------- */
+        .cta-zone {
+            text-align: center;
+            margin: 40px 0 26px;
+        }
+        .ticket {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+            padding: 17px 52px;
+            background: hsl(var(--blue));
+            color: #fff;
+            font-family: 'Shippori Mincho', serif;
+            font-size: 0.92rem;
+            font-weight: 700;
+            letter-spacing: 5px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            position: relative;
+            box-shadow: 0 10px 26px hsla(var(--blue), 0.35);
+            transition: all 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        .ticket::before,
+        .ticket::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 14px; height: 14px;
+            background: hsl(var(--sand));
+            border-radius: 50%;
+            transform: translateY(-50%);
+        }
+        .ticket::before { left: -7px; }
+        .ticket::after { right: -7px; }
+        .ticket:hover {
+            background: hsl(var(--blue-deep));
+            transform: translateY(-3px);
+            box-shadow: 0 16px 34px hsla(var(--blue), 0.45);
+        }
+        .ticket:active {
+            transform: translateY(0) scale(0.98);
+        }
+        .ticket svg {
+            width: 17px; height: 17px;
+            fill: none; stroke: currentColor;
+            stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+            transition: transform 0.3s ease;
+        }
+        .ticket:hover svg { transform: translateX(4px); }
+
+        /* ---------- 底部 ---------- */
+        .footer {
+            text-align: center;
+            padding-top: 22px;
+            border-top: 1px solid hsla(var(--line), 0.7);
+            font-family: 'Shippori Mincho', serif;
+            font-size: 0.62rem;
+            letter-spacing: 4px;
+            color: hsla(var(--muted), 0.7);
+        }
+        .footer .fd {
+            font-size: 0.6rem;
+            letter-spacing: 6px;
+            color: hsla(var(--blue), 0.55);
+            margin-bottom: 8px;
+        }
+        .footer .by {
+            font-size: 0.58rem;
+            letter-spacing: 3px;
+            color: hsla(var(--muted), 0.55);
+        }
+
+        /* ============ 响应式 ============ */
+        @media (max-width: 720px) {
+            .photo { opacity: 0.4; }
+            .p3, .p5, .p7, .p9 { display: none; }
+            .p1 { width: 74px; top: 4%; left: 2%; }
+            .p2 { width: 66px; top: 3%; right: 3%; }
+            .p4 { width: 78px; top: 26%; right: 2%; }
+            .p6 { width: 64px; top: 48%; right: 3%; }
+            .p8 { width: 70px; top: 70%; right: 2%; }
+            .p10 { width: 72px; bottom: 5%; left: 4%; right: auto; }
+        }
+
+        @media (max-width: 560px) {
+            .content { padding: 58px 20px 48px; }
+            .hero::before { left: -20px; height: 68px; }
+            .include-list { grid-template-columns: 1fr; gap: 0; }
+            .dual { grid-template-columns: 1fr; }
+            .steps { flex-direction: column; }
+            .step { border-left: none; border-top: 1px solid hsla(var(--line), 0.8); padding: 12px 0; }
+            .step:first-child { border-top: none; padding-top: 0; }
+            .step-n { font-size: 1.1rem; margin-bottom: 4px; }
+            .author { flex-direction: column; align-items: flex-start; }
+            .ticket { padding: 15px 34px; letter-spacing: 3px; font-size: 0.8rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="horizon"></div>
+    <div class="grain"></div>
+
+    <!-- 10张真实散落照片（已替换） -->
+    <div class="photo p1"><div class="inner"><img src="https://testingcf.jsdelivr.net/gh/sanshui19516/CG@main/%E4%B9%A1%E4%B8%8B%E5%A4%8F%E6%97%A5/ZZJS%20(1).jpg" alt=""></div><div class="cap">SHIOSHIMA</div></div>
+    <div class="photo p2"><div class="inner"><img src="https://testingcf.jsdelivr.net/gh/sanshui19516/CG@main/%E4%B9%A1%E4%B8%8B%E5%A4%8F%E6%97%A5/ZZJS%20(2).jpg" alt=""></div><div class="cap">CAICHI</div></div>
+    <div class="photo p3"><div class="inner"><img src="https://testingcf.jsdelivr.net/gh/sanshui19516/CG@main/%E4%B9%A1%E4%B8%8B%E5%A4%8F%E6%97%A5/ZZJS%20(3).jpg" alt=""></div><div class="cap">UMI</div></div>
+    <div class="photo p4"><div class="inner"><img src="https://testingcf.jsdelivr.net/gh/sanshui19516/CG@main/%E4%B9%A1%E4%B8%8B%E5%A4%8F%E6%97%A5/ZZJS%20(4).jpg" alt=""></div><div class="cap">ENGAWA</div></div>
+    <div class="photo p5"><div class="inner"><img src="https://testingcf.jsdelivr.net/gh/sanshui19516/CG@main/%E4%B9%A1%E4%B8%8B%E5%A4%8F%E6%97%A5/ZZJS%20(5).jpg" alt=""></div><div class="cap">MATSURI</div></div>
+    <div class="photo p6"><div class="inner"><img src="https://testingcf.jsdelivr.net/gh/sanshui19516/CG@main/%E4%B9%A1%E4%B8%8B%E5%A4%8F%E6%97%A5/ZZJS%20(6).jpg" alt=""></div><div class="cap">HANABI</div></div>
+    <div class="photo p7"><div class="inner"><img src="https://testingcf.jsdelivr.net/gh/sanshui19516/CG@main/%E4%B9%A1%E4%B8%8B%E5%A4%8F%E6%97%A5/ZZJS%20(7).jpg" alt=""></div><div class="cap">KAZE</div></div>
+    <div class="photo p8"><div class="inner"><img src="https://testingcf.jsdelivr.net/gh/sanshui19516/CG@main/%E4%B9%A1%E4%B8%8B%E5%A4%8F%E6%97%A5/ZZJS%20(8).jpg" alt=""></div><div class="cap">SEMI</div></div>
+    <div class="photo p9"><div class="inner"><img src="https://testingcf.jsdelivr.net/gh/sanshui19516/CG@main/%E4%B9%A1%E4%B8%8B%E5%A4%8F%E6%97%A5/ZZJS%20(9).jpg" alt=""></div><div class="cap">SUIKA</div></div>
+    <div class="photo p10"><div class="inner"><img src="https://testingcf.jsdelivr.net/gh/sanshui19516/CG@main/%E4%B9%A1%E4%B8%8B%E5%A4%8F%E6%97%A5/ZZJS%20(10).jpg" alt=""></div><div class="cap">NATSU</div></div>
+
+    <main class="content">
+
+        <!-- Hero -->
+        <header class="hero">
+            <div class="hero-eyebrow">NATSU · SHIOSHIMA</div>
+            <h1 class="hero-title">
+                乡下夏日<br>
+                <span class="accent">大姐姐的○○</span>
+            </h1>
+            <div class="hero-sub">南 千 夏</div>
+            <div class="hero-rule"></div>
+            <div class="hero-tagline">
+                汐见町 · 蝉鸣 · 海风 · 一个夏天<br>
+                20 岁的大姐姐 × 18 岁的少年
+            </div>
+        </header>
+
+        <!-- 本卡包含 -->
+        <section class="sec">
+            <div class="sec-label">
+                <span class="sec-num">01</span>
+                <span class="sec-name">本卡包含</span>
+                <span class="sec-name-en">Contents</span>
+            </div>
+            <ul class="include-list">
+                <li>剧情推进</li>
+                <li>状态栏 UI</li>
+                <li>选项栏 UI</li>
+                <li>完整世界观</li>
+            </ul>
+        </section>
+
+        <!-- 发布信息 / 授权说明 -->
+        <section class="sec">
+            <div class="sec-label">
+                <span class="sec-num">02</span>
+                <span class="sec-name">发布 & 授权</span>
+                <span class="sec-name-en">Info</span>
+            </div>
+            <div class="dual">
+                <div class="card">
+                    <div class="card-t">发布信息</div>
+                    <ul>
+                        <li>仅发布于 <span class="hl">Discord 类脑</span></li>
+                        <li>作者：<span class="hl">三年的水</span></li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <div class="card-t">授权说明</div>
+                    <ul>
+                        <li><span class="ok">允许二改（署名）</span></li>
+                        <li><span class="ok">二改后需标注出处</span></li>
+                        <li><span class="no">禁止商用</span></li>
+                        <li><span class="no">禁止墙内二传</span></li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- 使用说明 -->
+        <section class="sec">
+            <div class="sec-label">
+                <span class="sec-num">03</span>
+                <span class="sec-name">使用说明</span>
+                <span class="sec-name-en">How to</span>
+            </div>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-n">01</div>
+                    <div class="step-t">导入角色卡到<br>SillyTavern</div>
+                </div>
+                <div class="step">
+                    <div class="step-n">02</div>
+                    <div class="step-t">配置状态栏与<br>选项栏正则</div>
+                </div>
+                <div class="step">
+                    <div class="step-n">03</div>
+                    <div class="step-t">开始对话<br>体验</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 作者 -->
+        <section class="sec">
+            <div class="sec-label">
+                <span class="sec-num">04</span>
+                <span class="sec-name">作者</span>
+                <span class="sec-name-en">Author</span>
+            </div>
+            <div class="author">
+                <img class="author-av" src="https://cdn.jsdelivr.net/gh/sanshui19516/CG@main/%E5%A4%B4%E5%83%8F.png" alt="作者头像" />
+                <div class="author-info">
+                    <div class="author-name">三年的水</div>
+                    <div class="author-work">✦ 乡下夏日 · 大姐姐的○○ ✦</div>
+                    <div class="author-links">
+                        <a class="alink" href="{{原帖链接}}" target="_blank" rel="noopener noreferrer">
+                            <svg viewBox="0 0 24 24"><path d="M4 4h16v16H4z"/><path d="M8 8h8v8H8z"/><path d="M16 8l-4 4-4-4"/><path d="M12 12v6"/></svg>
+                            <span class="lbl">原帖</span> Discord 原帖
+                        </a>
+                        <a class="alink" href="https://discord.com/channels/1134557553011998840/1516980193195987075/1516980193195987075" target="_blank" rel="noopener noreferrer">
+                            <svg viewBox="0 0 24 24"><path d="M4 4h16v16H4z"/><path d="M8 8h8v8H8z"/><path d="M16 8l-4 4-4-4"/><path d="M12 12v6"/></svg>
+                            <span class="lbl">集锦</span> Discord 频道
+                        </a>
+                        <a class="alink" href="https://discord.com/channels/1134557553011998840/1516980193195987075/1516980470871621794" target="_blank" rel="noopener noreferrer">
+                            <svg viewBox="0 0 24 24"><path d="M21 11.5L12 2 3 11.5"/><path d="M5 10v10a2 2 0 002 2h10a2 2 0 002-2V10"/><path d="M12 15v4"/></svg>
+                            <span class="lbl">关注</span> Discord 频道
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 故事标签 -->
+        <section class="sec">
+            <div class="sec-label">
+                <span class="sec-num">05</span>
+                <span class="sec-name">故事标签</span>
+                <span class="sec-name-en">Tags</span>
+            </div>
+            <div class="tags">
+                <span class="tag">夏日</span>
+                <span class="tag">年龄差</span>
+                <span class="tag">大姐姐主动</span>
+            </div>
+        </section>
+
+        <!-- 公益声明 -->
+        <section class="sec">
+            <div class="sec-label">
+                <span class="sec-num">06</span>
+                <span class="sec-name">公益声明</span>
+                <span class="sec-name-en">Notice</span>
+            </div>
+            <div class="notice">
+                <span class="nt">禁止商用 · 公益声明</span>
+                本角色卡为作者 <span class="hl">三年的水</span> 免费分享的公益作品，仅供个人娱乐与创作交流使用。<br>
+                严禁任何形式的商业用途，包括转卖、收费下载、打包售卖或用于盈利性直播 / 视频。<br>
+                如通过付费渠道获得，请立即退款并举报贩卖者。<br>
+                感谢您的支持与理解。
+            </div>
+        </section>
+
+        <!-- 按钮 -->
+        <div class="cta-zone">
+            <button class="ticket" onclick="switchOpening(2)">
+                <span>开始体验</span>
+                <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </button>
+        </div>
+
+        <!-- 底部 -->
+        <div class="footer">
+            <div class="fd">✦ 请多多评论 ✦</div>
+            <div class="by">by 三年的水</div>
+        </div>
+
+    </main>
+
+    <script>
+        async function switchOpening(swipeId) {
+            var clickedCard = event.currentTarget;
+            clickedCard.style.opacity = '0.6';
+            clickedCard.style.pointerEvents = 'none';
+            try {
+                var messages;
+                try {
+                    messages = await getChatMessages?.('0', { include_swipe: true });
+                } catch (e) {
+                    var context = window.SillyTavern?.getContext?.();
+                    messages = context?.chat?.messages;
+                }
+                if (!messages || messages.length === 0) throw new Error('没有找到聊天消息。');
+                var userMessage = messages[0];
+                if (!userMessage.swipes) throw new Error('第一条消息没有滑动条。');
+                if (userMessage.swipes.length <= swipeId) throw new Error('滑动条 ' + swipeId + ' 不存在。');
+                var targetSwipe = userMessage.swipes[swipeId];
+                var setChatMessage = window.setChatMessage || window.SillyTavern?.getContext?.()?.setChatMessage;
+                if (typeof setChatMessage === 'function') {
+                    await setChatMessage(targetSwipe, 0, { swipe_id: swipeId, refresh: 'display_and_render_current' });
+                } else if (typeof userMessage.setSwipe === 'function') {
+                    userMessage.setSwipe(swipeId);
+                }
+            } catch (error) {
+                console.error('切换失败:', error);
+            } finally {
+                clickedCard.style.opacity = '1';
+                clickedCard.style.pointerEvents = 'auto';
+            }
+        }
+    </script>
+
+</body>
+</html>
