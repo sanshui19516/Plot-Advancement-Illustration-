@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>乡下夏日 · 大姐姐的○○</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;600;700;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet" />
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --sea: 200, 55%, 58%;
+            --sea-deep: 205, 60%, 42%;
+            --sea-pale: 200, 45%, 88%;
+            --sand: 38, 45%, 90%;
+            --sand-deep: 38, 38%, 84%;
+            --ink: 210, 25%, 22%;
+            --muted: 210, 15%, 50%;
+            --line: 200, 35%, 78%;
+        }
+
+        html, body {
+            width: 100%;
+            min-height: 100vh;
+            background: transparent;
+            font-family: 'Zen Kaku Gothic New', 'PingFang SC', system-ui, sans-serif;
+            color: hsl(var(--ink));
+            overflow-x: hidden;
+        }
+
+        /* ============ 背景纹理 ============ */
+        .bg-grain {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            background-image:
+                repeating-linear-gradient(
+                    45deg,
+                    hsla(var(--sea), 0.03) 0px,
+                    hsla(var(--sea), 0.03) 1px,
+                    transparent 1px,
+                    transparent 10px
+                ),
+                radial-gradient(
+                    circle,
+                    hsla(var(--sea), 0.055) 1px,
+                    transparent 1px
+                );
+            background-size: auto, 24px 24px;
+            mix-blend-mode: multiply;
+        }
+
+        /* 顶部流动海平线 */
+        .horizon {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            height: 4px;
+            z-index: 3;
+            background: linear-gradient(90deg,
+                hsl(var(--sea-deep)),
+                hsl(var(--sea)),
+                hsl(var(--sand-deep)),
+                hsl(var(--sea)),
+                hsl(var(--sea-deep))
+            );
+            background-size: 200% 100%;
+            animation: horizonMove 20s linear infinite;
+            pointer-events: none;
+        }
+        @keyframes horizonMove {
+            0% { background-position: 0% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        /* ============ 主容器 · 大横屏 ============ */
+        .stage {
+            position: relative;
+            z-index: 5;
+            width: 100%;
+            max-width: 1320px;
+            aspect-ratio: 16 / 8.4;
+            max-height: 90vh;
+            margin: 24px auto;
+            display: grid;
+            grid-template-columns: 56% 44%;
+            background: #fdfcfa;
+            border: 1px solid hsla(var(--line), 0.9);
+            border-radius: 3px;
+            box-shadow:
+                0 30px 70px rgba(30, 55, 90, 0.16),
+                0 8px 20px rgba(30, 55, 90, 0.08);
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(24px) scale(0.99);
+            animation: stageIn 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+        @keyframes stageIn {
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        /* ============ 左栏 · 文字区 ============ */
+        .left {
+            position: relative;
+            padding: 44px 48px 36px 52px;
+            display: flex;
+            flex-direction: column;
+            background: #fdfcfa;
+            overflow: hidden;
+        }
+        .left::before {
+            content: '';
+            position: absolute;
+            top: 44px; bottom: 36px;
+            left: 28px;
+            width: 2px;
+            background: linear-gradient(
+                to bottom,
+                hsl(var(--sea)) 0%,
+                hsla(var(--sea), 0.2) 70%,
+                transparent 100%
+            );
+            border-radius: 2px;
+        }
+
+        .eyebrow {
+            font-family: 'Shippori Mincho', serif;
+            font-size: 0.62rem;
+            font-weight: 600;
+            letter-spacing: 7px;
+            color: hsl(var(--sea));
+            margin-bottom: 18px;
+        }
+
+        .title {
+            font-family: 'Shippori Mincho', serif;
+            font-weight: 800;
+            font-size: clamp(2rem, 4.6vw, 3.4rem);
+            line-height: 1.06;
+            letter-spacing: 0.015em;
+            color: hsl(var(--ink));
+            margin-bottom: 12px;
+        }
+        .title .accent {
+            color: hsl(var(--sea));
+            position: relative;
+        }
+        .title .accent::after {
+            content: '';
+            position: absolute;
+            left: 0; right: 8px; bottom: 4px;
+            height: 6px;
+            background: hsla(var(--sea), 0.16);
+            border-radius: 3px;
+            z-index: -1;
+        }
+
+        .subline {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            font-family: 'Shippori Mincho', serif;
+            font-size: 0.92rem;
+            font-weight: 600;
+            letter-spacing: 5px;
+            color: hsl(var(--muted));
+            margin-bottom: 26px;
+        }
+        .subline::before,
+        .subline::after {
+            content: '';
+            height: 1px;
+            background: hsla(var(--line), 0.9);
+            flex-shrink: 0;
+        }
+        .subline::before { width: 26px; }
+        .subline::after { flex: 1; }
+
+        /* 故事简介 · 打字机 */
+        .story {
+            flex: 1;
+            min-height: 0;
+            background: hsla(var(--sea-pale), 0.32);
+            border-left: 2px solid hsla(var(--sea), 0.4);
+            border-radius: 2px;
+            padding: 18px 20px 14px;
+            overflow-y: auto;
+            position: relative;
+            scrollbar-width: thin;
+            scrollbar-color: hsla(var(--sea), 0.25) transparent;
+            transition: border-color 0.4s ease;
+        }
+        .story::-webkit-scrollbar { width: 3px; }
+        .story::-webkit-scrollbar-track { background: transparent; }
+        .story::-webkit-scrollbar-thumb {
+            background: hsla(var(--sea), 0.28);
+            border-radius: 10px;
+        }
+        .story.done {
+            border-left-color: hsla(var(--sea), 0.25);
+        }
+
+        .story-label {
+            font-family: 'Shippori Mincho', serif;
+            font-size: 0.55rem;
+            font-weight: 700;
+            letter-spacing: 4px;
+            color: hsla(var(--sea), 0.7);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+        }
+        .story-label svg {
+            width: 12px; height: 12px;
+            fill: none; stroke: currentColor;
+            stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+        }
+
+        .typewriter {
+            font-family: 'Shippori Mincho', serif;
+            font-size: clamp(0.78rem, 1.2vw, 0.88rem);
+            font-weight: 500;
+            line-height: 2.0;
+            color: hsl(var(--ink));
+            letter-spacing: 0.4px;
+            min-height: 100%;
+        }
+        .typewriter .para {
+            display: block;
+            text-indent: 2em;
+            margin-bottom: 0.55em;
+        }
+        .typewriter .para:last-child { margin-bottom: 0; }
+
+        .typewriter .divider {
+            display: block;
+            text-align: center;
+            font-size: 0.5rem;
+            letter-spacing: 8px;
+            color: hsla(var(--sea), 0.3);
+            margin: 0.35em 0;
+            opacity: 0;
+            transition: opacity 0.6s ease;
+        }
+        .typewriter .divider.show { opacity: 1; }
+
+        .typewriter .cursor {
+            display: inline-block;
+            width: 2px;
+            height: 1em;
+            background: hsl(var(--sea));
+            margin-left: 2px;
+            vertical-align: text-bottom;
+            animation: blink 0.9s step-end infinite;
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+        .typewriter .cursor.done {
+            animation: blink 1.2s step-end infinite;
+            opacity: 0.55;
+        }
+
+        .skip-hint {
+            position: absolute;
+            bottom: 8px;
+            right: 14px;
+            font-size: 0.5rem;
+            letter-spacing: 2px;
+            color: hsla(var(--muted), 0.35);
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.8s ease;
+        }
+        .skip-hint.show { opacity: 1; }
+
+        /* ============ 右栏 · 主视觉 ============ */
+        .right {
+            position: relative;
+            background:
+                linear-gradient(150deg,
+                    hsl(var(--sea-pale)) 0%,
+                    hsl(200, 50%, 82%) 45%,
+                    hsl(200, 55%, 74%) 100%
+                );
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .right::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image:
+                repeating-linear-gradient(
+                    -15deg,
+                    hsla(var(--sea-deep), 0.06) 0px,
+                    hsla(var(--sea-deep), 0.06) 1px,
+                    transparent 1px,
+                    transparent 18px
+                );
+            pointer-events: none;
+        }
+
+        /* 3D 旋转图环 */
+        .scene {
+            display: grid;
+            perspective: 55em;
+            mask: linear-gradient(90deg, #0000, #000 12% 88%, #0000);
+            width: 100%;
+            height: 100%;
+            position: relative;
+            align-items: center;
+            justify-items: center;
+            z-index: 2;
+        }
+        .a3d {
+            display: grid;
+            place-self: center;
+            transform-style: preserve-3d;
+            animation: ry 32s linear infinite;
+            width: 100%;
+            height: 100%;
+            place-items: center;
+        }
+        @keyframes ry { to { rotate: y 1turn; } }
+
+        .card {
+            --w: min(20%, 150px);
+            --ba: 1turn / 6;
+            grid-area: 1/1;
+            width: var(--w);
+            aspect-ratio: 7/10;
+            object-fit: cover;
+            border-radius: 1.2em;
+            backface-visibility: hidden;
+            transform: rotatey(calc(var(--i) * var(--ba)))
+                       translatez(calc(-1 * (0.5 * var(--w) + 0.5em) / tan(0.5 * var(--ba))));
+            box-shadow: 0 6px 30px rgba(30, 55, 90, 0.3);
+            border: 1px solid hsla(var(--sea), 0.25);
+            transition: transform 0.3s, box-shadow 0.3s;
+            background: hsla(var(--sea-pale), 0.8);
+        }
+        .card:hover {
+            transform: rotatey(calc(var(--i) * var(--ba)))
+                       translatez(calc(-1 * (0.5 * var(--w) + 0.5em) / tan(0.5 * var(--ba)) - 18px));
+            box-shadow: 0 12px 50px hsla(var(--sea), 0.5);
+        }
+
+        /* 图片占位（当图片加载失败时生效） */
+        .card.ph {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Shippori Mincho', serif;
+            font-size: 0.6rem;
+            letter-spacing: 3px;
+            color: hsla(var(--sea-deep), 0.55);
+        }
+
+        /* 角落刻线 */
+        .corner {
+            position: absolute;
+            width: 16px; height: 16px;
+            border: 1.5px solid hsl(var(--sea));
+            z-index: 3;
+            pointer-events: none;
+        }
+        .corner.tl { top: 14px; left: 14px; border-right: none; border-bottom: none; }
+        .corner.tr { top: 14px; right: 14px; border-left: none; border-bottom: none; }
+        .corner.bl { bottom: 14px; left: 14px; border-right: none; border-top: none; }
+        .corner.br { bottom: 14px; right: 14px; border-left: none; border-top: none; }
+
+        /* 竖排装饰 */
+        .vertical {
+            position: absolute;
+            right: 6px; top: 50%;
+            transform: translateY(-50%);
+            writing-mode: vertical-rl;
+            font-family: 'Shippori Mincho', serif;
+            font-size: 0.58rem;
+            font-weight: 600;
+            letter-spacing: 8px;
+            color: hsla(var(--sea-deep), 0.35);
+            z-index: 4;
+            pointer-events: none;
+        }
+
+        /* ============ PLAY 按钮 ============ */
+        .cta {
+            position: absolute;
+            left: 52px;
+            bottom: 58px;
+            z-index: 10;
+        }
+        .ticket {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 13px;
+            padding: 15px 46px;
+            background: hsl(var(--sea));
+            color: #fff;
+            font-family: 'Shippori Mincho', serif;
+            font-size: 0.88rem;
+            font-weight: 700;
+            letter-spacing: 5px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            position: relative;
+            box-shadow: 0 10px 24px hsla(var(--sea), 0.34);
+            transition: all 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        .ticket::before,
+        .ticket::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 12px; height: 12px;
+            background: #fdfcfa;
+            border-radius: 50%;
+            transform: translateY(-50%);
+        }
+        .ticket::before { left: -6px; }
+        .ticket::after { right: -6px; }
+        .ticket:hover {
+            background: hsl(var(--sea-deep));
+            transform: translateY(-3px);
+            box-shadow: 0 16px 32px hsla(var(--sea), 0.42);
+        }
+        .ticket:active {
+            transform: translateY(0) scale(0.98);
+        }
+        .ticket svg {
+            width: 16px; height: 16px;
+            fill: none; stroke: currentColor;
+            stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+            transition: transform 0.3s ease;
+        }
+        .ticket:hover svg { transform: translateX(4px); }
+
+        /* ============ 底部横贯 ============ */
+        .bottom-bar {
+            position: absolute;
+            left: 0; right: 0; bottom: 0;
+            padding: 14px 52px 14px 28px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: linear-gradient(to top, hsla(var(--sand), 0.92), hsla(var(--sand), 0));
+            z-index: 6;
+            pointer-events: none;
+        }
+        .bb-left {
+            font-family: 'Shippori Mincho', serif;
+            font-size: 0.55rem;
+            letter-spacing: 4px;
+            color: hsla(var(--muted), 0.75);
+            pointer-events: auto;
+        }
+        .bb-left strong {
+            color: hsl(var(--sea-deep));
+            font-weight: 700;
+        }
+        .bb-right {
+            font-family: 'Shippori Mincho', serif;
+            font-size: 0.55rem;
+            letter-spacing: 5px;
+            color: hsla(var(--sea), 0.55);
+            pointer-events: auto;
+        }
+
+        /* ============ 过场动画 ============ */
+        #transition-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            z-index: 99999;
+            background: #0a0f14;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.6s ease;
+            pointer-events: none;
+        }
+        #transition-overlay.active {
+            display: flex;
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .transition-text {
+            text-align: center;
+            font-family: 'Shippori Mincho', serif;
+            position: relative;
+            z-index: 10;
+        }
+
+        .t-title {
+            font-size: clamp(2.4rem, 7vw, 4.5rem);
+            font-weight: 800;
+            color: #fff;
+            letter-spacing: 0.2em;
+            margin-bottom: 20px;
+            opacity: 0;
+            transform: translateY(8px);
+            transition: opacity 1.2s ease, transform 1.2s ease;
+        }
+        .t-title.show { opacity: 1; transform: translateY(0); }
+        .t-title.fade-out { opacity: 0; transform: translateY(-6px); }
+
+        .t-sub {
+            font-size: clamp(1rem, 2.5vw, 1.4rem);
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.6);
+            letter-spacing: 0.5em;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 1s ease, transform 1s ease;
+        }
+        .t-sub.show { opacity: 1; transform: translateY(0); }
+        .t-sub.fade-out { opacity: 0; transform: translateY(-4px); }
+
+        .t-skip {
+            position: absolute;
+            bottom: 3rem;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255, 255, 255, 0.15);
+            font-size: 0.62rem;
+            letter-spacing: 0.25em;
+            opacity: 0;
+            transition: opacity 1s ease;
+            font-family: 'Zen Kaku Gothic New', sans-serif;
+        }
+        .t-skip.show { opacity: 1; }
+
+        /* 光晕 */
+        .glow {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60vw;
+            height: 60vw;
+            max-width: 800px;
+            max-height: 800px;
+            background: radial-gradient(circle,
+                hsla(200, 55%, 58%, 0.15) 0%,
+                transparent 60%
+            );
+            pointer-events: none;
+            animation: glowPulse 4s ease-in-out infinite;
+        }
+        @keyframes glowPulse {
+            0%, 100% { opacity: 0.4; transform: translate(-50%, -50%) scale(1); }
+            50% { opacity: 0.8; transform: translate(-50%, -50%) scale(1.1); }
+        }
+
+        /* ============ 响应式 ============ */
+        @media (max-width: 1024px) {
+            .stage {
+                grid-template-columns: 60% 40%;
+                aspect-ratio: 16 / 9.5;
+                margin: 16px auto;
+            }
+            .left { padding: 36px 34px 30px 44px; }
+            .left::before { top: 36px; bottom: 30px; left: 24px; }
+            .cta { left: 44px; bottom: 48px; }
+            .bottom-bar { padding: 12px 44px 12px 24px; }
+        }
+
+        @media (max-width: 720px) {
+            body { padding: 12px; }
+            .horizon { height: 3px; }
+            .stage {
+                grid-template-columns: 1fr;
+                aspect-ratio: auto;
+                max-height: none;
+                border-radius: 2px;
+                margin: 8px auto;
+            }
+            .left {
+                padding: 34px 22px 28px 30px;
+                min-height: auto;
+            }
+            .left::before { top: 34px; bottom: 28px; left: 16px; }
+            .eyebrow { font-size: 0.55rem; letter-spacing: 5px; margin-bottom: 14px; }
+            .title { font-size: 1.85rem; }
+            .subline { font-size: 0.78rem; letter-spacing: 3px; margin-bottom: 18px; }
+            .story { padding: 14px 15px 12px; max-height: 220px; flex: none; }
+            .typewriter { font-size: 0.76rem; line-height: 1.9; }
+            .right {
+                aspect-ratio: 16 / 10;
+                min-height: 220px;
+            }
+            .vertical { display: none; }
+            .cta {
+                position: static;
+                margin: 22px 0 0;
+                padding: 0 22px 0 30px;
+            }
+            .ticket {
+                width: 100%;
+                padding: 15px 20px;
+                letter-spacing: 4px;
+                font-size: 0.82rem;
+            }
+            .bottom-bar {
+                position: static;
+                padding: 18px 22px 20px 30px;
+                background: none;
+                flex-direction: column;
+                gap: 8px;
+                align-items: flex-start;
+            }
+            .card { --w: min(28%, 100px); }
+        }
+
+        @media (max-width: 400px) {
+            .left { padding: 28px 18px 22px 26px; }
+            .left::before { left: 13px; }
+            .title { font-size: 1.6rem; }
+            .eyebrow { font-size: 0.5rem; letter-spacing: 4px; }
+            .cta { padding: 0 18px 0 26px; }
+            .bottom-bar { padding: 14px 18px 16px 26px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="horizon"></div>
+    <div class="bg-grain"></div>
+
+    <div class="stage" id="stage">
+
+        <!-- ========== 左栏 · 文字 ========== -->
+        <section class="left">
+
+            <div class="eyebrow">NATSU · SHIOSHIMA 2025</div>
+
+            <h1 class="title">
+                乡下夏日<br>
+                <span class="accent">大姐姐的○○</span>
+            </h1>
+
+            <div class="subline">南 千 夏</div>
+
+            <div class="story" id="storyBox">
+                <div class="story-label">
+                    <svg viewBox="0 0 24 24"><polyline points="4 7 4 4 20 4 20 7"/><line x1="4" y1="10" x2="20" y2="10"/><line x1="4" y1="14" x2="20" y2="14"/><line x1="4" y1="18" x2="16" y2="18"/></svg>
+                    STORY
+                </div>
+                <div class="typewriter" id="typewriter"></div>
+                <div class="skip-hint" id="skipHint">✦ 点击跳过 ✦</div>
+            </div>
+
+        </section>
+
+        <!-- ========== 右栏 · 3D 图片环 ========== -->
+        <aside class="right">
+            <div class="corner tl"></div>
+            <div class="corner tr"></div>
+            <div class="corner bl"></div>
+            <div class="corner br"></div>
+
+            <div class="scene">
+                <div class="a3d">
+                    <!-- 6 张真实图片（已替换） -->
+                    <img class="card" src="https://testingcf.jsdelivr.net/gh/sanshui19516/CG@main/%E4%B9%A1%E4%B8%8B%E5%A4%8F%E6%97%A5/HHYM%20(1).jpg" style="--i: 0" alt="" />
+                    <img class="card" src="https://testingcf.jsdelivr.net/gh/sanshui19516/CG@main/%E4%B9%A1%E4%B8%8B%E5%A4%8F%E6%97%A5/HHYM%20(2).jpg" style="--i: 1" alt="" />
+                    <img class="card" src="https://testingcf.jsdelivr.net/gh/sanshui19516/CG@main/%E4%B9%A1%E4%B8%8B%E5%A4%8F%E6%97%A5/HHYM%20(3).jpg" style="--i: 2" alt="" />
+                    <img class="card" src="https://testingcf.jsdelivr.net/gh/sanshui19516/CG@main/%E4%B9%A1%E4%B8%8B%E5%A4%8F%E6%97%A5/HHYM%20(4).jpg" style="--i: 3" alt="" />
+                    <img class="card" src="https://testingcf.jsdelivr.net/gh/sanshui19516/CG@main/%E4%B9%A1%E4%B8%8B%E5%A4%8F%E6%97%A5/HHYM%20(5).jpg" style="--i: 4" alt="" />
+                    <img class="card" src="https://testingcf.jsdelivr.net/gh/sanshui19516/CG@main/%E4%B9%A1%E4%B8%8B%E5%A4%8F%E6%97%A5/HHYM%20(6).jpg" style="--i: 5" alt="" />
+                </div>
+            </div>
+
+            <div class="vertical">SHIOSHIMA · NATSU</div>
+        </aside>
+
+        <!-- ========== 开始按钮 ========== -->
+        <div class="cta">
+            <button class="ticket" id="startBtn">
+                <span>はじまる</span>
+                <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </button>
+        </div>
+
+        <!-- ========== 底部信息 ========== -->
+        <div class="bottom-bar">
+            <div class="bb-left">A STORY BY <strong>三年的水</strong></div>
+            <div class="bb-right">✦ 请多多评论 ✦</div>
+        </div>
+
+    </div>
+
+    <!-- ========== 过场动画 ========== -->
+    <div id="transition-overlay">
+        <div class="glow"></div>
+        <div class="transition-text">
+            <div class="t-title" id="tTitle">三 年 的 水</div>
+            <div class="t-sub" id="tSub">请 多 多 评 论</div>
+        </div>
+        <div class="t-skip" id="tSkip">— 点击任意处跳过 —</div>
+    </div>
+
+    <script>
+        // ============================================================
+        // 跳转函数：切换到第 N 个开场白
+        // ============================================================
+        async function switchOpening(swipeId) {
+            console.log('[欢迎页] 尝试跳转到索引:', swipeId);
+            try {
+                let messages;
+                try {
+                    messages = await getChatMessages?.('0', { include_swipe: true });
+                } catch (e) {
+                    const context = window.SillyTavern?.getContext?.();
+                    messages = context?.chat?.messages;
+                }
+                if (!messages || messages.length === 0) throw new Error('没有找到聊天消息');
+                const userMessage = messages[0];
+                if (!userMessage.swipes) throw new Error('第一条消息没有滑动条');
+                if (userMessage.swipes.length <= swipeId) throw new Error('滑动条 ' + swipeId + ' 不存在');
+
+                const targetSwipe = userMessage.swipes[swipeId];
+                const setChatMessage = window.setChatMessage || window.SillyTavern?.getContext?.()?.setChatMessage;
+
+                if (typeof setChatMessage === 'function') {
+                    await setChatMessage(targetSwipe, 0, { swipe_id: swipeId, refresh: 'display_and_render_current' });
+                    console.log('[欢迎页] 跳转成功');
+                    return;
+                }
+                if (typeof userMessage.setSwipe === 'function') {
+                    userMessage.setSwipe(swipeId);
+                    console.log('[欢迎页] 跳转成功（setSwipe）');
+                    return;
+                }
+            } catch (e) {
+                console.warn('[欢迎页] 跳转失败:', e);
+            }
+        }
+
+        // ============================================================
+        // 打字机
+        // ============================================================
+        const storyParagraphs = [
+            '十八岁那年的夏天，他一个人回到老家。父母工作走不开，让他先回来收拾房子。',
+            '隔壁住着小时候一起玩的姐姐。南千夏，二十岁，大学生，暑假也回来了。',
+            '她不再是记忆里的样子。她穿得很少，靠得很近，说话的时候会看着他笑。',
+            '他记得小时候说过要娶她。她没提。但她记得。这个夏天，她打算认真地把这句话变成真的。'
+        ];
+
+        const CHAR_INTERVAL = 24;
+        const PARA_PAUSE = 340;
+
+        const typewriterEl = document.getElementById('typewriter');
+        const skipHint = document.getElementById('skipHint');
+        const storyBox = document.getElementById('storyBox');
+
+        let isTyping = false;
+        let isDone = false;
+        let timer = null;
+
+        function buildFullHTML() {
+            let html = '';
+            for (let i = 0; i < storyParagraphs.length; i++) {
+                html += '<span class="para">' + storyParagraphs[i] + '</span>';
+                if (i < storyParagraphs.length - 1) {
+                    html += '<span class="divider show">✦ ✦ ✦</span>';
+                }
+            }
+            return html;
+        }
+
+        function startTypewriter() {
+            if (!typewriterEl) return;
+            if (isTyping || isDone) return;
+            isTyping = true;
+            typewriterEl.innerHTML = '';
+            if (skipHint) skipHint.classList.remove('show');
+
+            let queue = [];
+            for (let p = 0; p < storyParagraphs.length; p++) {
+                queue.push({ type: 'p-start', index: p });
+                const txt = storyParagraphs[p];
+                for (let c = 0; c < txt.length; c++) {
+                    queue.push({ type: 'char', char: txt[c], paragraph: p });
+                }
+                queue.push({ type: 'p-end', index: p });
+            }
+
+            let qi = 0;
+            let curPara = null;
+
+            function next() {
+                if (qi >= queue.length) {
+                    isTyping = false;
+                    isDone = true;
+                    if (storyBox) storyBox.classList.add('done');
+                    const cur = document.createElement('span');
+                    cur.className = 'cursor done';
+                    cur.textContent = ' ';
+                    typewriterEl.appendChild(cur);
+                    if (skipHint) skipHint.classList.add('show');
+                    return;
+                }
+
+                const item = queue[qi];
+
+                if (item.type === 'p-start') {
+                    curPara = document.createElement('span');
+                    curPara.className = 'para';
+                    typewriterEl.appendChild(curPara);
+                    qi++;
+                    timer = setTimeout(next, 40);
+                    return;
+                }
+
+                if (item.type === 'p-end') {
+                    if (item.index < storyParagraphs.length - 1) {
+                        const d = document.createElement('span');
+                        d.className = 'divider';
+                        d.textContent = '✦ ✦ ✦';
+                        typewriterEl.appendChild(d);
+                        setTimeout(() => d.classList.add('show'), 50);
+                        qi++;
+                        timer = setTimeout(next, PARA_PAUSE);
+                        return;
+                    } else {
+                        qi++;
+                        timer = setTimeout(next, 30);
+                        return;
+                    }
+                }
+
+                if (item.type === 'char') {
+                    if (curPara) {
+                        curPara.appendChild(document.createTextNode(item.char));
+                    }
+                    qi++;
+                    timer = setTimeout(next, CHAR_INTERVAL);
+                    return;
+                }
+
+                qi++;
+                timer = setTimeout(next, CHAR_INTERVAL);
+            }
+
+            timer = setTimeout(next, 320);
+        }
+
+        function skipTypewriter() {
+            if (!isTyping && isDone) return;
+            if (timer) { clearTimeout(timer); timer = null; }
+            isTyping = false;
+            isDone = true;
+            if (storyBox) storyBox.classList.add('done');
+            typewriterEl.innerHTML = buildFullHTML();
+            const cur = document.createElement('span');
+            cur.className = 'cursor done';
+            cur.textContent = ' ';
+            typewriterEl.appendChild(cur);
+            if (skipHint) skipHint.classList.add('show');
+        }
+
+        if (storyBox) {
+            storyBox.addEventListener('click', function() {
+                if (isTyping) skipTypewriter();
+            });
+            storyBox.addEventListener('touchstart', function() {
+                if (isTyping) skipTypewriter();
+            }, { passive: true });
+        }
+
+        setTimeout(startTypewriter, 120);
+
+        // ============================================================
+        // 过场动画
+        // ============================================================
+        const overlay = document.getElementById('transition-overlay');
+        const tTitle = document.getElementById('tTitle');
+        const tSub = document.getElementById('tSub');
+        const tSkip = document.getElementById('tSkip');
+        const startBtn = document.getElementById('startBtn');
+
+        let transitionPlaying = false;
+        let transitionDone = false;
+
+        function startTransition() {
+            if (transitionDone) return;
+            transitionDone = true;
+            transitionPlaying = true;
+            overlay.classList.add('active');
+
+            setTimeout(() => { tTitle.classList.add('show'); }, 100);
+            setTimeout(() => {
+                tTitle.classList.remove('show');
+                tTitle.classList.add('fade-out');
+            }, 1500);
+
+            setTimeout(() => { tSub.classList.add('show'); }, 1800);
+
+            setTimeout(() => { tSkip.classList.add('show'); }, 2500);
+
+            setTimeout(() => {
+                tSub.classList.remove('show');
+                tSub.classList.add('fade-out');
+                tSkip.classList.remove('show');
+            }, 4200);
+
+            setTimeout(() => {
+                finishTransition();
+            }, 5000);
+        }
+
+        function finishTransition() {
+            if (!transitionPlaying && transitionDone) return;
+            transitionPlaying = false;
+            overlay.classList.remove('active');
+            setTimeout(() => {
+                switchOpening(1);
+            }, 400);
+        }
+
+        overlay.addEventListener('click', function() {
+            if (transitionPlaying) finishTransition();
+        });
+
+        if (startBtn) {
+            startBtn.addEventListener('click', function() {
+                startTransition();
+            });
+        }
+
+        // 键盘 Enter 也能开始
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && !transitionDone) {
+                startTransition();
+            }
+        });
+
+        // ============================================================
+        // 图片环卡片：加载失败显示占位
+        // ============================================================
+        document.querySelectorAll('.card').forEach((card, idx) => {
+            card.addEventListener('error', function() {
+                if (this.tagName === 'IMG') {
+                    const parent = this.parentNode;
+                    const placeholder = document.createElement('div');
+                    placeholder.className = 'card ph';
+                    placeholder.style.setProperty('--i', idx);
+                    placeholder.textContent = 'IMG ' + String(idx + 1).padStart(2, '0');
+                    parent.replaceChild(placeholder, this);
+                }
+            });
+        });
+
+        console.log('[乡下夏日 · 欢迎页] 已加载');
+    </script>
+
+</body>
+</html>
