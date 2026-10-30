@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>帰郷の夏 · 作者介绍</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg-deep: hsla(24, 22%, 9%, 0.96);
+  --bg-panel: hsla(26, 20%, 15%, 0.86);
+  --bg-card: hsla(26, 18%, 19%, 0.62);
+  --sunset: hsl(24, 72%, 62%);
+  --sunset-soft: hsl(30, 68%, 74%);
+  --sunset-glow: hsla(24, 80%, 55%, 0.18);
+  --rice: hsl(92, 24%, 48%);
+  --wood: hsl(28, 32%, 24%);
+  --text: hsl(35, 22%, 90%);
+  --text-sub: hsl(35, 15%, 64%);
+  --text-mute: hsl(35, 12%, 46%);
+  --line: hsla(30, 40%, 50%, 0.12);
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 16px 12px 40px;
+  background: transparent;
+  font-family: "PingFang SC", "Microsoft YaHei", "Hiragino Sans", sans-serif;
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+}
+
+.container {
+  max-width: 560px;
+  width: 100%;
+  position: relative;
+  padding: 0 0 24px;
+  background: var(--bg-deep);
+  border-radius: 28px;
+  border: 1px solid var(--line);
+  box-shadow:
+    0 40px 100px rgba(0, 0, 0, 0.7),
+    inset 0 0 0 1px hsla(30, 40%, 60%, 0.04);
+  overflow: hidden;
+}
+
+.hero {
+  position: relative;
+  height: 220px;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse at 50% 120%, var(--sunset-glow), transparent 60%),
+    linear-gradient(180deg, hsla(24, 30%, 14%, 1), hsla(24, 25%, 8%, 1));
+}
+
+.hero-window {
+  position: absolute;
+  inset: 0;
+  background-image:
+    repeating-linear-gradient(0deg, transparent 0 26px, hsla(30, 40%, 30%, 0.55) 26px 28px),
+    repeating-linear-gradient(90deg, transparent 0 34px, hsla(30, 40%, 30%, 0.55) 34px 36px);
+  opacity: 0.35;
+}
+
+.hero-glow {
+  position: absolute;
+  bottom: -50%;
+  left: 50%;
+  width: 140%;
+  height: 140%;
+  transform: translateX(-50%);
+  background: radial-gradient(ellipse at 50% 100%, var(--sunset-glow), transparent 55%);
+  animation: breathe 6s ease-in-out infinite;
+}
+
+@keyframes breathe {
+  0%, 100% { opacity: 0.6; transform: translateX(-50%) scale(1); }
+  50% { opacity: 1; transform: translateX(-50%) scale(1.06); }
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  text-align: center;
+}
+
+.hero-sub {
+  font-family: "Noto Serif SC", "Songti SC", serif;
+  font-size: 0.72rem;
+  letter-spacing: 8px;
+  color: var(--sunset-soft);
+  opacity: 0.7;
+  margin-bottom: 10px;
+}
+
+.hero-title {
+  font-family: "Noto Serif SC", "Songti SC", serif;
+  font-size: 1.55rem;
+  font-weight: 700;
+  letter-spacing: 3px;
+  line-height: 1.4;
+  background: linear-gradient(135deg, var(--sunset-soft), var(--sunset));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 30px var(--sunset-glow);
+}
+
+.hero-desc {
+  margin-top: 10px;
+  font-size: 0.72rem;
+  letter-spacing: 4px;
+  color: var(--text-sub);
+  opacity: 0.7;
+}
+
+.hero-cicada {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 60px;
+  height: 60px;
+  opacity: 0.18;
+  animation: flutter 4s ease-in-out infinite;
+}
+.hero-cicada svg { width: 100%; height: 100%; }
+
+@keyframes flutter {
+  0%, 100% { transform: rotate(-5deg) translateY(0); }
+  50% { transform: rotate(5deg) translateY(-4px); }
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px 0;
+  gap: 12px;
+}
+.divider-line {
+  flex: 1;
+  max-width: 100px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--line), transparent);
+}
+.divider-icon {
+  width: 22px;
+  height: 22px;
+  opacity: 0.35;
+}
+.divider-icon svg {
+  width: 100%;
+  height: 100%;
+  animation: spin 20s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.author-card {
+  margin: 0 20px 14px;
+  padding: 22px 18px 18px;
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  text-align: center;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+.author-card:hover {
+  border-color: hsla(24, 72%, 62%, 0.3);
+  box-shadow: 0 0 40px var(--sunset-glow);
+}
+
+.author-avatar {
+  display: block;
+  margin: 0 auto 12px auto;
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid hsla(24, 72%, 62%, 0.5);
+  box-shadow: 0 0 24px var(--sunset-glow);
+  transition: transform 0.4s;
+}
+.author-avatar:hover { transform: scale(1.06); }
+
+.author-name {
+  font-family: "Noto Serif SC", "Songti SC", serif;
+  font-size: 1.05rem;
+  letter-spacing: 4px;
+  color: var(--sunset-soft);
+  margin-bottom: 4px;
+}
+
+.author-badge {
+  font-size: 0.66rem;
+  letter-spacing: 2px;
+  color: var(--text-mute);
+  margin-bottom: 14px;
+}
+
+.author-links {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.author-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 12px;
+  background: hsla(26, 18%, 24%, 0.5);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  color: var(--text-sub);
+  text-decoration: none;
+  font-size: 0.76rem;
+  letter-spacing: 1px;
+  transition: all 0.3s;
+}
+.author-link:hover {
+  background: hsla(24, 40%, 22%, 0.7);
+  border-color: hsla(24, 72%, 62%, 0.35);
+  color: var(--sunset-soft);
+  transform: translateY(-1px);
+}
+.author-link svg {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: var(--sunset);
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0.8;
+}
+
+.info-block {
+  margin: 0 20px 12px;
+  padding: 14px 16px;
+  background: var(--bg-panel);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  transition: border-color 0.3s;
+}
+.info-block:hover { border-color: hsla(24, 72%, 62%, 0.2); }
+
+.info-label {
+  font-family: "Noto Serif SC", "Songti SC", serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 3px;
+  color: var(--sunset-soft);
+  margin-bottom: 10px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.info-label::before {
+  content: '';
+  display: inline-block;
+  width: 3px;
+  height: 12px;
+  background: var(--sunset);
+  border-radius: 2px;
+  opacity: 0.7;
+}
+
+.info-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.info-list li {
+  font-size: 0.74rem;
+  line-height: 1.7;
+  color: var(--text-sub);
+  padding-left: 14px;
+  position: relative;
+}
+.info-list li::before {
+  content: '◇';
+  position: absolute;
+  left: 0;
+  color: var(--sunset);
+  opacity: 0.5;
+  font-size: 0.6rem;
+  top: 3px;
+}
+
+.allow { color: var(--rice); }
+.warn { color: hsl(15, 55%, 62%); }
+.feature { color: var(--sunset-soft); }
+
+.gallery-section {
+  margin: 24px 20px 12px;
+}
+.gallery-head {
+  text-align: center;
+  margin-bottom: 16px;
+}
+.gallery-title {
+  font-family: "Noto Serif SC", "Songti SC", serif;
+  font-size: 1rem;
+  letter-spacing: 5px;
+  color: var(--sunset-soft);
+  margin-bottom: 4px;
+}
+.gallery-sub {
+  font-size: 0.68rem;
+  letter-spacing: 3px;
+  color: var(--text-mute);
+}
+
+.gallery {
+  column-count: 3;
+  column-gap: 8px;
+}
+@media (max-width: 520px) {
+  .gallery { column-count: 2; column-gap: 6px; }
+}
+
+.cg-item {
+  break-inside: avoid;
+  margin-bottom: 8px;
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  background: hsla(26, 18%, 14%, 0.6);
+  border: 1px solid var(--line);
+  transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
+  position: relative;
+}
+.cg-item:hover {
+  transform: translateY(-2px);
+  border-color: hsla(24, 72%, 62%, 0.35);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4), 0 0 20px var(--sunset-glow);
+}
+.cg-item img {
+  width: 100%;
+  height: auto;
+  display: block;
+  opacity: 0;
+  transition: opacity 0.5s;
+}
+.cg-item img.loaded { opacity: 1; }
+
+.story-card {
+  margin: 24px 20px 16px;
+  padding: 22px 18px 20px;
+  background:
+    linear-gradient(135deg, hsla(24, 30%, 18%, 0.8), hsla(26, 20%, 14%, 0.8));
+  border: 1px solid hsla(24, 72%, 62%, 0.2);
+  border-radius: 20px;
+  cursor: pointer;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.4s;
+}
+.story-card::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(ellipse at 30% 50%, var(--sunset-glow), transparent 60%);
+  animation: shimmer 8s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes shimmer {
+  0%, 100% { transform: translateX(-10%) scale(1); opacity: 0.4; }
+  50% { transform: translateX(10%) scale(1.1); opacity: 0.9; }
+}
+.story-card:hover {
+  border-color: hsla(24, 72%, 62%, 0.4);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4), 0 0 30px var(--sunset-glow);
+}
+
+.story-icon {
+  position: relative;
+  z-index: 1;
+  width: 36px;
+  height: 36px;
+  margin: 0 auto 10px;
+  opacity: 0.7;
+}
+.story-icon svg { width: 100%; height: 100%; }
+
+.story-title {
+  position: relative;
+  z-index: 1;
+  font-family: "Noto Serif SC", "Songti SC", serif;
+  font-size: 1rem;
+  letter-spacing: 4px;
+  color: var(--sunset-soft);
+  margin-bottom: 10px;
+}
+
+.story-desc {
+  position: relative;
+  z-index: 1;
+  font-size: 0.74rem;
+  line-height: 1.9;
+  color: var(--text-sub);
+  letter-spacing: 0.3px;
+}
+.story-desc em {
+  color: var(--sunset);
+  font-style: normal;
+  font-weight: 600;
+}
+
+.footer {
+  margin-top: 20px;
+  padding: 16px 20px 4px;
+  text-align: center;
+  border-top: 1px solid var(--line);
+}
+.footer-deco {
+  font-size: 0.7rem;
+  letter-spacing: 5px;
+  color: var(--sunset);
+  opacity: 0.6;
+  margin-bottom: 4px;
+  animation: glow 3s ease-in-out infinite;
+}
+@keyframes glow {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.9; }
+}
+.footer-name {
+  font-size: 0.68rem;
+  letter-spacing: 2px;
+  color: var(--text-mute);
+}
+
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  background: rgba(8, 6, 4, 0.94);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.lightbox.open { display: flex; opacity: 1; }
+
+.lightbox img {
+  max-width: 92vw;
+  max-height: 88vh;
+  border-radius: 12px;
+  box-shadow: 0 0 60px rgba(0, 0, 0, 0.9), 0 0 0 1px hsla(24, 72%, 62%, 0.2);
+  object-fit: contain;
+}
+
+.lightbox-close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 40px;
+  height: 40px;
+  border: 1px solid hsla(24, 72%, 62%, 0.3);
+  background: hsla(24, 30%, 16%, 0.8);
+  border-radius: 50%;
+  color: var(--sunset-soft);
+  font-size: 18px;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.lightbox-close:hover {
+  transform: rotate(90deg);
+  background: hsla(24, 40%, 22%, 0.9);
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <div class="hero">
+    <div class="hero-window"></div>
+    <div class="hero-glow"></div>
+    <div class="hero-cicada">
+      <svg viewBox="0 0 64 64" fill="none" stroke="hsl(24, 72%, 62%)" stroke-width="1.2">
+        <ellipse cx="32" cy="24" rx="7" ry="10"/>
+        <path d="M25 18 Q14 12 8 20 Q14 26 24 24"/>
+        <path d="M39 18 Q50 12 56 20 Q50 26 40 24"/>
+        <path d="M25 26 Q18 30 16 42 Q22 40 26 34"/>
+        <path d="M39 26 Q46 30 48 42 Q42 40 38 34"/>
+        <line x1="32" y1="34" x2="32" y2="42"/>
+      </svg>
+    </div>
+    <div class="hero-content">
+      <div class="hero-sub">帰 郷 の 夏</div>
+      <h1 class="hero-title">乡下的未亡人大姐姐</h1>
+      <div class="hero-desc">～ 雪 乃 さ ん の 家 で ～</div>
+    </div>
+  </div>
+
+  <div class="divider">
+    <div class="divider-line"></div>
+    <div class="divider-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="hsl(24, 72%, 62%)" stroke-width="1">
+        <path d="M12 12 m0 -1 a1 1 0 1 1 -0.01 0"/>
+        <path d="M12 12 m0 -3 a3 3 0 1 1 -0.01 0"/>
+        <path d="M12 12 m0 -5 a5 5 0 1 1 -0.01 0"/>
+        <path d="M12 12 m0 -7 a7 7 0 1 1 -0.01 0"/>
+        <path d="M12 12 m0 -9 a9 9 0 1 1 -0.01 0"/>
+      </svg>
+    </div>
+    <div class="divider-line"></div>
+  </div>
+
+  <div class="author-card">
+    <img class="author-avatar" src="https://cdn.jsdelivr.net/gh/sanshui19516/CG@main/%E5%A4%B4%E5%83%8F.png" alt="三年的水" />
+    <div class="author-name">三年的水</div>
+    <div class="author-badge">帰郷の夏 · 原案</div>
+    <div class="author-links">
+      <a class="author-link" href="https://discord.com/channels/1134557553011998840/1516980193195987075/1516980193195987075" target="_blank" rel="noopener noreferrer">
+        <svg viewBox="0 0 24 24"><path d="M4 6h16v12H4z"/><path d="M8 10h8"/><path d="M8 14h5"/></svg>
+        <span>原帖链接</span>
+      </a>
+      <a class="author-link" href="https://discord.com/channels/1134557553011998840/1516980193195987075/1516980193195987075" target="_blank" rel="noopener noreferrer">
+        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+        <span>作品集锦</span>
+      </a>
+      <a class="author-link" href="https://discord.com/channels/1134557553011998840/1516980193195987075/1516980470871621794" target="_blank" rel="noopener noreferrer">
+        <svg viewBox="0 0 24 24"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg>
+        <span>关注作者</span>
+      </a>
+    </div>
+  </div>
+
+  <div class="info-block">
+    <div class="info-label">发布信息</div>
+    <ul class="info-list">
+      <li>仅发布于 Discord 类脑</li>
+      <li>作者：三年的水</li>
+    </ul>
+  </div>
+
+  <div class="info-block">
+    <div class="info-label">授权说明</div>
+    <ul class="info-list">
+      <li><span class="allow">✓ 允许二改（需署名）</span></li>
+      <li><span class="allow">✓ 二改后需标注出处</span></li>
+      <li><span class="warn">✕ 禁止商用</span></li>
+      <li><span class="warn">✕ 禁止墙内二传</span></li>
+    </ul>
+  </div>
+
+  <div class="info-block">
+    <div class="info-label">本卡包含</div>
+    <ul class="info-list">
+      <li><span class="feature">MVU 变量系统 · 实时追踪雪乃的状态</span></li>
+      <li><span class="feature">六周时间线 · 20 个链式事件</span></li>
+      <li><span class="feature">三面性动态人设 · 村里人 / 姐姐 / 夜里</span></li>
+      <li><span class="feature">场景控制器 · 10 个可用场景</span></li>
+      <li><span class="feature">服装 / 称谓 / 生理期 / 怀孕 · 全联动</span></li>
+      <li><span class="feature">300张CGn></li>
+      <li><span class="feature">24 张 CG 画廊</span></li>
+    </ul>
+  </div>
+
+  <div class="info-block">
+    <div class="info-label">使用说明</div>
+    <ul class="info-list">
+      <li>导入角色卡到 SillyTavern</li>
+      <li>开启 MVU 变量系统</li>
+      <li>开启提示词模板</li>
+      <li>如果出现状态栏尾部代码块未渲染情况请看帖子标注i>
+      <li>开始对话 · 从暑假第一天开始</li>
+    </ul>
+  </div>
+
+  <div class="info-block">
+    <div class="info-label">特色系统</div>
+    <ul class="info-list">
+      <li>叙事调性 · 四阶段推进（适应 / 裂缝 / 越界 / 尾声）</li>
+      <li>村里闲话度 · 外部压力随关系推进而累积</li>
+      <li>生理期与怀孕 · 身体状态与剧情联动</li>
+      <li>时间压力 · 六周暑假的倒数感</li>
+    </ul>
+  </div>
+
+  <div class="info-block">
+    <div class="info-label">公益声明</div>
+    <ul class="info-list">
+      <li>本角色卡为作者「三年的水」免费分享的公益作品，仅供个人娱乐与创作交流使用。</li>
+      <li>严禁任何形式的商业用途，包括转卖、收费下载、打包售卖或用于盈利性直播 / 视频。</li>
+      <li>如通过付费渠道获得，请立即退款并举报贩卖者，维护创作者与您自身的权益。</li>
+      <li>感谢您的支持与理解。—— 作者：三年的水</li>
+    </ul>
+  </div>
+
+  <div class="gallery-section">
+    <div class="gallery-head">
+      <div class="gallery-title">二 十 四 帧 夏 日</div>
+      <div class="gallery-sub">点击任意画面，进入那个傍晚</div>
+    </div>
+    <div class="gallery" id="gallery"></div>
+  </div>
+
+  <div class="story-card" id="storyCard">
+    <div class="story-icon">
+      <svg viewBox="0 0 48 48" fill="none" stroke="hsl(24, 72%, 62%)" stroke-width="1.4">
+        <path d="M24 8 L24 14 M24 34 L24 40 M8 24 L14 24 M34 24 L40 24"/>
+        <circle cx="24" cy="24" r="8"/>
+        <path d="M16 20 Q12 16 8 18 Q12 22 16 22"/>
+        <path d="M32 20 Q36 16 40 18 Q36 22 32 22"/>
+      </svg>
+    </div>
+    <div class="story-title">那 年 夏 天</div>
+    <div class="story-desc">
+      暑假的第一天，<em>蝉声比记忆里更密</em>。<br>
+      老宅的木头颜色更深了，屋檐下那根横梁还是歪的。<br>
+      奶奶说，隔壁白石家的那位大姐姐，一个人守着那栋房子，已经三年了。<br>
+      明天，去一趟吧。至少去打声招呼。
+    </div>
+  </div>
+
+  <div class="footer">
+    <div class="footer-deco">✦ 请 多 多 评 论 ✦</div>
+    <div class="footer-name">by 三年的水</div>
+  </div>
+
+</div>
+
+<div class="lightbox" id="lightbox">
+  <button class="lightbox-close" id="lightboxClose" aria-label="关闭">✕</button>
+  <img id="lightboxImg" src="" alt="" />
+</div>
+
+<script>
+(function() {
+  'use strict';
+
+  /* ============================================================
+     跳转函数 · 完整定义
+     ============================================================ */
+  async function switchOpening(swipeId) {
+    console.log('[作者介绍页] 尝试跳转到索引:', swipeId);
+
+    try {
+      let messages;
+      try {
+        messages = await getChatMessages?.('0', { include_swipe: true });
+      } catch (e) {
+        const context = window.SillyTavern?.getContext?.() || window.parent?.SillyTavern?.getContext?.();
+        messages = context?.chat;
+      }
+      if (messages && messages.length > 0) {
+        const userMessage = messages[0];
+        if (userMessage && userMessage.swipes && userMessage.swipes.length > swipeId) {
+          const targetSwipe = userMessage.swipes[swipeId];
+          const ctx = window.SillyTavern?.getContext?.() || window.parent?.SillyTavern?.getContext?.();
+          const setChatMessage = window.setChatMessage || ctx?.setChatMessage;
+          if (typeof setChatMessage === 'function') {
+            await setChatMessage(targetSwipe, 0, { swipe_id: swipeId, refresh: 'display_and_render_current' });
+            return;
+          }
+          if (typeof userMessage.setSwipe === 'function') {
+            userMessage.setSwipe(swipeId);
+            return;
+          }
+        }
+      }
+    } catch (e) {
+      console.warn('[作者介绍页] 方法1失败:', e);
+    }
+
+    try {
+      if (typeof window.parent?.triggerSlash === 'function') {
+        window.parent.triggerSlash('/trigger');
+        return;
+      }
+      if (typeof window.triggerSlash === 'function') {
+        window.triggerSlash('/trigger');
+        return;
+      }
+    } catch (e) {
+      console.warn('[作者介绍页] 方法2失败:', e);
+    }
+  }
+
+  /* ============================================================
+     CG 画廊 · 24 张
+     ============================================================ */
+  const CG_URLS = [
+    'https://cdn.jsdelivr.net/gh/sanshui19516/Plot-Advancement-Illustration-@main/%E4%B9%A1%E4%B8%8B%E9%9B%AA%E4%B9%83/ZZJS%20(1).jpg',
+    'https://cdn.jsdelivr.net/gh/sanshui19516/Plot-Advancement-Illustration-@main/%E4%B9%A1%E4%B8%8B%E9%9B%AA%E4%B9%83/ZZJS%20(2).jpg',
+    'https://cdn.jsdelivr.net/gh/sanshui19516/Plot-Advancement-Illustration-@main/%E4%B9%A1%E4%B8%8B%E9%9B%AA%E4%B9%83/ZZJS%20(3).jpg',
+    'https://cdn.jsdelivr.net/gh/sanshui19516/Plot-Advancement-Illustration-@main/%E4%B9%A1%E4%B8%8B%E9%9B%AA%E4%B9%83/ZZJS%20(4).jpg',
+    'https://cdn.jsdelivr.net/gh/sanshui19516/Plot-Advancement-Illustration-@main/%E4%B9%A1%E4%B8%8B%E9%9B%AA%E4%B9%83/ZZJS%20(5).jpg',
+    'https://cdn.jsdelivr.net/gh/sanshui19516/Plot-Advancement-Illustration-@main/%E4%B9%A1%E4%B8%8B%E9%9B%AA%E4%B9%83/ZZJS%20(6).jpg',
+    'https://cdn.jsdelivr.net/gh/sanshui19516/Plot-Advancement-Illustration-@main/%E4%B9%A1%E4%B8%8B%E9%9B%AA%E4%B9%83/ZZJS%20(7).jpg',
+    'https://cdn.jsdelivr.net/gh/sanshui19516/Plot-Advancement-Illustration-@main/%E4%B9%A1%E4%B8%8B%E9%9B%AA%E4%B9%83/ZZJS%20(8).jpg',
+    'https://cdn.jsdelivr.net/gh/sanshui19516/Plot-Advancement-Illustration-@main/%E4%B9%A1%E4%B8%8B%E9%9B%AA%E4%B9%83/ZZJS%20(9).jpg',
+    'https://cdn.jsdelivr.net/gh/sanshui19516/Plot-Advancement-Illustration-@main/%E4%B9%A1%E4%B8%8B%E9%9B%AA%E4%B9%83/ZZJS%20(10).jpg',
+    'https://cdn.jsdelivr.net/gh/sanshui19516/Plot-Advancement-Illustration-@main/%E4%B9%A1%E4%B8%8B%E9%9B%AA%E4%B9%83/ZZJS%20(11).jpg',
+    'https://cdn.jsdelivr.net/gh/sanshui19516/Plot-Advancement-Illustration-@main/%E4%B9%A1%E4%B8%8B%E9%9B%AA%E4%B9%83/ZZJS%20(12).jpg',
+    'https://cdn.jsdelivr.net/gh/sanshui19516/Plot-Advancement-Illustration-@main/%E4%B9%A1%E4%B8%8B%E9%9B%AA%E4%B9%83/ZZJS%20(13).jpg',
+    'https://cdn.jsdelivr.net/gh/sanshui19516/Plot-Advancement-Illustration-@main/%E4%B9%A1%E4%B8%8B%E9%9B%AA%E4%B9%83/ZZJS%20(14).jpg',
+    'https://cdn.jsdelivr.net/gh/sanshui19516/Plot-Advancement-Illustration-@main/%E4%B9%A1%E4%B8%8B%E9%9B%AA%E4%B9%83/ZZJS%20(15).jpg',
+    'https://cdn.jsdelivr.net/gh/sanshui19516/Plot-Advancement-Illustration-@main/%E4%B9%A1%E4%B8%8B%E9%9B%AA%E4%B9%83/ZZJS%20(16).jpg',
+    'https://cdn.jsdelivr.net/gh/sanshui19516/Plot-Advancement-Illustration-@main/%E4%B9%A1%E4%B8%8B%E9%9B%AA%E4%B9%83/ZZJS%20(17).jpg',
+    'https://cdn.jsdelivr.net/gh/sanshui19516/Plot-Advancement-Illustration-@main/%E4%B9%A1%E4%B8%8B%E9%9B%AA%E4%B9%83/ZZJS%20(18).jpg',
+    'https://cdn.jsdelivr.net/gh/sanshui19516/Plot-Advancement-Illustration-@main/%E4%B9%A1%E4%B8%8B%E9%9B%AA%E4%B9%83/ZZJS%20(19).jpg',
+    'https://cdn.jsdelivr.net/gh/sanshui19516/Plot-Advancement-Illustration-@main/%E4%B9%A1%E4%B8%8B%E9%9B%AA%E4%B9%83/ZZJS%20(20).jpg',
+    'https://cdn.jsdelivr.net/gh/sanshui19516/Plot-Advancement-Illustration-@main/%E4%B9%A1%E4%B8%8B%E9%9B%AA%E4%B9%83/ZZJS%20(21).jpg',
+    'https://cdn.jsdelivr.net/gh/sanshui19516/Plot-Advancement-Illustration-@main/%E4%B9%A1%E4%B8%8B%E9%9B%AA%E4%B9%83/ZZJS%20(22).jpg',
+    'https://cdn.jsdelivr.net/gh/sanshui19516/Plot-Advancement-Illustration-@main/%E4%B9%A1%E4%B8%8B%E9%9B%AA%E4%B9%83/ZZJS%20(23).jpg',
+    'https://cdn.jsdelivr.net/gh/sanshui19516/Plot-Advancement-Illustration-@main/%E4%B9%A1%E4%B8%8B%E9%9B%AA%E4%B9%83/ZZJS%20(24).jpg'
+  ];
+
+  const gallery = document.getElementById('gallery');
+  const lightbox = document.getElementById('lightbox');
+  const lightboxImg = document.getElementById('lightboxImg');
+  const lightboxClose = document.getElementById('lightboxClose');
+
+  /* 一次性渲染全部 24 张 */
+  CG_URLS.forEach(function(url, index) {
+    const item = document.createElement('div');
+    item.className = 'cg-item';
+
+    const img = document.createElement('img');
+    img.src = url;
+    img.alt = 'CG ' + (index + 1);
+    img.loading = 'lazy';
+    img.decoding = 'async';
+
+    img.onload = function() { this.classList.add('loaded'); };
+    img.onerror = function() {
+      this.onerror = null;
+      this.src = 'data:image/svg+xml,' + encodeURIComponent(
+        '<svg xmlns="http://www.w3.org/2000/svg" width="200" height="280" viewBox="0 0 200 280">' +
+        '<rect width="200" height="280" fill="#2a2018"/>' +
+        '<text x="100" y="140" fill="#8a6a48" font-family="serif" font-size="14" text-anchor="middle">CG ' + (index + 1) + '</text>' +
+        '</svg>'
+      );
+      this.classList.add('loaded');
+    };
+
+    item.appendChild(img);
+    item.addEventListener('click', function() { openLightbox(index); });
+
+    gallery.appendChild(item);
+  });
+
+  /* 灯箱 */
+  function openLightbox(index) {
+    lightboxImg.src = CG_URLS[index];
+    lightbox.classList.add('open');
+  }
+
+  function closeLightbox() {
+    lightbox.classList.remove('open');
+    setTimeout(function() { lightboxImg.src = ''; }, 300);
+  }
+
+  lightboxClose.addEventListener('click', closeLightbox);
+  lightbox.addEventListener('click', function(e) {
+    if (e.target === lightbox) closeLightbox();
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeLightbox();
+  });
+
+  /* 故事卡片 · 跳转索引 2 */
+  document.getElementById('storyCard').addEventListener('click', async function() {
+    const card = this;
+    card.style.opacity = '0.6';
+    card.style.pointerEvents = 'none';
+    try {
+      await switchOpening(2);
+    } catch (err) {
+      console.error('[作者介绍页] 跳转失败:', err);
+    } finally {
+      setTimeout(function() {
+        card.style.opacity = '1';
+        card.style.pointerEvents = 'auto';
+      }, 500);
+    }
+  });
+
+  console.log('[帰郷の夏 · 作者介绍] 已加载，CG 总数：' + CG_URLS.length);
+})();
+</script>
+
+</body>
+</html>
