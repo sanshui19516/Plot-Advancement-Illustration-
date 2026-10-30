@@ -1,0 +1,1454 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>为你而生 · 状态栏</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg-deep: hsla(290, 22%, 8%, 0.96);
+  --bg-panel: hsla(295, 18%, 14%, 0.88);
+  --bg-card: hsla(295, 16%, 18%, 0.62);
+  --rose: hsl(330, 55%, 68%);
+  --rose-soft: hsl(335, 60%, 82%);
+  --rose-glow: hsla(330, 70%, 60%, 0.22);
+  --rose-deep: hsl(330, 45%, 42%);
+  --cream: hsl(35, 32%, 92%);
+  --plum: hsl(300, 25%, 35%);
+  --gold: hsl(40, 70%, 62%);
+  --gold-glow: hsla(40, 80%, 55%, 0.25);
+  --danger: hsl(350, 60%, 58%);
+  --danger-glow: hsla(350, 70%, 55%, 0.22);
+  --warn: hsl(25, 65%, 60%);
+  --text: hsl(340, 15%, 90%);
+  --text-sub: hsl(340, 12%, 66%);
+  --text-mute: hsl(340, 8%, 48%);
+  --line: hsla(330, 40%, 60%, 0.12);
+  --line-soft: hsla(330, 40%, 60%, 0.06);
+}
+
+html, body {
+  background: transparent;
+  font-family: "PingFang SC", "Microsoft YaHei", "Hiragino Sans", sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  min-height: auto;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 14px 10px 26px;
+  color: var(--text);
+}
+
+/* ============================================================
+   主容器
+   ============================================================ */
+.status-container {
+  width: 100%;
+  max-width: 560px;
+  background: var(--bg-deep);
+  border: 1px solid var(--line);
+  border-radius: 26px;
+  box-shadow:
+    0 24px 60px rgba(0, 0, 0, 0.6),
+    inset 0 0 0 1px hsla(330, 40%, 60%, 0.04);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.34, 1, 0.64, 1);
+}
+
+/* 顶部光晕 */
+.status-container::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 80% 0%, var(--rose-glow), transparent 55%),
+    radial-gradient(ellipse at 20% 100%, var(--gold-glow), transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.6;
+}
+
+/* 底部呼吸 */
+.status-container::after {
+  content: '';
+  position: absolute;
+  bottom: -60%;
+  left: 50%;
+  width: 160%;
+  height: 120%;
+  transform: translateX(-50%);
+  background: radial-gradient(ellipse at 50% 100%, hsla(330, 70%, 55%, 0.08), transparent 60%);
+  animation: roseBreathe 7s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+@keyframes roseBreathe {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
+}
+
+.status-container > * { position: relative; z-index: 1; }
+
+/* ============================================================
+   头部
+   ============================================================ */
+.header {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 18px 18px 14px;
+  border-bottom: 1px solid var(--line-soft);
+  transition: all 0.4s ease;
+}
+
+/* 头像 */
+.portrait {
+  position: relative;
+  flex-shrink: 0;
+  width: 112px;
+  height: 152px;
+  border-radius: 10px;
+  overflow: hidden;
+  background: hsla(295, 16%, 12%, 0.9);
+  border: 3px solid var(--cream);
+  box-shadow:
+    0 6px 24px rgba(0, 0, 0, 0.6),
+    0 0 30px var(--rose-glow);
+  transform: rotate(-1deg);
+  transition: all 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+  cursor: pointer;
+}
+
+.portrait:hover {
+  transform: rotate(0deg) scale(1.03);
+  box-shadow:
+    0 10px 32px rgba(0, 0, 0, 0.7),
+    0 0 44px hsla(330, 70%, 60%, 0.4);
+}
+
+.portrait img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: opacity 0.35s ease;
+}
+
+/* 照片右下折角 */
+.portrait::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 22px;
+  height: 22px;
+  background: linear-gradient(135deg, transparent 50%, hsla(35, 30%, 85%, 0.9) 50%);
+  pointer-events: none;
+}
+
+/* 身份区 */
+.identity {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 4px;
+}
+
+.name-row {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.char-name {
+  font-family: "Noto Serif SC", "Songti SC", serif;
+  font-size: 1.32rem;
+  font-weight: 700;
+  letter-spacing: 3px;
+  color: var(--rose-soft);
+  text-shadow: 0 0 20px var(--rose-glow);
+}
+
+.char-name-jp {
+  font-family: "Noto Serif SC", "Songti SC", serif;
+  font-size: 0.66rem;
+  letter-spacing: 2px;
+  color: var(--text-mute);
+}
+
+/* 标签行 */
+.tag-row {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 0.66rem;
+  letter-spacing: 1px;
+  border: 1px solid var(--line);
+  background: hsla(295, 16%, 22%, 0.5);
+  color: var(--text-sub);
+}
+
+.tag.stage {
+  border-color: hsla(330, 55%, 68%, 0.4);
+  color: var(--rose-soft);
+  background: hsla(330, 50%, 30%, 0.28);
+}
+
+.tag.emotion {
+  border-color: hsla(40, 70%, 62%, 0.35);
+  color: var(--gold);
+  background: hsla(40, 60%, 30%, 0.2);
+}
+
+/* 三面性徽章 */
+.tag.face {
+  font-weight: 600;
+}
+
+.tag.face.face-1 {
+  border-color: hsla(210, 40%, 60%, 0.35);
+  color: hsl(210, 45%, 72%);
+  background: hsla(210, 40%, 30%, 0.22);
+}
+
+.tag.face.face-2 {
+  border-color: hsla(330, 55%, 68%, 0.4);
+  color: var(--rose-soft);
+  background: hsla(330, 50%, 30%, 0.28);
+}
+
+.tag.face.face-3 {
+  border-color: hsla(350, 60%, 58%, 0.4);
+  color: hsl(350, 70%, 72%);
+  background: hsla(350, 55%, 30%, 0.28);
+}
+
+/* 日期行 */
+.date-line {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.72rem;
+  color: var(--text-sub);
+  font-family: "Consolas", "SF Mono", monospace;
+  letter-spacing: 1px;
+  flex-wrap: wrap;
+}
+
+.date-line .week-num {
+  color: var(--rose);
+  font-weight: 700;
+}
+
+.date-line .clock {
+  margin-left: auto;
+  color: var(--text-mute);
+  font-size: 0.68rem;
+}
+
+/* 折叠按钮 */
+.fold-btn {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--line);
+  background: hsla(295, 16%, 22%, 0.5);
+  border-radius: 50%;
+  color: var(--text-mute);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s;
+}
+.fold-btn:hover {
+  color: var(--rose-soft);
+  border-color: hsla(330, 55%, 68%, 0.4);
+}
+.fold-btn svg {
+  width: 14px;
+  height: 14px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: transform 0.35s ease;
+}
+
+/* 折叠状态 */
+.status-container.collapsed .voice,
+.status-container.collapsed .world-bar,
+.status-container.collapsed .tabs,
+.status-container.collapsed .panes {
+  display: none;
+}
+
+.status-container.collapsed .header {
+  padding: 12px 16px;
+  align-items: center;
+  border-bottom: none;
+}
+
+.status-container.collapsed .portrait {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  border-width: 2px;
+  transform: none;
+}
+.status-container.collapsed .portrait::after { display: none; }
+
+.status-container.collapsed .char-name {
+  font-size: 1rem;
+  letter-spacing: 2px;
+}
+
+.status-container.collapsed .char-name-jp,
+.status-container.collapsed .date-line,
+.status-container.collapsed .tag.emotion,
+.status-container.collapsed .tag.face {
+  display: none;
+}
+
+.status-container.collapsed .identity { gap: 4px; padding-top: 0; }
+.status-container.collapsed .fold-btn svg { transform: rotate(-90deg); }
+
+/* ============================================================
+   内心话
+   ============================================================ */
+.voice {
+  margin: 0 18px;
+  padding: 14px 16px 14px 20px;
+  background: linear-gradient(100deg, hsla(330, 45%, 22%, 0.4), hsla(295, 20%, 16%, 0.2));
+  border-left: 2px solid var(--rose);
+  border-radius: 4px 12px 12px 4px;
+  position: relative;
+}
+
+.voice::before {
+  content: '"';
+  position: absolute;
+  left: 6px;
+  top: 2px;
+  font-family: Georgia, serif;
+  font-size: 2rem;
+  color: var(--rose);
+  opacity: 0.4;
+  line-height: 1;
+}
+
+.voice-text {
+  font-size: 0.86rem;
+  line-height: 1.75;
+  color: var(--text);
+  letter-spacing: 0.3px;
+  font-style: italic;
+}
+
+.voice-text:empty::before {
+  content: "—— 此刻，她什么也没有想。";
+  color: var(--text-mute);
+  font-style: normal;
+  font-size: 0.76rem;
+}
+
+.voice-name {
+  margin-top: 6px;
+  font-size: 0.62rem;
+  color: var(--text-mute);
+  letter-spacing: 2px;
+  text-align: right;
+}
+
+/* ============================================================
+   世界条
+   ============================================================ */
+.world-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 12px 18px 0;
+  padding: 10px 14px;
+  background: hsla(295, 18%, 14%, 0.55);
+  border: 1px solid var(--line-soft);
+  border-radius: 12px;
+  font-size: 0.72rem;
+  color: var(--text-sub);
+}
+
+.world-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+}
+
+.world-item svg {
+  width: 13px;
+  height: 13px;
+  fill: none;
+  stroke: var(--rose);
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0.75;
+  flex-shrink: 0;
+}
+
+.world-item .val {
+  color: var(--text);
+  font-weight: 500;
+}
+
+.world-item .val.warn {
+  color: var(--warn);
+  font-weight: 600;
+}
+
+.world-sep {
+  width: 1px;
+  height: 12px;
+  background: var(--line);
+}
+
+/* ============================================================
+   页签
+   ============================================================ */
+.tabs {
+  display: flex;
+  gap: 3px;
+  margin: 14px 18px 0;
+  padding: 4px;
+  background: hsla(295, 18%, 12%, 0.6);
+  border-radius: 12px;
+  border: 1px solid var(--line-soft);
+}
+
+.tab-btn {
+  flex: 1;
+  padding: 8px 0;
+  border: none;
+  background: transparent;
+  color: var(--text-mute);
+  font-family: inherit;
+  font-size: 0.7rem;
+  letter-spacing: 1px;
+  border-radius: 9px;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+.tab-btn svg {
+  width: 12px;
+  height: 12px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.9;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  flex-shrink: 0;
+}
+
+.tab-btn:hover { color: var(--text-sub); }
+
+.tab-btn.active {
+  background: hsla(330, 45%, 30%, 0.5);
+  color: var(--rose-soft);
+  box-shadow: 0 0 20px hsla(330, 60%, 55%, 0.15);
+}
+
+/* ============================================================
+   内容区
+   ============================================================ */
+.panes {
+  padding: 14px 18px 18px;
+}
+
+.pane { display: none; }
+.pane.active {
+  display: block;
+  animation: paneIn 0.35s ease forwards;
+}
+@keyframes paneIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ============================================================
+   数值条
+   ============================================================ */
+.meter {
+  margin-bottom: 12px;
+}
+
+.meter:last-child { margin-bottom: 0; }
+
+.meter-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 5px;
+}
+
+.meter-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.7rem;
+  color: var(--text-sub);
+  letter-spacing: 1px;
+}
+
+.meter-label svg {
+  width: 12px;
+  height: 12px;
+  fill: none;
+  stroke: var(--rose);
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0.75;
+  flex-shrink: 0;
+}
+
+/* 崩坏线图标用红色 */
+.meter.breaking .meter-label svg {
+  stroke: var(--danger);
+  opacity: 0.9;
+}
+
+/* 归属感图标用金色 */
+.meter.belong .meter-label svg {
+  stroke: var(--gold);
+  opacity: 0.9;
+}
+
+.meter-value {
+  font-family: "Consolas", "SF Mono", monospace;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: 0.5px;
+}
+
+.meter-value .max {
+  font-size: 0.62rem;
+  font-weight: 400;
+  color: var(--text-mute);
+}
+
+/* 数值条 */
+.meter-track {
+  position: relative;
+  height: 5px;
+  background: hsla(295, 20%, 10%, 0.8);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.meter-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  border-radius: 6px;
+  transition: width 0.7s cubic-bezier(0.34, 1, 0.64, 1);
+  box-shadow: 0 0 10px currentColor;
+}
+
+.meter-fill::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 10px currentColor, 0 0 16px currentColor;
+  opacity: 0.9;
+}
+
+/* 各数值配色 */
+.fill-attach    { background: linear-gradient(90deg, hsl(330, 45%, 48%), hsl(335, 65%, 72%)); color: hsl(332, 60%, 65%); }
+.fill-desire    { background: linear-gradient(90deg, hsl(340, 65%, 52%), hsl(355, 75%, 68%)); color: hsl(348, 70%, 62%); }
+.fill-shame     { background: linear-gradient(90deg, hsl(320, 35%, 45%), hsl(330, 45%, 65%)); color: hsl(325, 40%, 58%); }
+.fill-restraint { background: linear-gradient(90deg, hsl(350, 55%, 45%), hsl(345, 65%, 62%)); color: hsl(348, 60%, 55%); }
+.fill-morality  { background: linear-gradient(90deg, hsl(350, 50%, 42%), hsl(355, 60%, 60%)); color: hsl(352, 55%, 52%); }
+.fill-belong    { background: linear-gradient(90deg, hsl(40, 70%, 50%), hsl(45, 85%, 70%)); color: hsl(42, 75%, 60%); }
+.fill-fatigue   { background: linear-gradient(90deg, hsl(200, 15%, 40%), hsl(200, 20%, 60%)); color: hsl(200, 18%, 55%); }
+.fill-chaos     { background: linear-gradient(90deg, hsl(280, 40%, 48%), hsl(290, 50%, 68%)); color: hsl(285, 45%, 60%); }
+.fill-initiative{ background: linear-gradient(90deg, hsl(170, 30%, 42%), hsl(170, 40%, 62%)); color: hsl(170, 35%, 55%); }
+.fill-userdesire{ background: linear-gradient(90deg, hsl(355, 60%, 50%), hsl(10, 70%, 65%)); color: hsl(2, 65%, 58%); }
+.fill-intimacy  { background: linear-gradient(90deg, hsl(340, 50%, 50%), hsl(350, 65%, 70%)); color: hsl(345, 58%, 62%); }
+.fill-synergy   { background: linear-gradient(90deg, hsl(180, 30%, 42%), hsl(180, 40%, 62%)); color: hsl(180, 35%, 55%); }
+.fill-camouflage{ background: linear-gradient(90deg, hsl(350, 50%, 42%), hsl(345, 60%, 58%)); color: hsl(348, 55%, 52%); }
+
+/* 危险/警示状态 */
+.meter.danger .meter-value { color: var(--danger); }
+.meter.danger .meter-track { box-shadow: 0 0 12px var(--danger-glow); }
+
+.meter.warn .meter-value { color: var(--warn); }
+
+/* ============================================================
+   关键卡片（关系页）
+   ============================================================ */
+.key-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.key-card {
+  padding: 12px 8px;
+  background: var(--bg-card);
+  border: 1px solid var(--line-soft);
+  border-radius: 12px;
+  text-align: center;
+}
+
+.key-card .k-label {
+  font-size: 0.58rem;
+  color: var(--text-mute);
+  letter-spacing: 1px;
+  margin-bottom: 5px;
+}
+
+.key-card .k-value {
+  font-family: "Noto Serif SC", "Songti SC", serif;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--rose-soft);
+  letter-spacing: 0.5px;
+  word-break: break-all;
+}
+
+/* ============================================================
+   特殊信息块（生理期/怀孕）
+   ============================================================ */
+.special-block {
+  margin-top: 12px;
+  padding: 10px 14px;
+  background: hsla(295, 16%, 12%, 0.5);
+  border: 1px solid var(--line-soft);
+  border-radius: 12px;
+}
+
+.special-block.period {
+  border-left: 2px solid var(--warn);
+}
+
+.special-block.preg {
+  border-left: 2px solid var(--rose);
+}
+
+.special-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.special-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.66rem;
+  color: var(--text-sub);
+  letter-spacing: 1px;
+}
+
+.special-title svg {
+  width: 12px;
+  height: 12px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.special-block.period .special-title svg { stroke: var(--warn); }
+.special-block.preg .special-title svg { stroke: var(--rose); }
+
+.special-value {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+/* ============================================================
+   事件日历
+   ============================================================ */
+.week-group {
+  margin-bottom: 12px;
+}
+.week-group:last-child { margin-bottom: 0; }
+
+.week-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+  font-size: 0.66rem;
+  letter-spacing: 2px;
+  color: var(--text-mute);
+}
+.week-head::before {
+  content: '';
+  width: 14px;
+  height: 1px;
+  background: var(--rose);
+  opacity: 0.5;
+}
+.week-head .w-num {
+  color: var(--rose);
+  font-weight: 700;
+}
+.week-head.current .w-num::after {
+  content: ' · 现在';
+  font-weight: 400;
+  color: var(--text-mute);
+}
+
+.event-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.event-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 8px;
+  border-radius: 7px;
+  font-size: 0.7rem;
+  color: var(--text-mute);
+  transition: all 0.25s;
+  border: 1px solid transparent;
+}
+
+.event-item .dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  border: 1.5px solid var(--text-mute);
+  flex-shrink: 0;
+  transition: all 0.3s;
+}
+
+.event-item.done {
+  color: var(--text);
+  background: hsla(330, 40%, 22%, 0.3);
+  border-color: var(--line-soft);
+}
+.event-item.done .dot {
+  background: var(--rose);
+  border-color: var(--rose);
+  box-shadow: 0 0 10px var(--rose-glow);
+}
+
+.event-item.active {
+  color: var(--rose-soft);
+  background: hsla(330, 50%, 26%, 0.35);
+  border-color: hsla(330, 55%, 68%, 0.3);
+}
+.event-item.active .dot {
+  background: transparent;
+  border-color: var(--rose);
+  animation: dotPulse 1.6s ease-in-out infinite;
+}
+@keyframes dotPulse {
+  0%, 100% { box-shadow: 0 0 0 0 var(--rose-glow); }
+  50% { box-shadow: 0 0 0 5px transparent; }
+}
+
+/* ============================================================
+   响应式
+   ============================================================ */
+@media (max-width: 460px) {
+  body { padding: 10px 8px 20px; }
+  .status-container { border-radius: 20px; }
+  .header { padding: 14px 14px 12px; gap: 12px; }
+  .portrait { width: 86px; height: 118px; }
+  .char-name { font-size: 1.12rem; letter-spacing: 2px; }
+  .voice { margin: 0 14px; padding: 12px 14px 12px 18px; }
+  .voice-text { font-size: 0.8rem; }
+  .world-bar { margin: 10px 14px 0; padding: 8px 12px; font-size: 0.66rem; gap: 6px; }
+  .tabs { margin: 12px 14px 0; }
+  .tab-btn { font-size: 0.64rem; padding: 7px 0; letter-spacing: 0.5px; }
+  .panes { padding: 12px 14px 16px; }
+  .key-cards { gap: 6px; }
+  .key-card { padding: 10px 4px; }
+}
+
+@media (max-width: 360px) {
+  .portrait { width: 74px; height: 102px; }
+  .char-name { font-size: 1rem; }
+  .world-bar { font-size: 0.6rem; }
+  .key-cards { grid-template-columns: 1fr 1fr; }
+}
+
+/* ============================================================
+   灯箱
+   ============================================================ */
+.photo-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 999999;
+  background: rgba(6, 4, 8, 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  cursor: pointer;
+}
+.photo-lightbox.open { display: flex; }
+.photo-lightbox img {
+  max-width: 90vw;
+  max-height: 86vh;
+  border-radius: 8px;
+  border: 4px solid var(--cream);
+  box-shadow: 0 0 80px rgba(0, 0, 0, 0.9);
+  object-fit: contain;
+}
+</style>
+</head>
+<body>
+
+<div class="status-container" id="app">
+
+  <!-- 头部 -->
+  <div class="header">
+    <div class="portrait" id="portrait" onclick="openPhoto()">
+      <img id="portraitImg" src="" alt="陈雅琴" />
+    </div>
+    <div class="identity">
+      <div class="name-row">
+        <span class="char-name">陈 雅 琴</span>
+        <span class="char-name-jp">ちん やきん</span>
+      </div>
+      <div class="tag-row">
+        <span class="tag stage" id="tagStage">暗示</span>
+        <span class="tag emotion" id="tagEmotion">平静</span>
+        <span class="tag face face-2" id="tagFace">第二面 · 妈妈</span>
+      </div>
+      <div class="date-line">
+        <span>第 <span class="week-num" id="weekNum">1</span> 周 · 第 <span id="dayNum">1</span> 天</span>
+        <span class="clock" id="clock">07:30</span>
+      </div>
+    </div>
+    <button class="fold-btn" id="foldBtn" aria-label="折叠">
+      <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+    </button>
+  </div>
+
+  <!-- 内心话 -->
+  <div class="voice">
+    <div class="voice-text" id="voiceText"></div>
+    <div class="voice-name">—— 雅琴 · 此刻</div>
+  </div>
+
+  <!-- 世界条 -->
+  <div class="world-bar">
+    <span class="world-item">
+      <svg viewBox="0 0 24 24"><path d="M3 10l9-7 9 7v10a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>
+      <span class="val" id="wScene">别墅客厅</span>
+    </span>
+    <span class="world-sep"></span>
+    <span class="world-item">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.4 1.4M17.6 17.6L19 19M19 5l-1.4 1.4M6.4 17.6L5 19"/></svg>
+      <span class="val" id="wWeather">晴</span>
+    </span>
+    <span class="world-sep"></span>
+    <span class="world-item">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 14"/></svg>
+      <span class="val" id="wPeriod">上午</span>
+    </span>
+    <span class="world-sep"></span>
+    <span class="world-item">
+      <svg viewBox="0 0 24 24"><path d="M12 3v18M5 8l7-5 7 5M5 16l7 5 7-5"/></svg>
+      <span class="val" id="wOutsider">无外人</span>
+    </span>
+    <span class="world-sep"></span>
+    <span class="world-item">
+      <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/></svg>
+      <span class="val" id="wFamily">未察觉</span>
+    </span>
+  </div>
+
+  <!-- 页签 -->
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="cyq">
+      <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+      妈妈
+    </button>
+    <button class="tab-btn" data-tab="user">
+      <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      你
+    </button>
+    <button class="tab-btn" data-tab="rel">
+      <svg viewBox="0 0 24 24"><circle cx="9" cy="9" r="5"/><circle cx="15" cy="15" r="5"/></svg>
+      关系
+    </button>
+    <button class="tab-btn" data-tab="event">
+      <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><line x1="8" y1="3" x2="8" y2="7"/><line x1="16" y1="3" x2="16" y2="7"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      事件
+    </button>
+  </div>
+
+  <div class="panes">
+
+    <!-- ============ 妈妈 ============ -->
+    <div class="pane active" id="pane-cyq">
+
+      <div class="meter belong" id="m-belong">
+        <div class="meter-head">
+          <span class="meter-label">
+            <svg viewBox="0 0 24 24"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg>
+            归属感
+          </span>
+          <span class="meter-value"><span class="v">0</span><span class="max"> / 150</span></span>
+        </div>
+        <div class="meter-track"><div class="meter-fill fill-belong" style="width:0%"></div></div>
+      </div>
+
+      <div class="meter" id="m-attach">
+        <div class="meter-head">
+          <span class="meter-label">
+            <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+            依恋度
+          </span>
+          <span class="meter-value"><span class="v">120</span><span class="max"> / 500</span></span>
+        </div>
+        <div class="meter-track"><div class="meter-fill fill-attach" style="width:24%"></div></div>
+      </div>
+
+      <div class="meter" id="m-desire">
+        <div class="meter-head">
+          <span class="meter-label">
+            <svg viewBox="0 0 24 24"><path d="M12 2c0 4-4 5-4 9a4 4 0 0 0 8 0c0-2-1-3-1-5 2 1 4 3 4 6a7 7 0 0 1-14 0c0-5 5-6 7-10z"/></svg>
+            欲念值
+          </span>
+          <span class="meter-value"><span class="v">30</span><span class="max"> / 150</span></span>
+        </div>
+        <div class="meter-track"><div class="meter-fill fill-desire" style="width:20%"></div></div>
+      </div>
+
+      <div class="meter" id="m-shame">
+        <div class="meter-head">
+          <span class="meter-label">
+            <svg viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>
+            羞耻值
+          </span>
+          <span class="meter-value"><span class="v">60</span><span class="max"> / 100</span></span>
+        </div>
+        <div class="meter-track"><div class="meter-fill fill-shame" style="width:60%"></div></div>
+      </div>
+
+      <div class="meter breaking" id="m-restraint">
+        <div class="meter-head">
+          <span class="meter-label">
+            <svg viewBox="0 0 24 24"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/></svg>
+            克制力
+          </span>
+          <span class="meter-value"><span class="v">80</span><span class="max"> / 100</span></span>
+        </div>
+        <div class="meter-track"><div class="meter-fill fill-restraint" style="width:80%"></div></div>
+      </div>
+
+      <div class="meter breaking" id="m-morality">
+        <div class="meter-head">
+          <span class="meter-label">
+            <svg viewBox="0 0 24 24"><path d="M12 2l9 4v6c0 6-4 9-9 10-5-1-9-4-9-10V6z"/><path d="M9 12l2 2 4-4"/></svg>
+            道德值
+          </span>
+          <span class="meter-value"><span class="v">90</span><span class="max"> / 100</span></span>
+        </div>
+        <div class="meter-track"><div class="meter-fill fill-morality" style="width:90%"></div></div>
+      </div>
+
+      <div class="meter" id="m-fatigue">
+        <div class="meter-head">
+          <span class="meter-label">
+            <svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+            疲惫度
+          </span>
+          <span class="meter-value"><span class="v">20</span><span class="max"> / 100</span></span>
+        </div>
+        <div class="meter-track"><div class="meter-fill fill-fatigue" style="width:20%"></div></div>
+      </div>
+
+      <!-- 生理期 -->
+      <div class="special-block period">
+        <div class="special-head">
+          <span class="special-title">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+            生理期
+          </span>
+          <span class="special-value" id="periodVal">正常</span>
+        </div>
+        <div style="font-size:0.66rem;color:var(--text-mute);">周期第 <span id="periodDay">0</span> 天 / 35</div>
+      </div>
+
+      <!-- 怀孕 -->
+      <div class="special-block preg">
+        <div class="special-head">
+          <span class="special-title">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+            怀孕
+          </span>
+          <span class="special-value" id="pregVal">未孕</span>
+        </div>
+        <div style="font-size:0.66rem;color:var(--text-mute);">孕周 <span id="pregWeek">0</span> / 40</div>
+      </div>
+
+    </div>
+
+    <!-- ============ 你 ============ -->
+    <div class="pane" id="pane-user">
+
+      <div class="meter" id="m-chaos">
+        <div class="meter-head">
+          <span class="meter-label">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 9c1-2 3-2 4 0s3 2 4 0"/><path d="M8 15c1-2 3-2 4 0s3 2 4 0"/></svg>
+            混乱值
+          </span>
+          <span class="meter-value"><span class="v">40</span><span class="max"> / 100</span></span>
+        </div>
+        <div class="meter-track"><div class="meter-fill fill-chaos" style="width:40%"></div></div>
+      </div>
+
+      <div class="meter" id="m-initiative">
+        <div class="meter-head">
+          <span class="meter-label">
+            <svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9z"/></svg>
+            主动性
+          </span>
+          <span class="meter-value"><span class="v">25</span><span class="max"> / 100</span></span>
+        </div>
+        <div class="meter-track"><div class="meter-fill fill-initiative" style="width:25%"></div></div>
+      </div>
+
+      <div class="meter" id="m-userdesire">
+        <div class="meter-head">
+          <span class="meter-label">
+            <svg viewBox="0 0 24 24"><path d="M12 2c0 4-4 5-4 9a4 4 0 0 0 8 0c0-2-1-3-1-5 2 1 4 3 4 6a7 7 0 0 1-14 0c0-5 5-6 7-10z"/></svg>
+            欲念值
+          </span>
+          <span class="meter-value"><span class="v">35</span><span class="max"> / 150</span></span>
+        </div>
+        <div class="meter-track"><div class="meter-fill fill-userdesire" style="width:23%"></div></div>
+      </div>
+
+    </div>
+
+    <!-- ============ 关系 ============ -->
+    <div class="pane" id="pane-rel">
+
+      <div class="key-cards">
+        <div class="key-card">
+          <div class="k-label">性爱阶段</div>
+          <div class="k-value" id="kSexStage">未发生</div>
+        </div>
+        <div class="key-card">
+          <div class="k-label">性爱次数</div>
+          <div class="k-value" id="kSexCount">0</div>
+        </div>
+        <div class="key-card">
+          <div class="k-label">距上次亲密</div>
+          <div class="k-value" id="kSince">—</div>
+        </div>
+      </div>
+
+      <div class="meter" id="m-intimacy">
+        <div class="meter-head">
+          <span class="meter-label">
+            <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+            亲密度
+          </span>
+          <span class="meter-value"><span class="v">10</span><span class="max"> / 200</span></span>
+        </div>
+        <div class="meter-track"><div class="meter-fill fill-intimacy" style="width:5%"></div></div>
+      </div>
+
+      <div class="meter" id="m-synergy">
+        <div class="meter-head">
+          <span class="meter-label">
+            <svg viewBox="0 0 24 24"><circle cx="9" cy="9" r="5"/><circle cx="15" cy="15" r="5"/></svg>
+            默契度
+          </span>
+          <span class="meter-value"><span class="v">20</span><span class="max"> / 100</span></span>
+        </div>
+        <div class="meter-track"><div class="meter-fill fill-synergy" style="width:20%"></div></div>
+      </div>
+
+      <div class="meter breaking" id="m-camouflage">
+        <div class="meter-head">
+          <span class="meter-label">
+            <svg viewBox="0 0 24 24"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/><circle cx="12" cy="11" r="2.5"/></svg>
+            母子伪装度
+          </span>
+          <span class="meter-value"><span class="v">100</span><span class="max"> / 100</span></span>
+        </div>
+        <div class="meter-track"><div class="meter-fill fill-camouflage" style="width:100%"></div></div>
+      </div>
+
+    </div>
+
+    <!-- ============ 事件 ============ -->
+    <div class="pane" id="pane-event">
+      <div id="eventCalendar"></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- 灯箱 -->
+<div class="photo-lightbox" id="photoLightbox" onclick="closePhoto()">
+  <img id="photoLightboxImg" src="" alt="" />
+</div>
+
+<script>
+(function() {
+  'use strict';
+
+  /* ============================================================
+     ⚠️ 头像映射 · 按关系阶段
+     ============================================================ */
+  const PORTRAIT_MAP = {
+    '暗示':   'https://testingcf.jsdelivr.net/gh/sanshui19516/Plot-Advancement-Illustration-@main/%E4%B8%BA%E4%BD%A0%E8%80%8C%E7%94%9F/%E8%B6%85%E9%93%BE/%E6%9A%97%E7%A4%BA.jpg',
+    '边界':   'https://testingcf.jsdelivr.net/gh/sanshui19516/Plot-Advancement-Illustration-@main/%E4%B8%BA%E4%BD%A0%E8%80%8C%E7%94%9F/%E8%B6%85%E9%93%BE/%E8%BE%B9%E7%95%8C.jpg',
+    '突破':   'https://testingcf.jsdelivr.net/gh/sanshui19516/Plot-Advancement-Illustration-@main/%E4%B8%BA%E4%BD%A0%E8%80%8C%E7%94%9F/%E8%B6%85%E9%93%BE/%E7%AA%81%E7%A0%B4.jpg',
+    '日常化': 'https://testingcf.jsdelivr.net/gh/sanshui19516/Plot-Advancement-Illustration-@main/%E4%B8%BA%E4%BD%A0%E8%80%8C%E7%94%9F/%E8%B6%85%E9%93%BE/%E6%97%A5%E5%B8%B8%E5%8C%96.jpg'
+  };
+  const DEFAULT_PORTRAIT = PORTRAIT_MAP['暗示'];
+
+  /* MVU 字段路径映射 */
+  const FIELD_MAP = {
+    scene:      '世界.当前场景',
+    weather:    '世界.天气',
+    period:     '世界.时段',
+    clock:      '世界.当前时间',
+    week:       '世界.当前周',
+    day:        '世界.当前天',
+    season:     '世界.季节',
+    outsider:   '世界.家里有无外人',
+    family:     '世界.家族知情状态',
+    stage:      '陈雅琴.关系阶段',
+    emotion:    '陈雅琴.当前情绪',
+    voice:      '陈雅琴.内心话',
+    attach:     '陈雅琴.依恋度',
+    desire:     '陈雅琴.欲念值',
+    shame:      '陈雅琴.羞耻值',
+    restraint:  '陈雅琴.克制力',
+    morality:   '陈雅琴.道德值',
+    belong:     '陈雅琴.归属感',
+    fatigue:    '陈雅琴.疲惫度',
+    periodPhase:'陈雅琴.生理期.阶段',
+    periodDay:  '陈雅琴.生理期.周期天数',
+    pregStatus: '陈雅琴.怀孕.状态',
+    pregWeek:   '陈雅琴.怀孕.孕周',
+    chaos:      'user.混乱值',
+    initiative: 'user.主动性',
+    userDesire: 'user.欲念值',
+    sexStage:   '关系.性爱阶段',
+    sexCount:   '关系.性爱次数',
+    since:      '关系.距上次亲密',
+    intimacy:   '关系.亲密度',
+    synergy:    '关系.默契度',
+    camouflage: '关系.母子伪装度'
+  };
+
+  /* 24个事件 · 按周分组 */
+  const EVENT_WEEKS = [
+    { week: 1, events: ['睡裙事件', '内裤遗落'] },
+    { week: 2, events: ['生理反应', '更衣室撞见'] },
+    { week: 3, events: ['深夜自慰被听见', '闺蜜调侃'] },
+    { week: 4, events: ['渔网袜日常'] },
+    { week: 5, events: ['醉酒依偎'] },
+    { week: 6, events: ['第一次接吻'] },
+    { week: 7, events: ['房间自慰被撞见', '质问与坦白', '深度爱抚口交', '姥姥电话试探'] },
+    { week: 8, events: ['邀请同床', '第一次插入', '事后确认'] },
+    { week: 9, events: ['关系日常化'] },
+    { week: 11, events: ['体内射精', '闺蜜察觉', '约定双面关系'] },
+    { week: 13, events: ['带见姥姥姥爷'] },
+    { week: 15, events: ['家族聚会宣布', '登记结婚'] },
+    { week: 16, events: ['确认怀孕'] }
+  ];
+
+  function $(id) { return document.getElementById(id); }
+
+  function safeGet(obj, path, def) {
+    try {
+      const parts = path.split('.');
+      let cur = obj;
+      for (let i = 0; i < parts.length; i++) {
+        if (cur == null) return def;
+        cur = cur[parts[i]];
+      }
+      return cur == null ? def : cur;
+    } catch (e) { return def; }
+  }
+
+  function setMeter(meterId, value, max, dangerLow, warnLow) {
+    const el = $(meterId);
+    if (!el) return;
+    const v = Math.max(0, Math.min(Number(value) || 0, max));
+    el.querySelector('.v').textContent = Math.round(v);
+    const fill = el.querySelector('.meter-fill');
+    if (fill) fill.style.width = (max > 0 ? (v / max * 100) : 0) + '%';
+    if (typeof dangerLow === 'number') {
+      el.classList.toggle('danger', v <= dangerLow);
+    }
+    if (typeof warnLow === 'number') {
+      el.classList.toggle('warn', v <= warnLow && v > (dangerLow || -1));
+    }
+  }
+
+  function fetchState() {
+    try {
+      const all = (typeof getAllVariables === 'function') ? getAllVariables() : {};
+      return safeGet(all, 'stat_data', {}) || {};
+    } catch (e) {
+      return {};
+    }
+  }
+
+  /* 头像切换 */
+  function updatePortrait(stage) {
+    const img = $('portraitImg');
+    if (!img) return;
+    const targetUrl = PORTRAIT_MAP[stage] || DEFAULT_PORTRAIT;
+    if (img.getAttribute('data-current') === targetUrl) return;
+    img.style.opacity = '0';
+    setTimeout(function() {
+      img.src = targetUrl;
+      img.setAttribute('data-current', targetUrl);
+      img.onload = function() { img.style.opacity = '1'; };
+      img.onerror = function() { img.style.opacity = '1'; };
+    }, 200);
+  }
+
+  /* 判断三面性 */
+  function getFaceType(scene, period, outsider, stage) {
+    const publicScenes = ['陈雅琴的公司', '姥姥姥爷家'];
+    const homeScenes = ['别墅客厅', '别墅餐厅', '厨房', '陈雅琴的主卧', '陈雅琴的衣帽间', '{{user}}的房间', '二楼走廊', '私人花园'];
+
+    if (outsider === true) return { key: 'face-1', label: '第一面 · 女强人' };
+    if (publicScenes.indexOf(scene) !== -1) return { key: 'face-1', label: '第一面 · 女强人' };
+    if (scene === '小区花园与散步道' && period !== '深夜') return { key: 'face-1', label: '第一面 · 女强人' };
+    if (period === '深夜' && (scene === '陈雅琴的主卧' || scene === '陈雅琴的衣帽间')) return { key: 'face-3', label: '第三面 · 为他而生' };
+    return { key: 'face-2', label: '第二面 · 妈妈' };
+  }
+
+  function render() {
+    const data = fetchState();
+
+    const stage = safeGet(data, FIELD_MAP.stage, '暗示');
+    const emotion = safeGet(data, FIELD_MAP.emotion, '平静');
+    const scene = safeGet(data, FIELD_MAP.scene, '别墅客厅');
+    const period = safeGet(data, FIELD_MAP.period, '上午');
+    const outsider = safeGet(data, FIELD_MAP.outsider, false);
+
+    updatePortrait(stage);
+
+    $('tagStage').textContent = stage;
+    $('tagEmotion').textContent = emotion;
+
+    /* 三面性 */
+    const face = getFaceType(scene, period, outsider, stage);
+    const faceEl = $('tagFace');
+    faceEl.className = 'tag face ' + face.key;
+    faceEl.textContent = face.label;
+
+    $('weekNum').textContent = safeGet(data, FIELD_MAP.week, 1);
+    $('dayNum').textContent = safeGet(data, FIELD_MAP.day, 1);
+    $('clock').textContent = safeGet(data, FIELD_MAP.clock, '--:--');
+
+    /* 内心话 */
+    const voice = safeGet(data, FIELD_MAP.voice, '');
+    let cleanVoice = String(voice).replace(/^\*|\*$/g, '').trim();
+    cleanVoice = cleanVoice.replace(/^[（(]|[）)]$/g, '').trim();
+    $('voiceText').textContent = cleanVoice;
+
+    /* 世界条 */
+    $('wScene').textContent = scene;
+    $('wWeather').textContent = safeGet(data, FIELD_MAP.weather, '晴');
+    $('wPeriod').textContent = period;
+
+    const outsiderEl = $('wOutsider');
+    if (outsider === true) {
+      outsiderEl.textContent = '有外人';
+      outsiderEl.className = 'val warn';
+    } else {
+      outsiderEl.textContent = '无外人';
+      outsiderEl.className = 'val';
+    }
+
+    $('wFamily').textContent = safeGet(data, FIELD_MAP.family, '未察觉');
+
+    /* 陈雅琴数值 */
+    setMeter('m-belong', safeGet(data, FIELD_MAP.belong, 0), 150);
+    setMeter('m-attach', safeGet(data, FIELD_MAP.attach, 120), 500);
+    setMeter('m-desire', safeGet(data, FIELD_MAP.desire, 30), 150);
+    setMeter('m-shame', safeGet(data, FIELD_MAP.shame, 60), 100);
+    setMeter('m-restraint', safeGet(data, FIELD_MAP.restraint, 80), 100, 20, 40);
+    setMeter('m-morality', safeGet(data, FIELD_MAP.morality, 90), 100, 20, 40);
+    setMeter('m-fatigue', safeGet(data, FIELD_MAP.fatigue, 20), 100, null, null);
+
+    /* 生理期 & 怀孕 */
+    $('periodVal').textContent = safeGet(data, FIELD_MAP.periodPhase, '正常');
+    $('periodDay').textContent = safeGet(data, FIELD_MAP.periodDay, 0);
+    $('pregVal').textContent = safeGet(data, FIELD_MAP.pregStatus, '未孕');
+    $('pregWeek').textContent = safeGet(data, FIELD_MAP.pregWeek, 0);
+
+    /* user 数值 */
+    setMeter('m-chaos', safeGet(data, FIELD_MAP.chaos, 40), 100);
+    setMeter('m-initiative', safeGet(data, FIELD_MAP.initiative, 25), 100);
+    setMeter('m-userdesire', safeGet(data, FIELD_MAP.userDesire, 35), 150);
+
+    /* 关系 */
+    $('kSexStage').textContent = safeGet(data, FIELD_MAP.sexStage, '未发生');
+    $('kSexCount').textContent = safeGet(data, FIELD_MAP.sexCount, 0);
+
+    const sexStage = safeGet(data, FIELD_MAP.sexStage, '未发生');
+    const since = Number(safeGet(data, FIELD_MAP.since, 0));
+    $('kSince').textContent = (sexStage === '未发生') ? '—' : (since === 0 ? '今天' : since + ' 天前');
+
+    setMeter('m-intimacy', safeGet(data, FIELD_MAP.intimacy, 10), 200);
+    setMeter('m-synergy', safeGet(data, FIELD_MAP.synergy, 20), 100);
+    setMeter('m-camouflage', safeGet(data, FIELD_MAP.camouflage, 100), 100, 20, 40);
+
+    /* 事件日历 */
+    renderEventCalendar(data);
+  }
+
+  function renderEventCalendar(data) {
+    const box = $('eventCalendar');
+    if (!box) return;
+
+    const currentWeek = Number(safeGet(data, FIELD_MAP.week, 1)) || 1;
+    const events = safeGet(data, '事件', {}) || {};
+
+    let html = '';
+
+    EVENT_WEEKS.forEach(function(group) {
+      const isCurrent = (group.week === currentWeek);
+      html += '<div class="week-group">';
+      html += '<div class="week-head' + (isCurrent ? ' current' : '') + '">';
+      html += '<span class="w-num">第 ' + group.week + ' 周</span>';
+      html += '</div>';
+      html += '<div class="event-list">';
+      group.events.forEach(function(name) {
+        const done = events[name] === true;
+        let cls = 'event-item';
+        if (done) cls += ' done';
+        else if (group.week === currentWeek) cls += ' active';
+        html += '<div class="' + cls + '"><span class="dot"></span>' + name + '</div>';
+      });
+      html += '</div>';
+      html += '</div>';
+    });
+
+    box.innerHTML = html;
+  }
+
+  /* 折叠持久化 */
+  const FOLD_KEY = 'cyq_status_collapsed';
+
+  function applyFoldState(collapsed) {
+    $('app').classList.toggle('collapsed', collapsed);
+  }
+
+  $('foldBtn').addEventListener('click', function(e) {
+    e.stopPropagation();
+    const app = $('app');
+    const next = !app.classList.contains('collapsed');
+    applyFoldState(next);
+    try { localStorage.setItem(FOLD_KEY, next ? '1' : '0'); } catch (err) {}
+  });
+
+  try {
+    const saved = localStorage.getItem(FOLD_KEY);
+    if (saved === '1') applyFoldState(true);
+  } catch (e) {}
+
+  /* 页签 */
+  document.querySelectorAll('.tab-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('.tab-btn').forEach(function(b) { b.classList.remove('active'); });
+      document.querySelectorAll('.pane').forEach(function(p) { p.classList.remove('active'); });
+      this.classList.add('active');
+      const target = $('pane-' + this.dataset.tab);
+      if (target) target.classList.add('active');
+    });
+  });
+
+  /* 灯箱 */
+  window.openPhoto = function() {
+    const lb = $('photoLightbox');
+    const img = $('photoLightboxImg');
+    const portraitImg = $('portraitImg');
+    if (portraitImg && portraitImg.src) img.src = portraitImg.src;
+    lb.classList.add('open');
+  };
+
+  window.closePhoto = function() {
+    $('photoLightbox').classList.remove('open');
+  };
+
+  /* 初始化 */
+  function init() {
+    render();
+    setInterval(render, 1500);
+
+    try {
+      if (typeof eventOn !== 'undefined' && typeof Mvu !== 'undefined' && Mvu.events) {
+        eventOn(Mvu.events.VARIABLE_UPDATE_ENDED, function() {
+          render();
+        });
+      }
+    } catch (e) {}
+  }
+
+  if (typeof waitGlobalInitialized === 'function') {
+    waitGlobalInitialized('Mvu').then(init)['catch'](init);
+  } else {
+    $(init);
+  }
+
+  console.log('[为你而生 · 状态栏] 已加载');
+})();
+</script>
+
+</body>
+</html>
