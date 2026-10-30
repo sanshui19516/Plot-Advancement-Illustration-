@@ -1,0 +1,1231 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>帰郷の夏 · 状态栏</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --ink: hsla(24, 20%, 8%, 0.96);
+  --wood: hsla(28, 26%, 15%, 0.92);
+  --wood-panel: hsla(28, 22%, 20%, 0.62);
+  --ember: hsl(24, 72%, 62%);
+  --ember-soft: hsl(32, 68%, 76%);
+  --ember-glow: hsla(24, 80%, 55%, 0.22);
+  --rice: hsl(92, 26%, 52%);
+  --text: hsl(35, 24%, 92%);
+  --text-sub: hsl(35, 14%, 64%);
+  --text-mute: hsl(35, 10%, 44%);
+  --line: hsla(30, 40%, 50%, 0.13);
+  --line-soft: hsla(30, 40%, 50%, 0.07);
+}
+
+html, body {
+  background: transparent;
+  font-family: "PingFang SC", "Microsoft YaHei", "Hiragino Sans", sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  min-height: auto;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 14px 10px 26px;
+  color: var(--text);
+}
+
+/* ============================================================
+   主容器
+   ============================================================ */
+.status-container {
+  width: 100%;
+  max-width: 560px;
+  background: var(--wood);
+  border: 1px solid var(--line);
+  border-radius: 26px;
+  box-shadow:
+    0 24px 60px rgba(0, 0, 0, 0.55),
+    inset 0 0 0 1px hsla(30, 40%, 60%, 0.04);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.34, 1, 0.64, 1);
+}
+
+.status-container::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    repeating-linear-gradient(
+      92deg,
+      transparent 0 38px,
+      hsla(28, 40%, 30%, 0.16) 38px 40px
+    ),
+    radial-gradient(ellipse at 80% 0%, var(--ember-glow), transparent 55%);
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.8;
+}
+
+.status-container::after {
+  content: '';
+  position: absolute;
+  bottom: -60%;
+  left: 50%;
+  width: 160%;
+  height: 120%;
+  transform: translateX(-50%);
+  background: radial-gradient(ellipse at 50% 100%, hsla(24, 80%, 55%, 0.1), transparent 60%);
+  animation: emberBreathe 7s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+@keyframes emberBreathe {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+
+.status-container > * { position: relative; z-index: 1; }
+
+/* ============================================================
+   头部
+   ============================================================ */
+.header {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 18px 18px 14px;
+  border-bottom: 1px solid var(--line-soft);
+  transition: all 0.4s ease;
+}
+
+/* 头像 */
+.portrait {
+  position: relative;
+  flex-shrink: 0;
+  width: 112px;
+  height: 152px;
+  border-radius: 8px;
+  overflow: hidden;
+  background: hsla(28, 20%, 12%, 0.9);
+  border: 3px solid hsl(35, 30%, 88%);
+  box-shadow:
+    0 6px 24px rgba(0, 0, 0, 0.6),
+    0 0 30px var(--ember-glow);
+  transform: rotate(-1.2deg);
+  transition: all 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+  cursor: pointer;
+}
+
+.portrait:hover {
+  transform: rotate(0deg) scale(1.03);
+  box-shadow:
+    0 10px 32px rgba(0, 0, 0, 0.7),
+    0 0 44px hsla(24, 80%, 55%, 0.35);
+}
+
+.portrait img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: opacity 0.35s ease;
+}
+
+.portrait::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 22px;
+  height: 22px;
+  background: linear-gradient(135deg, transparent 50%, hsla(30, 30%, 80%, 0.85) 50%);
+  pointer-events: none;
+}
+
+/* 身份区 */
+.identity {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 4px;
+}
+
+.name-row {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.char-name {
+  font-family: "Noto Serif SC", "Songti SC", serif;
+  font-size: 1.32rem;
+  font-weight: 700;
+  letter-spacing: 4px;
+  color: var(--ember-soft);
+  text-shadow: 0 0 20px var(--ember-glow);
+}
+
+.char-name-jp {
+  font-family: "Noto Serif SC", "Songti SC", serif;
+  font-size: 0.66rem;
+  letter-spacing: 2px;
+  color: var(--text-mute);
+}
+
+.tag-row {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 0.66rem;
+  letter-spacing: 1px;
+  border: 1px solid var(--line);
+  background: hsla(28, 22%, 22%, 0.5);
+  color: var(--text-sub);
+}
+
+.tag.stage {
+  border-color: hsla(24, 72%, 62%, 0.4);
+  color: var(--ember-soft);
+  background: hsla(24, 60%, 30%, 0.25);
+}
+
+.tag.emotion {
+  border-color: hsla(92, 26%, 52%, 0.35);
+  color: hsl(92, 30%, 68%);
+  background: hsla(92, 26%, 30%, 0.2);
+}
+
+.date-line {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.72rem;
+  color: var(--text-sub);
+  font-family: "Consolas", "SF Mono", monospace;
+  letter-spacing: 1px;
+}
+
+.date-line .week-num {
+  color: var(--ember);
+  font-weight: 700;
+}
+
+.date-line .clock {
+  margin-left: auto;
+  color: var(--text-mute);
+  font-size: 0.68rem;
+}
+
+.fold-btn {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--line);
+  background: hsla(28, 22%, 22%, 0.5);
+  border-radius: 50%;
+  color: var(--text-mute);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s;
+}
+.fold-btn:hover {
+  color: var(--ember-soft);
+  border-color: hsla(24, 72%, 62%, 0.4);
+}
+.fold-btn svg {
+  width: 14px;
+  height: 14px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: transform 0.35s ease;
+}
+
+/* 折叠状态 */
+.status-container.collapsed .voice,
+.status-container.collapsed .world-bar,
+.status-container.collapsed .tabs,
+.status-container.collapsed .panes {
+  display: none;
+}
+
+.status-container.collapsed .header {
+  padding: 12px 16px;
+  align-items: center;
+  border-bottom: none;
+}
+
+.status-container.collapsed .portrait {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  border-width: 2px;
+  transform: none;
+}
+.status-container.collapsed .portrait::after { display: none; }
+
+.status-container.collapsed .char-name {
+  font-size: 1rem;
+  letter-spacing: 2px;
+}
+
+.status-container.collapsed .char-name-jp,
+.status-container.collapsed .date-line,
+.status-container.collapsed .tag.emotion {
+  display: none;
+}
+
+.status-container.collapsed .identity { gap: 4px; padding-top: 0; }
+.status-container.collapsed .fold-btn svg { transform: rotate(-90deg); }
+
+/* 内心话 */
+.voice {
+  margin: 0 18px;
+  padding: 14px 16px 14px 20px;
+  background: linear-gradient(100deg, hsla(24, 50%, 22%, 0.4), hsla(28, 20%, 16%, 0.2));
+  border-left: 2px solid var(--ember);
+  border-radius: 4px 12px 12px 4px;
+  position: relative;
+}
+
+.voice::before {
+  content: '"';
+  position: absolute;
+  left: 6px;
+  top: 2px;
+  font-family: Georgia, serif;
+  font-size: 2rem;
+  color: var(--ember);
+  opacity: 0.35;
+  line-height: 1;
+}
+
+.voice-text {
+  font-size: 0.86rem;
+  line-height: 1.75;
+  color: var(--text);
+  letter-spacing: 0.3px;
+  font-style: italic;
+}
+
+.voice-text:empty::before {
+  content: "—— 此刻，她什么也没有想。";
+  color: var(--text-mute);
+  font-style: normal;
+  font-size: 0.76rem;
+}
+
+.voice-name {
+  margin-top: 6px;
+  font-size: 0.62rem;
+  color: var(--text-mute);
+  letter-spacing: 2px;
+  text-align: right;
+}
+
+/* 世界条 */
+.world-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 12px 18px 0;
+  padding: 10px 14px;
+  background: hsla(28, 20%, 14%, 0.55);
+  border: 1px solid var(--line-soft);
+  border-radius: 12px;
+  font-size: 0.72rem;
+  color: var(--text-sub);
+}
+
+.world-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+}
+
+.world-item svg {
+  width: 13px;
+  height: 13px;
+  fill: none;
+  stroke: var(--ember);
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0.75;
+  flex-shrink: 0;
+}
+
+.world-item .val {
+  color: var(--text);
+  font-weight: 500;
+}
+
+.world-sep {
+  width: 1px;
+  height: 12px;
+  background: var(--line);
+}
+
+/* 页签 */
+.tabs {
+  display: flex;
+  gap: 3px;
+  margin: 14px 18px 0;
+  padding: 4px;
+  background: hsla(28, 20%, 12%, 0.6);
+  border-radius: 12px;
+  border: 1px solid var(--line-soft);
+}
+
+.tab-btn {
+  flex: 1;
+  padding: 8px 0;
+  border: none;
+  background: transparent;
+  color: var(--text-mute);
+  font-family: inherit;
+  font-size: 0.72rem;
+  letter-spacing: 2px;
+  border-radius: 9px;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
+
+.tab-btn svg {
+  width: 13px;
+  height: 13px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.9;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.tab-btn:hover { color: var(--text-sub); }
+
+.tab-btn.active {
+  background: hsla(24, 60%, 32%, 0.5);
+  color: var(--ember-soft);
+  box-shadow: 0 0 20px hsla(24, 80%, 55%, 0.12);
+}
+
+/* 内容区 */
+.panes {
+  padding: 14px 18px 18px;
+}
+
+.pane { display: none; }
+.pane.active {
+  display: block;
+  animation: paneIn 0.35s ease forwards;
+}
+@keyframes paneIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* 数值条 */
+.meter {
+  margin-bottom: 12px;
+}
+.meter:last-child { margin-bottom: 0; }
+
+.meter-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 5px;
+}
+
+.meter-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.7rem;
+  color: var(--text-sub);
+  letter-spacing: 1px;
+}
+
+.meter-label svg {
+  width: 12px;
+  height: 12px;
+  fill: none;
+  stroke: var(--ember);
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0.7;
+}
+
+.meter-value {
+  font-family: "Consolas", "SF Mono", monospace;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: 0.5px;
+}
+
+.meter-value .max {
+  font-size: 0.62rem;
+  font-weight: 400;
+  color: var(--text-mute);
+}
+
+.meter-track {
+  position: relative;
+  height: 5px;
+  background: hsla(28, 20%, 10%, 0.8);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.meter-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  border-radius: 6px;
+  transition: width 0.7s cubic-bezier(0.34, 1, 0.64, 1);
+  box-shadow: 0 0 10px currentColor;
+}
+
+.meter-fill::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 10px currentColor, 0 0 16px currentColor;
+  opacity: 0.9;
+}
+
+.fill-affection { background: linear-gradient(90deg, hsl(24, 60%, 48%), hsl(32, 80%, 70%)); color: hsl(30, 80%, 65%); }
+.fill-desire    { background: linear-gradient(90deg, hsl(8, 62%, 46%), hsl(20, 78%, 62%)); color: hsl(14, 78%, 60%); }
+.fill-morality  { background: linear-gradient(90deg, hsl(92, 22%, 38%), hsl(92, 30%, 58%)); color: hsl(92, 30%, 55%); }
+.fill-shame     { background: linear-gradient(90deg, hsl(30, 40%, 40%), hsl(38, 55%, 62%)); color: hsl(36, 50%, 58%); }
+.fill-fatigue   { background: linear-gradient(90deg, hsl(200, 12%, 38%), hsl(200, 16%, 58%)); color: hsl(200, 16%, 55%); }
+.fill-intimacy  { background: linear-gradient(90deg, hsl(340, 45%, 48%), hsl(350, 60%, 66%)); color: hsl(345, 55%, 60%); }
+.fill-synergy   { background: linear-gradient(90deg, hsl(170, 30%, 38%), hsl(170, 38%, 58%)); color: hsl(170, 35%, 55%); }
+
+.meter.danger .meter-value { color: hsl(8, 70%, 65%); }
+.meter.danger .meter-track { box-shadow: 0 0 12px hsla(8, 70%, 55%, 0.3); }
+
+/* 关系页 */
+.key-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.key-card {
+  padding: 12px 14px;
+  background: var(--wood-panel);
+  border: 1px solid var(--line-soft);
+  border-radius: 12px;
+  text-align: center;
+}
+
+.key-card .k-label {
+  font-size: 0.62rem;
+  color: var(--text-mute);
+  letter-spacing: 1.5px;
+  margin-bottom: 5px;
+}
+
+.key-card .k-value {
+  font-family: "Noto Serif SC", "Songti SC", serif;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--ember-soft);
+  letter-spacing: 1px;
+}
+
+/* 六周日历 */
+.week-group { margin-bottom: 12px; }
+.week-group:last-child { margin-bottom: 0; }
+
+.week-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+  font-size: 0.66rem;
+  letter-spacing: 2px;
+  color: var(--text-mute);
+}
+.week-head::before {
+  content: '';
+  width: 14px;
+  height: 1px;
+  background: var(--ember);
+  opacity: 0.5;
+}
+.week-head .w-num {
+  color: var(--ember);
+  font-weight: 700;
+}
+.week-head.current .w-num::after {
+  content: ' · 现在';
+  font-weight: 400;
+  color: var(--text-mute);
+}
+
+.event-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.event-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 8px;
+  border-radius: 7px;
+  font-size: 0.7rem;
+  color: var(--text-mute);
+  transition: all 0.25s;
+  border: 1px solid transparent;
+}
+
+.event-item .dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  border: 1.5px solid var(--text-mute);
+  flex-shrink: 0;
+  transition: all 0.3s;
+}
+
+.event-item.done {
+  color: var(--text);
+  background: hsla(24, 40%, 22%, 0.3);
+  border-color: var(--line-soft);
+}
+.event-item.done .dot {
+  background: var(--ember);
+  border-color: var(--ember);
+  box-shadow: 0 0 10px var(--ember-glow);
+}
+
+.event-item.active {
+  color: var(--ember-soft);
+  background: hsla(24, 60%, 26%, 0.35);
+  border-color: hsla(24, 72%, 62%, 0.3);
+}
+.event-item.active .dot {
+  background: transparent;
+  border-color: var(--ember);
+  animation: dotPulse 1.6s ease-in-out infinite;
+}
+@keyframes dotPulse {
+  0%, 100% { box-shadow: 0 0 0 0 var(--ember-glow); }
+  50% { box-shadow: 0 0 0 5px transparent; }
+}
+
+/* 波纹 */
+.gossip-block {
+  margin-top: 16px;
+  padding: 12px 14px;
+  background: hsla(28, 20%, 12%, 0.5);
+  border: 1px solid var(--line-soft);
+  border-radius: 12px;
+}
+
+.gossip-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.gossip-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.68rem;
+  color: var(--text-sub);
+  letter-spacing: 1px;
+}
+
+.gossip-title svg {
+  width: 13px;
+  height: 13px;
+  fill: none;
+  stroke: hsl(42, 60%, 56%);
+  stroke-width: 1.7;
+  stroke-linecap: round;
+}
+
+.gossip-waves {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  height: 20px;
+}
+
+.gossip-wave {
+  width: 3px;
+  border-radius: 2px;
+  background: hsl(42, 60%, 50%);
+  opacity: 0.3;
+  transition: all 0.4s;
+}
+
+/* 响应式 */
+@media (max-width: 460px) {
+  body { padding: 10px 8px 20px; }
+  .status-container { border-radius: 20px; }
+  .header { padding: 14px 14px 12px; gap: 12px; }
+  .portrait { width: 86px; height: 118px; }
+  .char-name { font-size: 1.12rem; letter-spacing: 2px; }
+  .voice { margin: 0 14px; padding: 12px 14px 12px 18px; }
+  .voice-text { font-size: 0.8rem; }
+  .world-bar { margin: 10px 14px 0; padding: 8px 12px; font-size: 0.66rem; gap: 6px; }
+  .tabs { margin: 12px 14px 0; }
+  .tab-btn { font-size: 0.66rem; padding: 7px 0; letter-spacing: 1px; }
+  .panes { padding: 12px 14px 16px; }
+  .key-cards { gap: 6px; }
+  .key-card { padding: 10px; }
+}
+
+@media (max-width: 360px) {
+  .portrait { width: 74px; height: 102px; }
+  .char-name { font-size: 1rem; }
+  .world-bar { font-size: 0.6rem; }
+}
+
+/* 灯箱 */
+.photo-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 999999;
+  background: rgba(6, 4, 3, 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  cursor: pointer;
+}
+.photo-lightbox.open { display: flex; }
+.photo-lightbox img {
+  max-width: 90vw;
+  max-height: 86vh;
+  border-radius: 6px;
+  border: 4px solid hsl(35, 30%, 88%);
+  box-shadow: 0 0 80px rgba(0, 0, 0, 0.9);
+  object-fit: contain;
+}
+</style>
+</head>
+<body>
+
+<div class="status-container" id="app">
+
+  <div class="header">
+    <div class="portrait" id="portrait" onclick="openPhoto()">
+      <img id="portraitImg" src="" alt="雪乃" />
+    </div>
+    <div class="identity">
+      <div class="name-row">
+        <span class="char-name">白石 雪乃</span>
+        <span class="char-name-jp">しらいし ゆきの</span>
+      </div>
+      <div class="tag-row">
+        <span class="tag stage" id="tagStage">疏离</span>
+        <span class="tag emotion" id="tagEmotion">平静</span>
+      </div>
+      <div class="date-line">
+        <span>第 <span class="week-num" id="weekNum">1</span> 周 · 第 <span id="dayNum">1</span> 天</span>
+        <span class="clock" id="clock">08:00</span>
+      </div>
+    </div>
+    <button class="fold-btn" id="foldBtn" aria-label="折叠">
+      <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+    </button>
+  </div>
+
+  <div class="voice">
+    <div class="voice-text" id="voiceText"></div>
+    <div class="voice-name">—— 雪乃 · 此刻</div>
+  </div>
+
+  <div class="world-bar">
+    <span class="world-item">
+      <svg viewBox="0 0 24 24"><path d="M3 10l9-7 9 7v10a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>
+      <span class="val" id="wScene">白石家缘侧</span>
+    </span>
+    <span class="world-sep"></span>
+    <span class="world-item">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.4 1.4M17.6 17.6L19 19M19 5l-1.4 1.4M6.4 17.6L5 19"/></svg>
+      <span class="val" id="wWeather">晴</span>
+    </span>
+    <span class="world-sep"></span>
+    <span class="world-item">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 14"/></svg>
+      <span class="val" id="wPeriod">上午</span>
+    </span>
+    <span class="world-sep"></span>
+    <span class="world-item">
+      <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><line x1="8" y1="3" x2="8" y2="7"/><line x1="16" y1="3" x2="16" y2="7"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      <span class="val" id="wSeason">夏</span>
+    </span>
+  </div>
+
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="status">
+      <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+      状态
+    </button>
+    <button class="tab-btn" data-tab="relation">
+      <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      关系
+    </button>
+    <button class="tab-btn" data-tab="event">
+      <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><line x1="8" y1="3" x2="8" y2="7"/><line x1="16" y1="3" x2="16" y2="7"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      六周
+    </button>
+  </div>
+
+  <div class="panes">
+
+    <div class="pane active" id="pane-status">
+      <div class="meter" id="m-affection">
+        <div class="meter-head">
+          <span class="meter-label"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>好感度</span>
+          <span class="meter-value"><span class="v">0</span><span class="max"> / 200</span></span>
+        </div>
+        <div class="meter-track"><div class="meter-fill fill-affection" style="width:0%"></div></div>
+      </div>
+
+      <div class="meter" id="m-desire">
+        <div class="meter-head">
+          <span class="meter-label"><svg viewBox="0 0 24 24"><path d="M12 2c0 4-4 5-4 9a4 4 0 0 0 8 0c0-2-1-3-1-5 2 1 4 3 4 6a7 7 0 0 1-14 0c0-5 5-6 7-10z"/></svg>欲望值</span>
+          <span class="meter-value"><span class="v">0</span><span class="max"> / 100</span></span>
+        </div>
+        <div class="meter-track"><div class="meter-fill fill-desire" style="width:0%"></div></div>
+      </div>
+
+      <div class="meter" id="m-morality">
+        <div class="meter-head">
+          <span class="meter-label"><svg viewBox="0 0 24 24"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/></svg>道德值</span>
+          <span class="meter-value"><span class="v">95</span><span class="max"> / 100</span></span>
+        </div>
+        <div class="meter-track"><div class="meter-fill fill-morality" style="width:95%"></div></div>
+      </div>
+
+      <div class="meter" id="m-shame">
+        <div class="meter-head">
+          <span class="meter-label"><svg viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>羞耻值</span>
+          <span class="meter-value"><span class="v">80</span><span class="max"> / 100</span></span>
+        </div>
+        <div class="meter-track"><div class="meter-fill fill-shame" style="width:80%"></div></div>
+      </div>
+
+      <div class="meter" id="m-fatigue">
+        <div class="meter-head">
+          <span class="meter-label"><svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>疲惫度</span>
+          <span class="meter-value"><span class="v">20</span><span class="max"> / 100</span></span>
+        </div>
+        <div class="meter-track"><div class="meter-fill fill-fatigue" style="width:20%"></div></div>
+      </div>
+    </div>
+
+    <div class="pane" id="pane-relation">
+      <div class="key-cards">
+        <div class="key-card">
+          <div class="k-label">性爱阶段</div>
+          <div class="k-value" id="kSexStage">未发生</div>
+        </div>
+        <div class="key-card">
+          <div class="k-label">距上次亲密</div>
+          <div class="k-value" id="kSince">—</div>
+        </div>
+      </div>
+
+      <div class="meter" id="m-intimacy">
+        <div class="meter-head">
+          <span class="meter-label"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>亲密度</span>
+          <span class="meter-value"><span class="v">0</span><span class="max"> / 100</span></span>
+        </div>
+        <div class="meter-track"><div class="meter-fill fill-intimacy" style="width:0%"></div></div>
+      </div>
+
+      <div class="meter" id="m-synergy">
+        <div class="meter-head">
+          <span class="meter-label"><svg viewBox="0 0 24 24"><circle cx="9" cy="9" r="5"/><circle cx="15" cy="15" r="5"/></svg>默契度</span>
+          <span class="meter-value"><span class="v">0</span><span class="max"> / 100</span></span>
+        </div>
+        <div class="meter-track"><div class="meter-fill fill-synergy" style="width:0%"></div></div>
+      </div>
+
+      <div class="gossip-block">
+        <div class="gossip-head">
+          <span class="gossip-title">
+            <svg viewBox="0 0 24 24"><path d="M2 12c2-3 4-3 6 0s4 3 6 0 4-3 6 0"/><path d="M2 17c2-3 4-3 6 0s4 3 6 0 4-3 6 0" opacity="0.6"/><path d="M2 7c2-3 4-3 6 0s4 3 6 0 4-3 6 0" opacity="0.4"/></svg>
+            村里闲话度
+          </span>
+          <span class="meter-value"><span class="v" id="gossipVal">0</span><span class="max"> / 100</span></span>
+        </div>
+        <div class="gossip-waves" id="gossipWaves"></div>
+      </div>
+    </div>
+
+    <div class="pane" id="pane-event">
+      <div id="eventCalendar"></div>
+    </div>
+
+  </div>
+</div>
+
+<div class="photo-lightbox" id="photoLightbox" onclick="closePhoto()">
+  <img id="photoLightboxImg" src="" alt="" />
+</div>
+
+<script>
+(function() {
+  'use strict';
+
+  /* ============================================================
+     ⚠️ 头像映射 · 按关系阶段
+     ============================================================ */
+  const PORTRAIT_MAP = {
+    '疏离': 'https://cdn.jsdelivr.net/gh/sanshui19516/Plot-Advancement-Illustration-@main/%E4%B9%A1%E4%B8%8B%E9%9B%AA%E4%B9%83/ztl%20(2).jpg',
+    '裂缝': 'https://cdn.jsdelivr.net/gh/sanshui19516/Plot-Advancement-Illustration-@main/%E4%B9%A1%E4%B8%8B%E9%9B%AA%E4%B9%83/ztl%20(1).jpg',
+    '越界': 'https://cdn.jsdelivr.net/gh/sanshui19516/Plot-Advancement-Illustration-@main/%E4%B9%A1%E4%B8%8B%E9%9B%AA%E4%B9%83/ztl%20(3).jpg',
+    '尾声': 'https://cdn.jsdelivr.net/gh/sanshui19516/Plot-Advancement-Illustration-@main/%E4%B9%A1%E4%B8%8B%E9%9B%AA%E4%B9%83/ztl%20(4).jpg'
+  };
+
+  const DEFAULT_PORTRAIT = PORTRAIT_MAP['疏离'];
+
+  /* MVU 字段路径映射 */
+  const FIELD_MAP = {
+    scene:     '世界.当前场景',
+    weather:   '世界.天气',
+    period:    '世界.时段',
+    clock:     '世界.具体时间',
+    week:      '世界.当前周',
+    day:       '世界.当前天',
+    season:    '世界.季节',
+    gossip:    '世界.村里闲话度',
+    stage:     '雪乃.关系阶段',
+    emotion:   '雪乃.当前情绪',
+    voice:     '雪乃.内心话',
+    affection: '雪乃.好感度',
+    desire:    '雪乃.欲望值',
+    morality:  '雪乃.道德值',
+    shame:     '雪乃.羞耻值',
+    fatigue:   '雪乃.疲惫度',
+    sexStage:  '关系.性爱阶段',
+    sexCount:  '关系.性爱次数',
+    since:     '关系.距上次亲密',
+    intimacy:  '关系.亲密度',
+    synergy:   '关系.默契度'
+  };
+
+  /* 20个事件 · 按周分组 */
+  const EVENT_WEEKS = [
+    { week: 1, events: ['归乡问候', '帮忙日常', '外人面前', '修缘侧碰手', '夜晚失眠'] },
+    { week: 2, events: ['浴衣松动', '缘侧傍晚', '学校话题', '洗澡水声', '晒被褥'] },
+    { week: 3, events: ['失态明显', '试探边界', '停电烛光', '你是大人了', 'user发烧'] },
+    { week: 4, events: ['雷雨留宿', '事后疏离'] },
+    { week: 5, events: ['重新见面', '村里闲话', '旧相册'] },
+    { week: 6, events: [] }
+  ];
+
+  /* ============================================================
+     工具
+     ============================================================ */
+  function $(id) { return document.getElementById(id); }
+
+  function safeGet(obj, path, def) {
+    try {
+      const parts = path.split('.');
+      let cur = obj;
+      for (let i = 0; i < parts.length; i++) {
+        if (cur == null) return def;
+        cur = cur[parts[i]];
+      }
+      return cur == null ? def : cur;
+    } catch (e) { return def; }
+  }
+
+  function setMeter(meterId, value, max, dangerLow) {
+    const el = $(meterId);
+    if (!el) return;
+    const v = Math.max(0, Math.min(Number(value) || 0, max));
+    el.querySelector('.v').textContent = Math.round(v);
+    const fill = el.querySelector('.meter-fill');
+    if (fill) fill.style.width = (max > 0 ? (v / max * 100) : 0) + '%';
+    if (typeof dangerLow === 'number') {
+      el.classList.toggle('danger', v <= dangerLow);
+    }
+  }
+
+  function fetchState() {
+    try {
+      const all = (typeof getAllVariables === 'function') ? getAllVariables() : {};
+      return safeGet(all, 'stat_data', {}) || {};
+    } catch (e) {
+      return {};
+    }
+  }
+
+  /* ============================================================
+     头像切换 · 按关系阶段
+     ============================================================ */
+  function updatePortrait(stage) {
+    const img = $('portraitImg');
+    if (!img) return;
+
+    const targetUrl = PORTRAIT_MAP[stage] || DEFAULT_PORTRAIT;
+
+    /* 已经是对应头像就不动 */
+    if (img.getAttribute('data-current') === targetUrl) return;
+
+    /* 淡出 → 换图 → 淡入 */
+    img.style.opacity = '0';
+    setTimeout(function() {
+      img.src = targetUrl;
+      img.setAttribute('data-current', targetUrl);
+      img.onload = function() {
+        img.style.opacity = '1';
+      };
+      /* 如果图片加载失败，也恢复显示（防止卡在透明） */
+      img.onerror = function() {
+        img.style.opacity = '1';
+      };
+    }, 200);
+  }
+
+  /* ============================================================
+     渲染
+     ============================================================ */
+  function render() {
+    const data = fetchState();
+
+    /* 关系阶段 & 情绪 */
+    const stage = safeGet(data, FIELD_MAP.stage, '疏离');
+    const emotion = safeGet(data, FIELD_MAP.emotion, '平静');
+
+    /* 头像切换 */
+    updatePortrait(stage);
+
+    /* 头部 */
+    $('tagStage').textContent = stage;
+    $('tagEmotion').textContent = emotion;
+    $('weekNum').textContent = safeGet(data, FIELD_MAP.week, 1);
+    $('dayNum').textContent = safeGet(data, FIELD_MAP.day, 1);
+    $('clock').textContent = safeGet(data, FIELD_MAP.clock, '--:--');
+
+    /* 内心话 */
+    const voice = safeGet(data, FIELD_MAP.voice, '');
+    const voiceEl = $('voiceText');
+    let cleanVoice = String(voice).replace(/^\*|\*$/g, '').trim();
+    cleanVoice = cleanVoice.replace(/^[（(]|[）)]$/g, '').trim();
+    voiceEl.textContent = cleanVoice;
+
+    /* 世界条 */
+    $('wScene').textContent = safeGet(data, FIELD_MAP.scene, '白石家缘侧');
+    $('wWeather').textContent = safeGet(data, FIELD_MAP.weather, '晴');
+    $('wPeriod').textContent = safeGet(data, FIELD_MAP.period, '上午');
+    $('wSeason').textContent = safeGet(data, FIELD_MAP.season, '夏');
+
+    /* 状态 */
+    setMeter('m-affection', safeGet(data, FIELD_MAP.affection, 0), 200);
+    setMeter('m-desire', safeGet(data, FIELD_MAP.desire, 0), 100);
+    setMeter('m-morality', safeGet(data, FIELD_MAP.morality, 95), 100, 25);
+    setMeter('m-shame', safeGet(data, FIELD_MAP.shame, 80), 100);
+    setMeter('m-fatigue', safeGet(data, FIELD_MAP.fatigue, 20), 100, 80);
+
+    /* 关系 */
+    $('kSexStage').textContent = safeGet(data, FIELD_MAP.sexStage, '未发生');
+
+    const since = Number(safeGet(data, FIELD_MAP.since, 0));
+    const sexStage = safeGet(data, FIELD_MAP.sexStage, '未发生');
+    $('kSince').textContent = (sexStage === '未发生') ? '—' : (since === 0 ? '今天' : since + ' 天前');
+
+    setMeter('m-intimacy', safeGet(data, FIELD_MAP.intimacy, 0), 100);
+    setMeter('m-synergy', safeGet(data, FIELD_MAP.synergy, 0), 100);
+
+    /* 村里闲话 */
+    const gossip = Number(safeGet(data, FIELD_MAP.gossip, 0)) || 0;
+    $('gossipVal').textContent = Math.round(gossip);
+    renderGossipWaves(gossip);
+
+    /* 六周 */
+    renderEventCalendar(data);
+  }
+
+  function renderGossipWaves(gossip) {
+    const box = $('gossipWaves');
+    if (!box) return;
+    const total = 24;
+    const lit = Math.round(gossip / 100 * total);
+
+    if (box.children.length !== total) {
+      box.innerHTML = '';
+      for (let i = 0; i < total; i++) {
+        const bar = document.createElement('div');
+        bar.className = 'gossip-wave';
+        box.appendChild(bar);
+      }
+    }
+
+    for (let i = 0; i < total; i++) {
+      const bar = box.children[i];
+      const active = i < lit;
+      const h = active ? (8 + (i / total) * 12) : 3;
+      bar.style.height = h + 'px';
+      bar.style.opacity = active ? '0.85' : '0.18';
+    }
+  }
+
+  function renderEventCalendar(data) {
+    const box = $('eventCalendar');
+    if (!box) return;
+
+    const currentWeek = Number(safeGet(data, FIELD_MAP.week, 1)) || 1;
+    const events = safeGet(data, '事件', {}) || {};
+
+    let html = '';
+
+    EVENT_WEEKS.forEach(function(group) {
+      const isCurrent = (group.week === currentWeek);
+      html += '<div class="week-group">';
+      html += '<div class="week-head' + (isCurrent ? ' current' : '') + '">';
+      html += '<span class="w-num">第 ' + group.week + ' 周</span>';
+      html += '</div>';
+
+      if (group.events.length === 0) {
+        html += '<div class="event-item" style="opacity:0.45;font-style:italic;">尾声 · 离开与未完成的余韵</div>';
+      } else {
+        html += '<div class="event-list">';
+        group.events.forEach(function(name) {
+          const done = events[name] === true;
+          let cls = 'event-item';
+          if (done) cls += ' done';
+          else if (group.week === currentWeek) cls += ' active';
+          html += '<div class="' + cls + '"><span class="dot"></span>' + name + '</div>';
+        });
+        html += '</div>';
+      }
+
+      html += '</div>';
+    });
+
+    box.innerHTML = html;
+  }
+
+  /* ============================================================
+     折叠
+     ============================================================ */
+  const FOLD_KEY = 'yukino_status_collapsed';
+
+  function applyFoldState(collapsed) {
+    $('app').classList.toggle('collapsed', collapsed);
+  }
+
+  $('foldBtn').addEventListener('click', function(e) {
+    e.stopPropagation();
+    const app = $('app');
+    const next = !app.classList.contains('collapsed');
+    applyFoldState(next);
+    try { localStorage.setItem(FOLD_KEY, next ? '1' : '0'); } catch (err) {}
+  });
+
+  try {
+    const saved = localStorage.getItem(FOLD_KEY);
+    if (saved === '1') applyFoldState(true);
+  } catch (e) {}
+
+  /* ============================================================
+     页签
+     ============================================================ */
+  document.querySelectorAll('.tab-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('.tab-btn').forEach(function(b) { b.classList.remove('active'); });
+      document.querySelectorAll('.pane').forEach(function(p) { p.classList.remove('active'); });
+      this.classList.add('active');
+      const target = $('pane-' + this.dataset.tab);
+      if (target) target.classList.add('active');
+    });
+  });
+
+  /* ============================================================
+     头像灯箱
+     ============================================================ */
+  window.openPhoto = function() {
+    const lb = $('photoLightbox');
+    const img = $('photoLightboxImg');
+    const portraitImg = $('portraitImg');
+    if (portraitImg && portraitImg.src) {
+      img.src = portraitImg.src;
+    }
+    lb.classList.add('open');
+  };
+
+  window.closePhoto = function() {
+    $('photoLightbox').classList.remove('open');
+  };
+
+  /* ============================================================
+     初始化
+     ============================================================ */
+  function init() {
+    render();
+    setInterval(render, 1500);
+
+    try {
+      if (typeof eventOn !== 'undefined' && typeof Mvu !== 'undefined' && Mvu.events) {
+        eventOn(Mvu.events.VARIABLE_UPDATE_ENDED, function() {
+          render();
+        });
+      }
+    } catch (e) {}
+  }
+
+  if (typeof waitGlobalInitialized === 'function') {
+    waitGlobalInitialized('Mvu').then(init)['catch'](init);
+  } else {
+    $(init);
+  }
+
+  console.log('[帰郷の夏 · 状态栏] 已加载，头像映射：4 个关系阶段');
+})();
+</script>
+
+</body>
+</html>
