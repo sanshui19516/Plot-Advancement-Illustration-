@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>为你而生</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  width: 100%;
+  background: transparent;
+  font-family: "PingFang SC", "Microsoft YaHei", "Hiragino Sans", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  overflow: hidden;
+}
+
+.stage {
+  position: relative;
+  width: 100%;
+  height: 0;
+  padding-bottom: 56.25%;
+  overflow: hidden;
+  background: #0a060a;
+  min-height: 300px;
+}
+
+.stage > * { position: absolute; }
+
+/* 背景 */
+.marble-bg {
+  inset: 0;
+  background: 
+    radial-gradient(ellipse at 25% 25%, hsla(330, 35%, 22%, 0.45), transparent 55%),
+    radial-gradient(ellipse at 75% 75%, hsla(40, 30%, 18%, 0.3), transparent 55%),
+    linear-gradient(135deg, hsla(290, 22%, 7%, 1), hsla(300, 18%, 11%, 1));
+  z-index: 1;
+}
+
+.marble-bg::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: 
+    repeating-linear-gradient(42deg, transparent 0 70px, hsla(330, 25%, 35%, 0.04) 70px 72px),
+    repeating-linear-gradient(-38deg, transparent 0 110px, hsla(40, 30%, 35%, 0.03) 110px 111px);
+}
+
+/* 呼吸光 */
+.breathe-glow {
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 50%, hsla(330, 60%, 50%, 0.1), transparent 60%);
+  animation: breathe 8s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 2;
+}
+
+@keyframes breathe {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
+}
+
+/* 花瓣 */
+.petals { inset: 0; pointer-events: none; z-index: 3; }
+
+.petal {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background: radial-gradient(ellipse at 30% 30%, hsla(330, 60%, 75%, 0.6), hsla(330, 45%, 50%, 0.4));
+  border-radius: 50% 0 50% 50%;
+  transform-origin: center;
+  animation: petalFall linear infinite;
+  opacity: 0;
+}
+
+@keyframes petalFall {
+  0% { transform: translateY(-30px) rotate(0deg); opacity: 0; }
+  15% { opacity: 0.7; }
+  85% { opacity: 0.4; }
+  100% { transform: translateY(600px) rotate(540deg); opacity: 0; }
+}
+
+.petal:nth-child(1) { left: 12%; animation-duration: 14s; animation-delay: 0s; }
+.petal:nth-child(2) { left: 35%; animation-duration: 18s; animation-delay: 3s; width: 8px; height: 8px; }
+.petal:nth-child(3) { left: 58%; animation-duration: 16s; animation-delay: 6s; }
+.petal:nth-child(4) { left: 82%; animation-duration: 20s; animation-delay: 1.5s; width: 10px; height: 10px; }
+.petal:nth-child(5) { left: 92%; animation-duration: 22s; animation-delay: 9s; width: 6px; height: 6px; }
+.petal:nth-child(6) { left: 22%; animation-duration: 19s; animation-delay: 12s; width: 7px; height: 7px; }
+
+/* 左侧镜子区 */
+.mirror-side {
+  top: 0;
+  left: 0;
+  width: 55%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 5;
+  padding: 4% 0;
+}
+
+.mirror-frame {
+  position: relative;
+  width: 72%;
+  height: 88%;
+  max-height: 420px;
+  border-radius: 50% / 45%;
+  padding: 6px;
+  background: linear-gradient(135deg, hsla(40, 50%, 55%, 0.4), hsla(330, 30%, 30%, 0.3));
+  box-shadow: 
+    0 0 40px hsla(330, 70%, 55%, 0.25),
+    0 0 80px hsla(330, 60%, 45%, 0.15),
+    0 12px 40px rgba(0, 0, 0, 0.6);
+}
+
+.mirror-frame::before {
+  content: '';
+  position: absolute;
+  inset: 3px;
+  border-radius: 50% / 45%;
+  border: 1px solid hsla(40, 60%, 65%, 0.5);
+}
+
+.mirror {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 50% / 45%;
+  overflow: hidden;
+  background: 
+    radial-gradient(ellipse at 40% 30%, hsla(330, 60%, 40%, 0.5), hsla(330, 35%, 15%, 0.9));
+  box-shadow: inset 0 0 60px hsla(330, 60%, 30%, 0.4);
+}
+
+/* 镜面反光 */
+.mirror::before {
+  content: '';
+  position: absolute;
+  top: 10%;
+  left: 18%;
+  width: 28%;
+  height: 22%;
+  background: radial-gradient(ellipse, hsla(0, 0%, 100%, 0.18), transparent 70%);
+  border-radius: 50%;
+  transform: rotate(-20deg);
+  z-index: 10;
+  pointer-events: none;
+}
+
+.mirror::after {
+  content: '';
+  position: absolute;
+  bottom: 15%;
+  right: 15%;
+  width: 20%;
+  height: 12%;
+  background: radial-gradient(ellipse, hsla(40, 80%, 70%, 0.15), transparent 70%);
+  border-radius: 50%;
+  transform: rotate(15deg);
+  z-index: 10;
+  pointer-events: none;
+}
+
+.mirror-inner {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  perspective: 900px;
+}
+
+.ring {
+  position: relative;
+  width: 110px;
+  height: 150px;
+  transform-style: preserve-3d;
+  animation: ringSpin 30s linear infinite;
+}
+
+@keyframes ringSpin {
+  from { transform: rotateY(0deg); }
+  to { transform: rotateY(360deg); }
+}
+
+.ring-card {
+  position: absolute;
+  inset: 0;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid hsla(40, 55%, 60%, 0.35);
+  box-shadow: 
+    0 6px 20px rgba(0, 0, 0, 0.6),
+    0 0 20px hsla(330, 60%, 55%, 0.15);
+  backface-visibility: hidden;
+  background: hsla(300, 15%, 15%, 0.9);
+}
+
+.ring-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.ring-card:nth-child(1) { transform: rotateY(0deg) translateZ(150px); }
+.ring-card:nth-child(2) { transform: rotateY(60deg) translateZ(150px); }
+.ring-card:nth-child(3) { transform: rotateY(120deg) translateZ(150px); }
+.ring-card:nth-child(4) { transform: rotateY(180deg) translateZ(150px); }
+.ring-card:nth-child(5) { transform: rotateY(240deg) translateZ(150px); }
+.ring-card:nth-child(6) { transform: rotateY(300deg) translateZ(150px); }
+
+/* 右侧文字区 */
+.text-side {
+  top: 0;
+  right: 0;
+  width: 45%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 4% 5%;
+  text-align: center;
+  z-index: 5;
+}
+
+.tag-line {
+  font-family: "Noto Serif SC", "Songti SC", serif;
+  font-size: clamp(0.55rem, 1vw, 0.72rem);
+  letter-spacing: 6px;
+  color: hsla(330, 55%, 75%, 0.6);
+  margin-bottom: 2%;
+}
+
+.main-title {
+  font-family: "Noto Serif SC", "Songti SC", serif;
+  font-size: clamp(1.6rem, 3.5vw, 3rem);
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  line-height: 1.25;
+  background: linear-gradient(135deg, hsl(335, 65%, 85%), hsl(330, 60%, 70%), hsl(40, 75%, 68%));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 20px hsla(330, 70%, 55%, 0.4));
+  margin-bottom: 2%;
+}
+
+.sub-title {
+  font-family: "Noto Serif SC", "Songti SC", serif;
+  font-size: clamp(0.6rem, 1.15vw, 0.88rem);
+  letter-spacing: 0.35em;
+  color: hsla(340, 20%, 78%, 0.7);
+  margin-bottom: 8%;
+  font-style: italic;
+}
+
+.ornament {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 8%;
+}
+
+.ornament-line {
+  width: 40px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, hsla(330, 55%, 70%, 0.4));
+}
+
+.ornament-line:last-child {
+  background: linear-gradient(270deg, transparent, hsla(330, 55%, 70%, 0.4));
+}
+
+.ornament-icon {
+  width: 12px;
+  height: 12px;
+  opacity: 0.5;
+}
+
+.start-btn {
+  position: relative;
+  padding: 13px 42px;
+  background: hsla(330, 35%, 18%, 0.85);
+  border: 1.5px solid hsla(330, 55%, 68%, 0.6);
+  border-radius: 40px;
+  color: hsl(335, 60%, 82%);
+  font-family: "Noto Serif SC", "Songti SC", serif;
+  font-size: clamp(0.78rem, 1.2vw, 1rem);
+  letter-spacing: 0.3em;
+  cursor: pointer;
+  transition: all 0.35s ease;
+  overflow: hidden;
+  box-shadow: 
+    0 4px 20px rgba(0, 0, 0, 0.5),
+    0 0 24px hsla(330, 70%, 55%, 0.15);
+}
+
+.start-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, transparent 30%, hsla(335, 70%, 75%, 0.25) 50%, transparent 70%);
+  transform: translateX(-100%);
+  transition: transform 0.8s ease;
+}
+
+.start-btn:hover {
+  border-color: hsl(335, 65%, 80%);
+  color: hsl(340, 80%, 94%);
+  box-shadow: 
+    0 6px 30px rgba(0, 0, 0, 0.6),
+    0 0 50px hsla(330, 70%, 60%, 0.4);
+  transform: translateY(-2px);
+}
+
+.start-btn:hover::before {
+  transform: translateX(100%);
+}
+
+.start-btn:active {
+  transform: translateY(0) scale(0.98);
+}
+
+/* 口红印装饰 */
+.lip-mark {
+  position: absolute;
+  z-index: 4;
+  opacity: 0.15;
+  pointer-events: none;
+}
+
+.lip-mark-1 {
+  top: 15%;
+  right: 8%;
+  width: 30px;
+  height: 18px;
+  background: radial-gradient(ellipse at 30% 50%, hsl(350, 70%, 55%), transparent 70%);
+  border-radius: 50%;
+  transform: rotate(-15deg);
+}
+
+.lip-mark-2 {
+  bottom: 22%;
+  left: 6%;
+  width: 24px;
+  height: 14px;
+  background: radial-gradient(ellipse at 50% 50%, hsl(350, 70%, 55%), transparent 70%);
+  border-radius: 50%;
+  transform: rotate(25deg);
+}
+
+/* 过场动画 */
+.transition-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  background: #050308;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+
+.transition-overlay.active {
+  display: flex;
+  opacity: 1;
+}
+
+/* 门板 */
+.door-left, .door-right {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 50%;
+  background: linear-gradient(90deg, hsla(290, 25%, 6%, 1), hsla(300, 20%, 10%, 1));
+  z-index: 2;
+  transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.5);
+}
+
+.door-left { left: 0; }
+.door-right { right: 0; }
+
+/* 门上的纹理 */
+.door-left::before, .door-right::before {
+  content: '';
+  position: absolute;
+  inset: 20px;
+  border: 1px solid hsla(330, 30%, 30%, 0.15);
+}
+
+.transition-overlay.open .door-left {
+  transform: translateX(-100%);
+}
+.transition-overlay.open .door-right {
+  transform: translateX(100%);
+}
+
+/* 门缝的光 */
+.door-light {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  transform: translateX(-50%);
+  background: radial-gradient(ellipse at center, hsla(330, 70%, 60%, 0.6), transparent 60%);
+  z-index: 1;
+  transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.transition-overlay.open .door-light {
+  width: 100%;
+}
+
+.transition-content {
+  position: relative;
+  z-index: 5;
+  text-align: center;
+}
+
+.t-author {
+  font-family: "Noto Serif SC", "Songti SC", serif;
+  font-size: clamp(1.5rem, 4vw, 2.8rem);
+  font-weight: 700;
+  letter-spacing: 0.4em;
+  color: hsl(335, 65%, 82%);
+  text-shadow: 0 0 40px hsla(330, 70%, 55%, 0.6);
+  opacity: 0;
+  transform: translateY(15px);
+  transition: opacity 1s ease, transform 1s ease;
+  margin-bottom: 0.4em;
+}
+
+.t-author.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.t-comment {
+  font-family: "Noto Serif SC", "Songti SC", serif;
+  font-size: clamp(0.85rem, 1.8vw, 1.2rem);
+  letter-spacing: 0.4em;
+  color: hsla(340, 30%, 80%, 0.7);
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 1s ease 0.4s, transform 1s ease 0.4s;
+}
+
+.t-comment.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.credit-line {
+  position: absolute;
+  bottom: 8%;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-family: "Noto Serif SC", "Songti SC", serif;
+  font-size: clamp(0.55rem, 1vw, 0.7rem);
+  letter-spacing: 0.15em;
+  color: hsla(340, 25%, 70%, 0.4);
+  line-height: 1.9;
+  padding: 0 10%;
+  opacity: 0;
+  transition: opacity 0.8s ease;
+  z-index: 6;
+}
+
+.credit-line.show { opacity: 1; }
+
+.credit-char {
+  display: inline-block;
+  opacity: 0;
+}
+
+@keyframes charReveal {
+  to { opacity: 1; }
+}
+
+.skip-hint {
+  position: absolute;
+  bottom: 3%;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.62rem;
+  letter-spacing: 0.2em;
+  color: hsla(340, 30%, 70%, 0.15);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 1s ease;
+  z-index: 10;
+}
+
+.skip-hint.show { opacity: 1; }
+
+/* 竖屏适配 */
+@media (max-aspect-ratio: 1/1) {
+  .stage {
+    height: 100vh;
+    padding-bottom: 0;
+    min-height: 0;
+  }
+
+  .mirror-side {
+    width: 100%;
+    height: 50%;
+    top: 0;
+    padding: 3% 0;
+  }
+
+  .mirror-frame {
+    width: 60%;
+    height: 90%;
+  }
+
+  .ring {
+    width: 90px;
+    height: 120px;
+  }
+
+  .ring-card:nth-child(1) { transform: rotateY(0deg) translateZ(120px); }
+  .ring-card:nth-child(2) { transform: rotateY(60deg) translateZ(120px); }
+  .ring-card:nth-child(3) { transform: rotateY(120deg) translateZ(120px); }
+  .ring-card:nth-child(4) { transform: rotateY(180deg) translateZ(120px); }
+  .ring-card:nth-child(5) { transform: rotateY(240deg) translateZ(120px); }
+  .ring-card:nth-child(6) { transform: rotateY(300deg) translateZ(120px); }
+
+  .text-side {
+    width: 100%;
+    height: 50%;
+    top: 50%;
+    padding: 3% 6%;
+  }
+
+  .main-title {
+    font-size: 1.6rem;
+  }
+
+  .sub-title {
+    font-size: 0.72rem;
+  }
+
+  .start-btn {
+    padding: 11px 34px;
+    font-size: 0.85rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ring { animation-duration: 90s; }
+  .petal { animation: none; opacity: 0.3; }
+  .breathe-glow { animation: none; opacity: 0.6; }
+}
+</style>
+</head>
+<body>
+
+<div class="stage" id="stageRoot">
+
+  <!-- 大理石背景 -->
+  <div class="marble-bg"></div>
+  <div class="breathe-glow"></div>
+
+  <!-- 花瓣 -->
+  <div class="petals">
+    <div class="petal"></div>
+    <div class="petal"></div>
+    <div class="petal"></div>
+    <div class="petal"></div>
+    <div class="petal"></div>
+    <div class="petal"></div>
+  </div>
+
+  <!-- 口红印装饰 -->
+  <div class="lip-mark lip-mark-1"></div>
+  <div class="lip-mark lip-mark-2"></div>
+
+  <!-- 左侧 · 化妆镜 -->
+  <div class="mirror-side">
+    <div class="mirror-frame">
+      <div class="mirror">
+        <div class="mirror-inner">
+          <div class="ring">
+            <div class="ring-card"><img src="https://cdn.jsdelivr.net/gh/sanshui19516/Plot-Advancement-Illustration-@main/%E4%B8%BA%E4%BD%A0%E8%80%8C%E7%94%9F/%E8%B6%85%E9%93%BE/HHY%20(1).jpg" alt="" /></div>
+            <div class="ring-card"><img src="https://cdn.jsdelivr.net/gh/sanshui19516/Plot-Advancement-Illustration-@main/%E4%B8%BA%E4%BD%A0%E8%80%8C%E7%94%9F/%E8%B6%85%E9%93%BE/HHY%20(2).jpg" alt="" /></div>
+            <div class="ring-card"><img src="https://cdn.jsdelivr.net/gh/sanshui19516/Plot-Advancement-Illustration-@main/%E4%B8%BA%E4%BD%A0%E8%80%8C%E7%94%9F/%E8%B6%85%E9%93%BE/HHY%20(3).jpg" alt="" /></div>
+            <div class="ring-card"><img src="https://cdn.jsdelivr.net/gh/sanshui19516/Plot-Advancement-Illustration-@main/%E4%B8%BA%E4%BD%A0%E8%80%8C%E7%94%9F/%E8%B6%85%E9%93%BE/HHY%20(4).jpg" alt="" /></div>
+            <div class="ring-card"><img src="https://cdn.jsdelivr.net/gh/sanshui19516/Plot-Advancement-Illustration-@main/%E4%B8%BA%E4%BD%A0%E8%80%8C%E7%94%9F/%E8%B6%85%E9%93%BE/HHY%20(5).jpg" alt="" /></div>
+            <div class="ring-card"><img src="https://cdn.jsdelivr.net/gh/sanshui19516/Plot-Advancement-Illustration-@main/%E4%B8%BA%E4%BD%A0%E8%80%8C%E7%94%9F/%E8%B6%85%E9%93%BE/HHY%20(6).jpg" alt="" /></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 右侧 · 文字区 -->
+  <div class="text-side">
+    <div class="tag-line">B O R N　F O R　Y O U</div>
+    <div class="main-title">为你而生</div>
+    <div class="sub-title">—— 妈妈，本来就是为你而生的 ——</div>
+
+    <div class="ornament">
+      <div class="ornament-line"></div>
+      <svg class="ornament-icon" viewBox="0 0 24 24" fill="none" stroke="hsl(330, 55%, 70%)" stroke-width="1.2">
+        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+      </svg>
+      <div class="ornament-line"></div>
+    </div>
+
+    <button class="start-btn" id="startBtn">推 开 那 扇 门</button>
+  </div>
+
+</div>
+
+<!-- 过场动画 -->
+<div class="transition-overlay" id="transitionOverlay">
+  <div class="door-light"></div>
+  <div class="door-left"></div>
+  <div class="door-right"></div>
+
+  <div class="transition-content">
+    <div class="t-author" id="tAuthor">三 年 的 水</div>
+    <div class="t-comment" id="tComment">请 多 多 评 论</div>
+  </div>
+
+  <div class="credit-line" id="creditLine"></div>
+  <div class="skip-hint" id="skipHint">— 点击任意处跳过 —</div>
+</div>
+
+<div id="welcome-data" style="display:none;">$1</div>
+
+<script>
+(function() {
+  'use strict';
+
+  async function switchOpening(swipeId) {
+    console.log('[欢迎页] 跳转到索引:', swipeId);
+    try {
+      let messages;
+      try {
+        messages = await getChatMessages?.('0', { include_swipe: true });
+      } catch (e) {
+        const context = window.SillyTavern?.getContext?.();
+        messages = context?.chat?.messages;
+      }
+      if (messages && messages.length > 0) {
+        const userMessage = messages[0];
+        if (userMessage && userMessage.swipes && userMessage.swipes.length > swipeId) {
+          const targetSwipe = userMessage.swipes[swipeId];
+          const setChatMessage = window.setChatMessage || window.SillyTavern?.getContext?.()?.setChatMessage;
+          if (typeof setChatMessage === 'function') {
+            await setChatMessage(targetSwipe, 0, { swipe_id: swipeId, refresh: 'display_and_render_current' });
+            return;
+          }
+          if (typeof userMessage.setSwipe === 'function') {
+            userMessage.setSwipe(swipeId);
+            return;
+          }
+        }
+      }
+    } catch (e) {
+      console.warn('[欢迎页] 方法1失败:', e);
+    }
+
+    try {
+      if (typeof window.parent.triggerSlash === 'function') {
+        window.parent.triggerSlash('/trigger');
+        return;
+      }
+      if (typeof window.triggerSlash === 'function') {
+        window.triggerSlash('/trigger');
+        return;
+      }
+    } catch (e) {
+      console.warn('[欢迎页] 备用跳转失败:', e);
+    }
+  }
+
+  function syncHeight() {
+    try {
+      const stage = document.getElementById('stageRoot');
+      if (!stage) return;
+      const height = stage.offsetHeight;
+      if (!height || height < 100) return;
+
+      const frame = window.frameElement;
+      if (frame && frame.tagName === 'IFRAME') {
+        frame.style.height = height + 'px';
+        frame.style.minHeight = 'unset';
+        frame.style.maxHeight = 'unset';
+        frame.style.overflow = 'hidden';
+      }
+
+      try {
+        const iframes = window.parent.document.querySelectorAll('iframe');
+        for (let i = 0; i < iframes.length; i++) {
+          const ifr = iframes[i];
+          try {
+            if (ifr.contentWindow === window) {
+              ifr.style.height = height + 'px';
+              ifr.style.minHeight = 'unset';
+              ifr.style.maxHeight = 'unset';
+              ifr.style.overflow = 'hidden';
+              break;
+            }
+          } catch (e) {}
+        }
+      } catch (e) {}
+    } catch (e) {}
+  }
+
+  syncHeight();
+  setTimeout(syncHeight, 100);
+  setTimeout(syncHeight, 300);
+  setTimeout(syncHeight, 600);
+  setTimeout(syncHeight, 1000);
+  setInterval(syncHeight, 800);
+  window.addEventListener('resize', syncHeight);
+
+  const overlay = document.getElementById('transitionOverlay');
+  const tAuthor = document.getElementById('tAuthor');
+  const tComment = document.getElementById('tComment');
+  const creditLine = document.getElementById('creditLine');
+  const skipHint = document.getElementById('skipHint');
+
+  const creditText = '本角色卡为作者「三年的水」免费分享的公益作品，仅供个人娱乐与创作交流使用。' +
+    '严禁任何形式的商业用途，包括转卖、收费下载、打包售卖或用于盈利性直播 / 视频。' +
+    '如通过付费渠道获得，请立即退款并举报贩卖者，维护创作者与您自身的权益。' +
+    '感谢您的支持与理解。—— 作者：三年的水';
+
+  let creditChars = [];
+  let isPlaying = false;
+  let isDone = false;
+
+  function prepareCreditChars() {
+    creditLine.innerHTML = '';
+    creditChars = [];
+    const chars = creditText.split('');
+    chars.forEach(function(ch) {
+      const span = document.createElement('span');
+      span.className = 'credit-char';
+      span.textContent = ch;
+      creditLine.appendChild(span);
+      creditChars.push(span);
+    });
+  }
+
+  function startTransition() {
+    if (isDone) return;
+    isDone = true;
+    overlay.classList.add('active');
+    isPlaying = true;
+
+    prepareCreditChars();
+
+    /* 门打开 */
+    setTimeout(() => {
+      overlay.classList.add('open');
+    }, 200);
+
+    /* 作者名出现 */
+    setTimeout(() => {
+      tAuthor.classList.add('show');
+    }, 800);
+
+    /* 请多多评论 */
+    setTimeout(() => {
+      tComment.classList.add('show');
+    }, 1500);
+
+    /* 版权声明逐字 */
+    setTimeout(() => {
+      creditLine.classList.add('show');
+      creditChars.forEach(function(el, i) {
+        setTimeout(() => {
+          el.style.animation = 'charReveal 0.4s ease forwards';
+        }, i * 30);
+      });
+    }, 2200);
+
+    setTimeout(() => skipHint.classList.add('show'), 1800);
+    setTimeout(finishTransition, 10000);
+  }
+
+  function finishTransition() {
+    if (!isPlaying) return;
+    isPlaying = false;
+    overlay.classList.remove('active', 'open');
+    tAuthor.classList.remove('show');
+    tComment.classList.remove('show');
+    creditLine.classList.remove('show');
+    skipHint.classList.remove('show');
+    switchOpening(1);
+  }
+
+  overlay.addEventListener('click', function() {
+    if (isPlaying) finishTransition();
+  });
+
+  document.getElementById('startBtn').addEventListener('click', function(e) {
+    e.stopPropagation();
+    if (this.dataset.triggered === 'true') return;
+    this.dataset.triggered = 'true';
+    startTransition();
+  });
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') {
+      const btn = document.getElementById('startBtn');
+      if (btn && btn.dataset.triggered !== 'true') btn.click();
+    }
+    if (e.key === 'Escape' && isPlaying) finishTransition();
+  });
+
+  console.log('[欢迎页 · 为你而生] 已加载');
+})();
+</script>
+
+</body>
+</html>
