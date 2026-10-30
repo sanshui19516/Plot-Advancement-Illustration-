@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>帰郷の夏 ～雪乃さんの家で～</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  width: 100%;
+  background: transparent;
+  font-family: "PingFang SC", "Microsoft YaHei", "Hiragino Sans", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  overflow: hidden;
+}
+
+/* ============================================================
+   主舞台 · padding-bottom 撑高（不依赖 iframe 初始高度）
+   ============================================================ */
+.stage {
+  position: relative;
+  width: 100%;
+  height: 0;
+  padding-bottom: 56.25%; /* 16:9 */
+  overflow: hidden;
+  background: #0a0806;
+  min-height: 300px;
+}
+
+.stage > * {
+  position: absolute;
+}
+
+/* 车窗金属框 */
+.window-frame {
+  inset: 0;
+  pointer-events: none;
+  z-index: 10;
+  border-radius: 6px;
+  box-shadow:
+    inset 0 0 0 8px hsl(28, 18%, 18%),
+    inset 0 0 0 10px hsl(30, 22%, 28%),
+    inset 0 0 0 12px hsl(26, 15%, 12%),
+    inset 0 0 40px 12px rgba(0, 0, 0, 0.7);
+}
+
+/* 车窗分隔竖条 */
+.window-bar {
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 14px;
+  transform: translateX(-50%);
+  background: linear-gradient(90deg, hsl(28, 18%, 14%), hsl(30, 22%, 26%), hsl(28, 18%, 14%));
+  z-index: 9;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.6);
+}
+
+/* ============================================================
+   窗外风景
+   ============================================================ */
+.sky {
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    hsl(28, 42%, 22%) 0%,
+    hsl(24, 62%, 38%) 22%,
+    hsl(22, 78%, 52%) 45%,
+    hsl(30, 82%, 62%) 62%,
+    hsl(36, 72%, 70%) 78%,
+    hsl(92, 30%, 42%) 100%
+  );
+  z-index: 1;
+}
+
+.sun {
+  left: 50%;
+  top: 52%;
+  width: 90px;
+  height: 90px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    hsl(42, 95%, 82%) 0%,
+    hsl(30, 92%, 68%) 40%,
+    hsla(24, 90%, 58%, 0.6) 70%,
+    transparent 100%
+  );
+  box-shadow: 0 0 80px 30px hsla(30, 90%, 62%, 0.4);
+  animation: sunPulse 8s ease-in-out infinite;
+  z-index: 2;
+}
+@keyframes sunPulse {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.9; }
+  50% { transform: translate(-50%, -50%) scale(1.08); opacity: 1; }
+}
+
+.mountains {
+  bottom: 32%;
+  left: 0;
+  right: 0;
+  height: 22%;
+  background: hsl(20, 28%, 18%);
+  clip-path: polygon(
+    0% 100%, 0% 60%, 8% 42%, 15% 55%, 22% 32%, 30% 48%,
+    38% 30%, 46% 52%, 55% 28%, 63% 45%, 72% 22%,
+    80% 40%, 88% 55%, 95% 38%, 100% 52%, 100% 100%
+  );
+  opacity: 0.85;
+  z-index: 2;
+  filter: blur(0.5px);
+}
+
+.rice-field {
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 34%;
+  background: linear-gradient(
+    180deg,
+    hsl(92, 26%, 32%) 0%,
+    hsl(96, 30%, 24%) 60%,
+    hsl(100, 34%, 16%) 100%
+  );
+  z-index: 3;
+  overflow: hidden;
+}
+
+.rice-wave {
+  bottom: 0;
+  left: -50%;
+  width: 200%;
+  height: 100%;
+  background-image: repeating-linear-gradient(
+    75deg,
+    transparent 0 3px,
+    hsla(92, 42%, 42%, 0.5) 3px 4px,
+    transparent 4px 12px
+  );
+  animation: waveMove 6s linear infinite;
+  opacity: 0.4;
+}
+@keyframes waveMove {
+  from { transform: translateX(0); }
+  to { transform: translateX(6px); }
+}
+.rice-wave:nth-child(2) {
+  animation-duration: 9s;
+  opacity: 0.25;
+  bottom: -2%;
+}
+
+.pole {
+  bottom: 26%;
+  width: 3px;
+  height: 42%;
+  background: hsl(20, 20%, 12%);
+  opacity: 0.8;
+  z-index: 4;
+}
+.pole::before {
+  content: '';
+  position: absolute;
+  top: 14%;
+  left: 50%;
+  width: 40px;
+  height: 2px;
+  background: hsl(20, 20%, 12%);
+  transform: translateX(-50%);
+}
+.pole::after {
+  content: '';
+  position: absolute;
+  top: 30%;
+  left: 50%;
+  width: 60px;
+  height: 2px;
+  background: hsl(20, 20%, 12%);
+  transform: translateX(-50%);
+}
+.pole-1 { left: 12%; }
+.pole-2 { right: 15%; height: 38%; }
+
+/* ============================================================
+   左半 · 3D 图片环
+   ============================================================ */
+.left-half {
+  top: 0;
+  left: 0;
+  width: 50%;
+  height: 100%;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.ring-stage {
+  perspective: 1000px;
+  width: 70%;
+  height: 70%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ring {
+  position: relative;
+  width: 160px;
+  height: 220px;
+  transform-style: preserve-3d;
+  animation: ringSpin 30s linear infinite;
+}
+@keyframes ringSpin {
+  from { transform: rotateY(0deg); }
+  to { transform: rotateY(360deg); }
+}
+
+.ring-card {
+  position: absolute;
+  inset: 0;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1.5px solid hsla(30, 70%, 70%, 0.4);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.7);
+  backface-visibility: hidden;
+  background: #1a1410;
+}
+.ring-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.ring-card:nth-child(1) { transform: rotateY(0deg) translateZ(200px); }
+.ring-card:nth-child(2) { transform: rotateY(60deg) translateZ(200px); }
+.ring-card:nth-child(3) { transform: rotateY(120deg) translateZ(200px); }
+.ring-card:nth-child(4) { transform: rotateY(180deg) translateZ(200px); }
+.ring-card:nth-child(5) { transform: rotateY(240deg) translateZ(200px); }
+.ring-card:nth-child(6) { transform: rotateY(300deg) translateZ(200px); }
+
+/* ============================================================
+   右半 · 站牌 + 标题 + 按钮
+   ============================================================ */
+.right-half {
+  top: 0;
+  right: 0;
+  width: 50%;
+  height: 100%;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 4% 6%;
+  text-align: center;
+}
+
+.station-sign {
+  display: inline-block;
+  padding: 10px 28px;
+  background: hsla(28, 30%, 14%, 0.85);
+  border: 2px solid hsl(30, 62%, 58%);
+  border-radius: 4px;
+  box-shadow:
+    0 0 30px hsla(30, 80%, 60%, 0.25),
+    inset 0 0 20px hsla(30, 60%, 40%, 0.15);
+  margin-bottom: 2.5%;
+  position: relative;
+  animation: signGlow 4s ease-in-out infinite;
+}
+@keyframes signGlow {
+  0%, 100% { box-shadow: 0 0 24px hsla(30, 80%, 60%, 0.2), inset 0 0 20px hsla(30, 60%, 40%, 0.1); }
+  50% { box-shadow: 0 0 40px hsla(30, 80%, 60%, 0.4), inset 0 0 24px hsla(30, 60%, 40%, 0.2); }
+}
+
+.station-text {
+  font-family: "Noto Serif SC", "Songti SC", serif;
+  font-size: 0.72rem;
+  letter-spacing: 5px;
+  color: hsl(36, 60%, 78%);
+  opacity: 0.85;
+}
+
+.main-title {
+  font-family: "Noto Serif SC", "Songti SC", serif;
+  font-size: clamp(1.4rem, 3.2vw, 2.6rem);
+  font-weight: 800;
+  letter-spacing: 0.15em;
+  line-height: 1.3;
+  background: linear-gradient(135deg, hsl(36, 78%, 82%), hsl(30, 82%, 64%), hsl(24, 72%, 52%));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 2px 12px hsla(24, 80%, 40%, 0.5));
+  margin-bottom: 1.2%;
+}
+
+.sub-title {
+  font-family: "Noto Serif SC", "Songti SC", serif;
+  font-size: clamp(0.6rem, 1.1vw, 0.85rem);
+  letter-spacing: 0.4em;
+  color: hsla(36, 40%, 78%, 0.65);
+  margin-bottom: 6%;
+}
+
+.start-btn {
+  position: relative;
+  padding: 14px 44px;
+  background: hsla(28, 30%, 16%, 0.9);
+  border: 1.5px solid hsl(30, 62%, 58%);
+  border-radius: 40px;
+  color: hsl(36, 62%, 80%);
+  font-family: "Noto Serif SC", "Songti SC", serif;
+  font-size: clamp(0.8rem, 1.2vw, 1rem);
+  letter-spacing: 0.3em;
+  cursor: pointer;
+  transition: all 0.35s ease;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5), 0 0 30px hsla(30, 70%, 55%, 0.15);
+}
+.start-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, transparent 30%, hsla(36, 80%, 70%, 0.25) 50%, transparent 70%);
+  transform: translateX(-100%);
+  transition: transform 0.8s ease;
+}
+.start-btn:hover {
+  border-color: hsl(36, 78%, 72%);
+  color: hsl(40, 85%, 92%);
+  box-shadow: 0 6px 30px rgba(0, 0, 0, 0.6), 0 0 50px hsla(30, 80%, 60%, 0.4);
+  transform: translateY(-2px);
+}
+.start-btn:hover::before {
+  transform: translateX(100%);
+}
+.start-btn:active {
+  transform: translateY(0) scale(0.98);
+}
+
+/* 蜻蜓 */
+.dragonfly {
+  z-index: 6;
+  opacity: 0.55;
+  pointer-events: none;
+}
+.dragonfly-1 {
+  top: 18%;
+  left: 68%;
+  width: 34px;
+  animation: fly1 18s ease-in-out infinite;
+}
+.dragonfly-2 {
+  top: 32%;
+  left: 42%;
+  width: 24px;
+  animation: fly2 22s ease-in-out infinite;
+}
+@keyframes fly1 {
+  0%, 100% { transform: translate(0, 0) rotate(-8deg); }
+  25% { transform: translate(30px, -18px) rotate(8deg); }
+  50% { transform: translate(60px, 6px) rotate(-6deg); }
+  75% { transform: translate(28px, -10px) rotate(10deg); }
+}
+@keyframes fly2 {
+  0%, 100% { transform: translate(0, 0) rotate(6deg); }
+  30% { transform: translate(-25px, 15px) rotate(-6deg); }
+  60% { transform: translate(-50px, -8px) rotate(4deg); }
+  90% { transform: translate(-20px, 10px) rotate(-8deg); }
+}
+
+/* ============================================================
+   过场动画
+   ============================================================ */
+.transition-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  background: #050403;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+.transition-overlay.active {
+  display: flex;
+  opacity: 1;
+}
+
+.train-pass {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.train-car {
+  position: absolute;
+  top: 50%;
+  left: -100%;
+  width: 100%;
+  height: 60%;
+  transform: translateY(-50%);
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    hsla(30, 30%, 30%, 0.8) 20%,
+    hsla(30, 30%, 20%, 0.95) 50%,
+    hsla(30, 30%, 30%, 0.8) 80%,
+    transparent 100%
+  );
+  animation: trainSlide 2.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+@keyframes trainSlide {
+  0% { left: -100%; }
+  100% { left: 100%; }
+}
+
+.train-windows {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 0 10%;
+}
+.train-window {
+  width: 8%;
+  height: 40%;
+  background: hsla(36, 80%, 70%, 0.4);
+  border-radius: 4px;
+  box-shadow: 0 0 20px hsla(36, 80%, 70%, 0.5);
+  opacity: 0;
+  animation: windowFlash 2.2s ease forwards;
+}
+.train-window:nth-child(1) { animation-delay: 0.2s; }
+.train-window:nth-child(2) { animation-delay: 0.4s; }
+.train-window:nth-child(3) { animation-delay: 0.6s; }
+.train-window:nth-child(4) { animation-delay: 0.8s; }
+.train-window:nth-child(5) { animation-delay: 1.0s; }
+@keyframes windowFlash {
+  0% { opacity: 0; }
+  20% { opacity: 1; }
+  70% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+.transition-text {
+  position: relative;
+  z-index: 5;
+  text-align: center;
+}
+
+.t-author {
+  font-family: "Noto Serif SC", "Songti SC", serif;
+  font-size: clamp(1.6rem, 4vw, 3rem);
+  font-weight: 700;
+  letter-spacing: 0.4em;
+  color: hsl(36, 72%, 82%);
+  text-shadow: 0 0 40px hsla(30, 80%, 60%, 0.6);
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 1s ease, transform 1s ease;
+  margin-bottom: 0.4em;
+}
+.t-author.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.t-comment {
+  font-family: "Noto Serif SC", "Songti SC", serif;
+  font-size: clamp(0.9rem, 1.8vw, 1.3rem);
+  letter-spacing: 0.4em;
+  color: hsla(36, 50%, 78%, 0.7);
+  opacity: 0;
+  transform: translateY(15px);
+  transition: opacity 1s ease 0.4s, transform 1s ease 0.4s;
+}
+.t-comment.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.credit-line {
+  position: absolute;
+  bottom: 8%;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-family: "Noto Serif SC", "Songti SC", serif;
+  font-size: clamp(0.55rem, 1vw, 0.72rem);
+  letter-spacing: 0.15em;
+  color: hsla(36, 40%, 70%, 0.4);
+  line-height: 1.9;
+  padding: 0 10%;
+  opacity: 0;
+  transition: opacity 0.8s ease;
+}
+.credit-line.show { opacity: 1; }
+
+.credit-char {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(6px);
+}
+@keyframes charReveal {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.skip-hint {
+  position: absolute;
+  bottom: 3%;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  color: hsla(36, 40%, 70%, 0.15);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 1s ease;
+  z-index: 10;
+}
+.skip-hint.show { opacity: 1; }
+
+/* ============================================================
+   竖屏适配
+   ============================================================ */
+@media (max-aspect-ratio: 1/1) {
+  .stage {
+    height: 100vh;
+    padding-bottom: 0;
+    min-height: 0;
+  }
+  .left-half {
+    width: 100%;
+    height: 45%;
+    top: 0;
+  }
+  .right-half {
+    width: 100%;
+    height: 55%;
+    top: 45%;
+    padding: 3% 6%;
+  }
+  .window-bar { display: none; }
+  .ring { width: 120px; height: 160px; }
+  .ring-card:nth-child(1) { transform: rotateY(0deg) translateZ(140px); }
+  .ring-card:nth-child(2) { transform: rotateY(60deg) translateZ(140px); }
+  .ring-card:nth-child(3) { transform: rotateY(120deg) translateZ(140px); }
+  .ring-card:nth-child(4) { transform: rotateY(180deg) translateZ(140px); }
+  .ring-card:nth-child(5) { transform: rotateY(240deg) translateZ(140px); }
+  .ring-card:nth-child(6) { transform: rotateY(300deg) translateZ(140px); }
+  .main-title { font-size: 1.5rem; }
+  .sub-title { font-size: 0.7rem; }
+  .station-text { font-size: 0.65rem; }
+  .start-btn { padding: 12px 34px; font-size: 0.85rem; }
+  .dragonfly-1, .dragonfly-2 { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ring { animation-duration: 90s; }
+  .sun, .station-sign { animation: none; }
+  .rice-wave { animation: none; }
+}
+</style>
+</head>
+<body>
+
+<div class="stage" id="stageRoot">
+
+  <div class="sky"></div>
+  <div class="sun"></div>
+  <div class="mountains"></div>
+  <div class="rice-field">
+    <div class="rice-wave"></div>
+    <div class="rice-wave"></div>
+  </div>
+  <div class="pole pole-1"></div>
+  <div class="pole pole-2"></div>
+
+  <div class="dragonfly dragonfly-1">
+    <svg viewBox="0 0 40 32" fill="none" stroke="hsl(30, 50%, 72%)" stroke-width="1.2">
+      <ellipse cx="20" cy="14" rx="3" ry="7"/>
+      <path d="M17 8 Q8 4 4 10 Q9 13 16 12"/>
+      <path d="M23 8 Q32 4 36 10 Q31 13 24 12"/>
+      <path d="M17 15 Q10 18 8 24 Q13 23 18 19"/>
+      <path d="M23 15 Q30 18 32 24 Q27 23 22 19"/>
+    </svg>
+  </div>
+  <div class="dragonfly dragonfly-2">
+    <svg viewBox="0 0 40 32" fill="none" stroke="hsl(30, 50%, 72%)" stroke-width="1.2">
+      <ellipse cx="20" cy="14" rx="2.5" ry="6"/>
+      <path d="M17 8 Q8 4 4 10 Q9 13 16 12"/>
+      <path d="M23 8 Q32 4 36 10 Q31 13 24 12"/>
+      <path d="M17 15 Q10 18 8 24 Q13 23 18 19"/>
+      <path d="M23 15 Q30 18 32 24 Q27 23 22 19"/>
+    </svg>
+  </div>
+
+  <div class="window-frame"></div>
+  <div class="window-bar"></div>
+
+  <div class="left-half">
+    <div class="ring-stage">
+      <div class="ring">
+        <div class="ring-card"><img src="https://cdn.jsdelivr.net/gh/sanshui19516/Plot-Advancement-Illustration-@main/%E4%B9%A1%E4%B8%8B%E9%9B%AA%E4%B9%83/ZZJS%20(1).jpg" alt="" /></div>
+        <div class="ring-card"><img src="https://cdn.jsdelivr.net/gh/sanshui19516/Plot-Advancement-Illustration-@main/%E4%B9%A1%E4%B8%8B%E9%9B%AA%E4%B9%83/ZZJS%20(6).jpg" alt="" /></div>
+        <div class="ring-card"><img src="https://cdn.jsdelivr.net/gh/sanshui19516/Plot-Advancement-Illustration-@main/%E4%B9%A1%E4%B8%8B%E9%9B%AA%E4%B9%83/ZZJS%20(10).jpg" alt="" /></div>
+        <div class="ring-card"><img src="https://cdn.jsdelivr.net/gh/sanshui19516/Plot-Advancement-Illustration-@main/%E4%B9%A1%E4%B8%8B%E9%9B%AA%E4%B9%83/ZZJS%20(15).jpg" alt="" /></div>
+        <div class="ring-card"><img src="https://cdn.jsdelivr.net/gh/sanshui19516/Plot-Advancement-Illustration-@main/%E4%B9%A1%E4%B8%8B%E9%9B%AA%E4%B9%83/ZZJS%20(20).jpg" alt="" /></div>
+        <div class="ring-card"><img src="https://cdn.jsdelivr.net/gh/sanshui19516/Plot-Advancement-Illustration-@main/%E4%B9%A1%E4%B8%8B%E9%9B%AA%E4%B9%83/ZZJS%20(24).jpg" alt="" /></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="right-half">
+    <div class="station-sign">
+      <div class="station-text">か え り み ち</div>
+    </div>
+    <div class="main-title">帰郷の夏</div>
+    <div class="sub-title">～ 雪乃さんの家で ～</div>
+    <button class="start-btn" id="startBtn">开始故事</button>
+  </div>
+
+</div>
+
+<div class="transition-overlay" id="transitionOverlay">
+  <div class="train-pass">
+    <div class="train-car">
+      <div class="train-windows">
+        <div class="train-window"></div>
+        <div class="train-window"></div>
+        <div class="train-window"></div>
+        <div class="train-window"></div>
+        <div class="train-window"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="transition-text">
+    <div class="t-author" id="tAuthor">三 年 的 水</div>
+    <div class="t-comment" id="tComment">请 多 多 评 论</div>
+  </div>
+
+  <div class="credit-line" id="creditLine"></div>
+  <div class="skip-hint" id="skipHint">— 点击任意处跳过 —</div>
+</div>
+
+<div id="welcome-data" style="display:none;">$1</div>
+
+<script>
+(function() {
+  'use strict';
+
+  async function switchOpening(swipeId) {
+    console.log('[欢迎页] 跳转到索引:', swipeId);
+    try {
+      let messages;
+      try {
+        messages = await getChatMessages?.('0', { include_swipe: true });
+      } catch (e) {
+        const context = window.SillyTavern?.getContext?.();
+        messages = context?.chat?.messages;
+      }
+      if (messages && messages.length > 0) {
+        const userMessage = messages[0];
+        if (userMessage && userMessage.swipes && userMessage.swipes.length > swipeId) {
+          const targetSwipe = userMessage.swipes[swipeId];
+          const setChatMessage = window.setChatMessage || window.SillyTavern?.getContext?.()?.setChatMessage;
+          if (typeof setChatMessage === 'function') {
+            await setChatMessage(targetSwipe, 0, { swipe_id: swipeId, refresh: 'display_and_render_current' });
+            return;
+          }
+          if (typeof userMessage.setSwipe === 'function') {
+            userMessage.setSwipe(swipeId);
+            return;
+          }
+        }
+      }
+    } catch (e) {
+      console.warn('[欢迎页] 方法1失败:', e);
+    }
+
+    try {
+      if (typeof window.parent.triggerSlash === 'function') {
+        window.parent.triggerSlash('/trigger');
+        return;
+      }
+      if (typeof window.triggerSlash === 'function') {
+        window.triggerSlash('/trigger');
+        return;
+      }
+    } catch (e) {
+      console.warn('[欢迎页] 备用跳转失败:', e);
+    }
+  }
+
+  /* 高度同步 · 持续强制对齐 */
+  function syncHeight() {
+    try {
+      const stage = document.getElementById('stageRoot');
+      if (!stage) return;
+      const height = stage.offsetHeight;
+      if (!height || height < 100) return;
+
+      const frame = window.frameElement;
+      if (frame && frame.tagName === 'IFRAME') {
+        frame.style.height = height + 'px';
+        frame.style.minHeight = 'unset';
+        frame.style.maxHeight = 'unset';
+        frame.style.overflow = 'hidden';
+      }
+
+      try {
+        const iframes = window.parent.document.querySelectorAll('iframe');
+        for (let i = 0; i < iframes.length; i++) {
+          const ifr = iframes[i];
+          try {
+            if (ifr.contentWindow === window) {
+              ifr.style.height = height + 'px';
+              ifr.style.minHeight = 'unset';
+              ifr.style.maxHeight = 'unset';
+              ifr.style.overflow = 'hidden';
+              break;
+            }
+          } catch (e) {}
+        }
+      } catch (e) {}
+    } catch (e) {}
+  }
+
+  syncHeight();
+  setTimeout(syncHeight, 100);
+  setTimeout(syncHeight, 300);
+  setTimeout(syncHeight, 600);
+  setTimeout(syncHeight, 1000);
+  setInterval(syncHeight, 800);
+  window.addEventListener('resize', syncHeight);
+
+  /* 过场动画 */
+  const overlay = document.getElementById('transitionOverlay');
+  const tAuthor = document.getElementById('tAuthor');
+  const tComment = document.getElementById('tComment');
+  const creditLine = document.getElementById('creditLine');
+  const skipHint = document.getElementById('skipHint');
+
+  const creditText = '本角色卡为作者「三年的水」免费分享的公益作品，仅供个人娱乐与创作交流使用。' +
+    '严禁任何形式的商业用途，包括转卖、收费下载、打包售卖或用于盈利性直播 / 视频。' +
+    '如通过付费渠道获得，请立即退款并举报贩卖者，维护创作者与您自身的权益。' +
+    '感谢您的支持与理解。—— 作者：三年的水';
+
+  let creditChars = [];
+  let isPlaying = false;
+  let isDone = false;
+
+  function prepareCreditChars() {
+    creditLine.innerHTML = '';
+    creditChars = [];
+    const chars = creditText.split('');
+    chars.forEach(function(ch) {
+      const span = document.createElement('span');
+      span.className = 'credit-char';
+      span.textContent = ch;
+      creditLine.appendChild(span);
+      creditChars.push(span);
+    });
+  }
+
+  function startTransition() {
+    if (isDone) return;
+    isDone = true;
+    overlay.classList.add('active');
+    isPlaying = true;
+
+    prepareCreditChars();
+
+    setTimeout(() => tAuthor.classList.add('show'), 200);
+    setTimeout(() => tComment.classList.add('show'), 900);
+    setTimeout(() => {
+      creditLine.classList.add('show');
+      creditChars.forEach(function(el, i) {
+        setTimeout(() => {
+          el.style.animation = 'charReveal 0.4s ease forwards';
+        }, i * 30);
+      });
+    }, 1800);
+
+    setTimeout(() => skipHint.classList.add('show'), 1500);
+    setTimeout(finishTransition, 10000);
+  }
+
+  function finishTransition() {
+    if (!isPlaying) return;
+    isPlaying = false;
+    overlay.classList.remove('active');
+    tAuthor.classList.remove('show');
+    tComment.classList.remove('show');
+    creditLine.classList.remove('show');
+    skipHint.classList.remove('show');
+    switchOpening(1);
+  }
+
+  overlay.addEventListener('click', function() {
+    if (isPlaying) finishTransition();
+  });
+
+  document.getElementById('startBtn').addEventListener('click', function(e) {
+    e.stopPropagation();
+    if (this.dataset.triggered === 'true') return;
+    this.dataset.triggered = 'true';
+    startTransition();
+  });
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') {
+      const btn = document.getElementById('startBtn');
+      if (btn && btn.dataset.triggered !== 'true') btn.click();
+    }
+    if (e.key === 'Escape' && isPlaying) finishTransition();
+  });
+
+  console.log('[欢迎页 · 帰郷の夏] 已加载，6 张图片环已就位');
+})();
+</script>
+
+</body>
+</html>
