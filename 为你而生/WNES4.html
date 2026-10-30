@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>为你而生 · 选项</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg-deep: hsla(290, 22%, 8%, 0.95);
+  --bg-panel: hsla(295, 18%, 15%, 0.72);
+  --bg-card: hsla(300, 20%, 20%, 0.55);
+  --rose: hsl(330, 55%, 68%);
+  --rose-soft: hsl(335, 60%, 82%);
+  --rose-glow: hsla(330, 70%, 60%, 0.24);
+  --rose-deep: hsl(330, 45%, 42%);
+  --cream: hsl(35, 32%, 92%);
+  --gold: hsl(40, 70%, 62%);
+  --gold-glow: hsla(40, 80%, 55%, 0.2);
+  --text: hsl(340, 15%, 92%);
+  --text-sub: hsl(340, 12%, 68%);
+  --text-mute: hsl(340, 8%, 48%);
+  --line: hsla(330, 40%, 60%, 0.12);
+  --line-soft: hsla(330, 40%, 60%, 0.06);
+}
+
+html, body {
+  background: transparent;
+  font-family: "PingFang SC", "Microsoft YaHei", "Hiragino Sans", sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  padding: 8px 10px 14px;
+}
+
+/* ============================================================
+   主容器
+   ============================================================ */
+.options-module {
+  width: 100%;
+  max-width: 560px;
+  position: relative;
+  padding: 14px 16px 16px;
+  background: var(--bg-deep);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  box-shadow:
+    0 16px 44px rgba(0, 0, 0, 0.55),
+    inset 0 0 0 1px hsla(330, 40%, 60%, 0.04);
+  overflow: hidden;
+  animation: fadeUp 0.5s cubic-bezier(0.34, 1, 0.64, 1) forwards;
+}
+
+/* 顶部光晕 */
+.options-module::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 50% 0%, var(--rose-glow), transparent 60%),
+    radial-gradient(ellipse at 20% 100%, var(--gold-glow), transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.7;
+}
+
+/* 呼吸光 */
+.options-module::after {
+  content: '';
+  position: absolute;
+  top: -60%;
+  left: 50%;
+  width: 140%;
+  height: 120%;
+  transform: translateX(-50%);
+  background: radial-gradient(ellipse at 50% 100%, hsla(330, 70%, 55%, 0.09), transparent 60%);
+  animation: roseBreathe 6s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+
+@keyframes roseBreathe {
+  0%, 100% { opacity: 0.45; }
+  50% { opacity: 1; }
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.options-module > * { position: relative; z-index: 1; }
+
+/* ============================================================
+   顶栏
+   ============================================================ */
+.options-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 10px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid var(--line-soft);
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.options-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: "Noto Serif SC", "Songti SC", serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 3px;
+  color: var(--rose-soft);
+  text-shadow: 0 0 16px var(--rose-glow);
+}
+
+.options-title svg {
+  width: 14px;
+  height: 14px;
+  fill: none;
+  stroke: var(--rose);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0.9;
+}
+
+.options-hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.6rem;
+  letter-spacing: 1px;
+  color: var(--text-mute);
+}
+
+.options-hint svg {
+  width: 11px;
+  height: 11px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* ============================================================
+   选项网格
+   ============================================================ */
+.options-inner {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+/* ============================================================
+   选项按钮 · 粉紫卡片
+   ============================================================ */
+.opt-btn {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 14px 10px;
+  min-height: 82px;
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  color: var(--text);
+  font-family: inherit;
+  font-size: 0.78rem;
+  line-height: 1.45;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  overflow: hidden;
+}
+
+/* 顶部光线 */
+.opt-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--rose), transparent);
+  opacity: 0;
+  transition: opacity 0.28s;
+}
+
+/* 悬停 */
+.opt-btn:hover {
+  background: hsla(330, 35%, 24%, 0.8);
+  border-color: hsla(330, 55%, 68%, 0.45);
+  transform: translateY(-3px);
+  box-shadow:
+    0 8px 26px rgba(0, 0, 0, 0.45),
+    0 0 28px var(--rose-glow);
+}
+
+.opt-btn:hover::before { opacity: 1; }
+
+.opt-btn:active {
+  transform: translateY(-1px) scale(0.98);
+  transition-duration: 0.05s;
+}
+
+.opt-btn.disabled {
+  opacity: 0.35;
+  pointer-events: none;
+  transform: none !important;
+}
+
+/* 序数徽章 */
+.opt-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 1px solid hsla(330, 55%, 68%, 0.4);
+  color: var(--rose);
+  font-family: "Noto Serif SC", "Songti SC", serif;
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0;
+  background: hsla(330, 50%, 30%, 0.28);
+  transition: all 0.28s;
+  flex-shrink: 0;
+  box-shadow: inset 0 0 8px hsla(330, 60%, 55%, 0.15);
+}
+
+.opt-btn:hover .opt-badge {
+  border-color: var(--rose);
+  color: var(--cream);
+  background: hsla(330, 60%, 42%, 0.55);
+  box-shadow: 0 0 14px var(--rose-glow), inset 0 0 8px hsla(330, 70%, 65%, 0.3);
+}
+
+/* 文字 */
+.opt-text {
+  font-size: 0.8rem;
+  letter-spacing: 0.3px;
+  color: var(--text);
+  word-break: break-word;
+  transition: color 0.28s;
+}
+
+.opt-btn:hover .opt-text {
+  color: var(--rose-soft);
+  text-shadow: 0 0 8px var(--rose-glow);
+}
+
+/* 空状态 */
+.options-empty {
+  grid-column: 1 / -1;
+  padding: 18px 0;
+  text-align: center;
+  font-family: "Noto Serif SC", "Songti SC", serif;
+  font-size: 0.72rem;
+  letter-spacing: 3px;
+  color: var(--text-mute);
+  opacity: 0.6;
+}
+
+/* ============================================================
+   移动端
+   ============================================================ */
+@media (max-width: 520px) {
+  .options-inner {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+
+  .opt-btn {
+    flex-direction: row;
+    justify-content: flex-start;
+    padding: 11px 14px;
+    min-height: 48px;
+    gap: 12px;
+    text-align: left;
+    border-radius: 12px;
+  }
+
+  .opt-btn::before {
+    top: auto;
+    bottom: 0;
+    height: 2px;
+  }
+
+  .opt-badge {
+    width: 24px;
+    height: 24px;
+    font-size: 0.7rem;
+    flex-shrink: 0;
+  }
+
+  .opt-text {
+    font-size: 0.82rem;
+  }
+
+  body {
+    padding: 6px 8px 10px;
+  }
+
+  .options-module {
+    padding: 12px 12px 14px;
+    border-radius: 16px;
+  }
+
+  .options-title {
+    font-size: 0.72rem;
+    letter-spacing: 2px;
+  }
+
+  .options-hint {
+    font-size: 0.56rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .opt-btn {
+    padding: 10px 12px;
+    min-height: 44px;
+  }
+  .opt-text { font-size: 0.76rem; }
+}
+</style>
+</head>
+<body>
+
+<div class="options-module" id="optionsRoot">
+
+  <!-- 顶栏 -->
+  <div class="options-header">
+    <div class="options-title">
+      <svg viewBox="0 0 24 24">
+        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+      </svg>
+      此刻的选择
+    </div>
+    <div class="options-hint">
+      <svg viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="10"/>
+        <line x1="12" y1="16" x2="12" y2="12"/>
+        <line x1="12" y1="8" x2="12.01" y2="8"/>
+      </svg>
+      点击触发
+    </div>
+  </div>
+
+  <!-- 选项容器 -->
+  <div class="options-inner" id="optionsList"></div>
+
+</div>
+
+<!-- ⚠️ 外链模式必须的隐藏容器：$1 是正则捕获组占位符 -->
+<div id="options-data" style="display:none;">$1</div>
+
+<script>
+(function() {
+  'use strict';
+
+  /* ============================================================
+     数据读取：优先 #options-data（外链），兜底 $1（内联）
+     ============================================================ */
+  var dataContainer = document.getElementById('options-data');
+  var raw = dataContainer ? dataContainer.textContent.trim() : '';
+
+  /* 如果外链没注入，尝试内联 $1 */
+  if (!raw || raw === '$1') {
+    raw = '$1'.trim();
+  }
+
+  var container = document.getElementById('optionsList');
+  if (!container) return;
+
+  /* ============================================================
+     发送选项到酒馆输入框
+     ============================================================ */
+  function sendOption(text) {
+    if (!text) return;
+
+    try {
+      if (typeof triggerSlash === 'function') {
+        triggerSlash('/send ' + text + '|/trigger');
+        return;
+      }
+      if (window.parent && typeof window.parent.triggerSlash === 'function') {
+        window.parent.triggerSlash('/send ' + text + '|/trigger');
+        return;
+      }
+    } catch (e) {}
+
+    var textarea = document.querySelector('#send_textarea') ||
+      (window.parent && window.parent.document.querySelector('#send_textarea'));
+    if (textarea) {
+      textarea.value = text;
+      textarea.dispatchEvent(new Event('input', { bubbles: true }));
+      var sendBtn = document.querySelector('#send_button') ||
+        document.querySelector('#send_btn') ||
+        (window.parent && window.parent.document.querySelector('#send_button'));
+      if (sendBtn) {
+        setTimeout(function() { sendBtn.click(); }, 80);
+      }
+    }
+  }
+
+  /* ============================================================
+     解析选项
+     ============================================================ */
+  var items = raw ? raw.split('|').map(function(s) {
+    return s.trim();
+  }).filter(function(s) {
+    return s.length > 0 && s !== '$1';
+  }) : [];
+
+  if (items.length === 0) {
+    container.innerHTML = '<div class="options-empty">✦ 等待选择 ✦</div>';
+    return;
+  }
+
+  /* ============================================================
+     渲染
+     ============================================================ */
+  var BADGES = ['壹', '贰', '叁', '肆', '伍', '陆', '柒', '捌', '玖', '拾'];
+
+  var html = '';
+  items.forEach(function(opt, index) {
+    if (index >= 3) return;
+
+    var safeText = opt
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+
+    var badge = BADGES[index] || (index + 1);
+
+    html += '<button class="opt-btn" data-opt="' + safeText + '">' +
+              '<span class="opt-badge">' + badge + '</span>' +
+              '<span class="opt-text">' + safeText + '</span>' +
+            '</button>';
+  });
+
+  container.innerHTML = html;
+
+  /* ============================================================
+     事件代理
+     ============================================================ */
+  container.addEventListener('click', function(e) {
+    var btn = e.target.closest('.opt-btn');
+    if (!btn || btn.classList.contains('disabled')) return;
+
+    var text = btn.getAttribute('data-opt');
+    if (!text) return;
+
+    var allBtns = container.querySelectorAll('.opt-btn');
+    allBtns.forEach(function(b) { b.classList.add('disabled'); });
+
+    sendOption(text);
+
+    setTimeout(function() {
+      container.querySelectorAll('.opt-btn').forEach(function(b) {
+        b.classList.remove('disabled');
+      });
+    }, 5000);
+  });
+
+  /* 触摸反馈 */
+  container.addEventListener('touchstart', function(e) {
+    var btn = e.target.closest('.opt-btn');
+    if (!btn) return;
+    btn.style.transition = 'none';
+    btn.style.transform = 'scale(0.96)';
+    setTimeout(function() {
+      btn.style.transition = '';
+      btn.style.transform = '';
+    }, 100);
+  }, { passive: true });
+
+  console.log('[为你而生 · 选项栏] 已加载，共 ' + items.length + ' 个选项');
+})();
+</script>
+
+</body>
+</html>
