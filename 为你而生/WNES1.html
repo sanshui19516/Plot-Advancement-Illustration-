@@ -1,0 +1,1190 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>为你而生 · 作者介绍</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg-deep: hsla(290, 22%, 8%, 0.97);
+  --bg-panel: hsla(295, 18%, 14%, 0.88);
+  --bg-card: hsla(300, 20%, 19%, 0.62);
+  --rose: hsl(330, 55%, 68%);
+  --rose-soft: hsl(335, 60%, 82%);
+  --rose-glow: hsla(330, 70%, 60%, 0.22);
+  --rose-deep: hsl(330, 45%, 42%);
+  --cream: hsl(35, 32%, 92%);
+  --gold: hsl(40, 70%, 62%);
+  --gold-glow: hsla(40, 80%, 55%, 0.2);
+  --plum: hsl(300, 22%, 30%);
+  --text: hsl(340, 15%, 90%);
+  --text-sub: hsl(340, 12%, 66%);
+  --text-mute: hsl(340, 8%, 48%);
+  --line: hsla(330, 40%, 60%, 0.12);
+  --line-soft: hsla(330, 40%, 60%, 0.06);
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 16px 12px 40px;
+  background: transparent;
+  font-family: "PingFang SC", "Microsoft YaHei", "Hiragino Sans", sans-serif;
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+}
+
+.container {
+  max-width: 560px;
+  width: 100%;
+  position: relative;
+  padding: 0 0 24px;
+  background: var(--bg-deep);
+  border-radius: 28px;
+  border: 1px solid var(--line);
+  box-shadow:
+    0 40px 100px rgba(0, 0, 0, 0.75),
+    inset 0 0 0 1px hsla(330, 40%, 60%, 0.04);
+  overflow: hidden;
+}
+
+.container::before {
+  content: '';
+  position: absolute;
+  top: -30%;
+  left: -20%;
+  width: 80%;
+  height: 60%;
+  background: radial-gradient(ellipse at 50% 50%, var(--rose-glow), transparent 65%);
+  pointer-events: none;
+  z-index: 0;
+  animation: roseDrift 12s ease-in-out infinite;
+}
+
+.container::after {
+  content: '';
+  position: absolute;
+  bottom: -30%;
+  right: -20%;
+  width: 80%;
+  height: 60%;
+  background: radial-gradient(ellipse at 50% 50%, var(--gold-glow), transparent 65%);
+  pointer-events: none;
+  z-index: 0;
+  animation: goldDrift 15s ease-in-out infinite;
+}
+
+@keyframes roseDrift {
+  0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.5; }
+  50% { transform: translate(15px, 20px) scale(1.15); opacity: 1; }
+}
+@keyframes goldDrift {
+  0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.4; }
+  50% { transform: translate(-15px, -15px) scale(1.1); opacity: 0.85; }
+}
+
+.container > * { position: relative; z-index: 1; }
+
+/* ============================================================
+   顶部 · 化妆镜框
+   ============================================================ */
+.hero {
+  position: relative;
+  height: 240px;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse at 50% 120%, hsla(330, 60%, 45%, 0.2), transparent 60%),
+    linear-gradient(180deg, hsla(295, 25%, 13%, 1), hsla(290, 20%, 7%, 1));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 化妆镜椭圆框 */
+.mirror-frame {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 200px;
+  height: 170px;
+  transform: translate(-50%, -50%);
+  border: 1.5px solid hsla(330, 55%, 68%, 0.35);
+  border-radius: 50%;
+  box-shadow:
+    0 0 40px hsla(330, 60%, 55%, 0.15),
+    inset 0 0 30px hsla(330, 50%, 40%, 0.08);
+  pointer-events: none;
+}
+
+.mirror-frame::before {
+  content: '';
+  position: absolute;
+  inset: 6px;
+  border: 0.5px solid hsla(330, 55%, 68%, 0.18);
+  border-radius: 50%;
+}
+
+.mirror-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 240px;
+  height: 200px;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(ellipse, hsla(330, 70%, 60%, 0.18), transparent 70%);
+  animation: mirrorBreathe 5s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes mirrorBreathe {
+  0%, 100% { opacity: 0.5; transform: translate(-50%, -50%) scale(1); }
+  50% { opacity: 1; transform: translate(-50%, -50%) scale(1.08); }
+}
+
+/* 花瓣装饰 */
+.petal {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  background: hsla(330, 55%, 68%, 0.35);
+  border-radius: 0 50% 0 50%;
+  transform-origin: center;
+  pointer-events: none;
+  animation: petalFall 10s linear infinite;
+}
+
+.petal:nth-child(1) { left: 15%; top: -20px; animation-delay: 0s; }
+.petal:nth-child(2) { left: 45%; top: -20px; animation-delay: 3.5s; width: 10px; height: 10px; }
+.petal:nth-child(3) { left: 70%; top: -20px; animation-delay: 6.5s; }
+.petal:nth-child(4) { left: 85%; top: -20px; animation-delay: 1.8s; width: 8px; height: 8px; opacity: 0.5; }
+
+@keyframes petalFall {
+  0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+  10% { opacity: 0.7; }
+  90% { opacity: 0.5; }
+  100% { transform: translateY(280px) rotate(360deg); opacity: 0; }
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  padding: 0 24px;
+}
+
+.hero-sub {
+  font-family: "Noto Serif SC", "Songti SC", serif;
+  font-size: 0.68rem;
+  letter-spacing: 6px;
+  color: var(--rose-soft);
+  opacity: 0.75;
+  margin-bottom: 10px;
+}
+
+.hero-title {
+  font-family: "Noto Serif SC", "Songti SC", serif;
+  font-size: 1.6rem;
+  font-weight: 700;
+  letter-spacing: 4px;
+  line-height: 1.4;
+  background: linear-gradient(135deg, var(--rose-soft), var(--rose), var(--gold));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 30px var(--rose-glow);
+  margin-bottom: 8px;
+}
+
+.hero-desc {
+  font-family: "Noto Serif SC", "Songti SC", serif;
+  font-size: 0.72rem;
+  letter-spacing: 3px;
+  color: var(--text-sub);
+  opacity: 0.75;
+  font-style: italic;
+}
+
+/* ============================================================
+   蕾丝分隔线
+   ============================================================ */
+.lace-divider {
+  padding: 14px 20px;
+  text-align: center;
+  line-height: 0;
+}
+
+.lace-divider svg {
+  width: 100%;
+  max-width: 320px;
+  height: 20px;
+  display: inline-block;
+}
+
+/* ============================================================
+   作者卡片 · 香水瓶标签
+   ============================================================ */
+.author-card {
+  margin: 0 20px 14px;
+  padding: 24px 18px 20px;
+  background:
+    linear-gradient(180deg, hsla(330, 30%, 18%, 0.7), hsla(295, 20%, 14%, 0.85));
+  border: 1px solid hsla(330, 50%, 55%, 0.2);
+  border-radius: 4px 24px 4px 24px;
+  text-align: center;
+  position: relative;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.author-card::before,
+.author-card::after {
+  content: '';
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  border-color: hsla(330, 50%, 55%, 0.4);
+  border-style: solid;
+}
+
+.author-card::before {
+  top: 8px;
+  left: 8px;
+  border-width: 1px 0 0 1px;
+}
+
+.author-card::after {
+  bottom: 8px;
+  right: 8px;
+  border-width: 0 1px 1px 0;
+}
+
+.author-card:hover {
+  border-color: hsla(330, 50%, 55%, 0.4);
+  box-shadow: 0 0 40px var(--rose-glow);
+}
+
+.author-avatar {
+  display: block;
+  margin: 0 auto 14px auto;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid hsla(330, 55%, 68%, 0.5);
+  box-shadow: 0 0 24px var(--rose-glow);
+  transition: transform 0.4s;
+}
+
+.author-avatar:hover { transform: scale(1.06) rotate(3deg); }
+
+.author-name {
+  font-family: "Noto Serif SC", "Songti SC", serif;
+  font-size: 1.1rem;
+  letter-spacing: 5px;
+  color: var(--rose-soft);
+  margin-bottom: 4px;
+}
+
+.author-tagline {
+  font-size: 0.64rem;
+  letter-spacing: 2px;
+  color: var(--text-mute);
+  margin-bottom: 16px;
+  font-style: italic;
+}
+
+.author-links {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.author-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 12px;
+  background: hsla(330, 20%, 20%, 0.5);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  color: var(--text-sub);
+  text-decoration: none;
+  font-size: 0.76rem;
+  letter-spacing: 1px;
+  transition: all 0.3s;
+}
+
+.author-link:hover {
+  background: hsla(330, 35%, 24%, 0.7);
+  border-color: hsla(330, 55%, 68%, 0.35);
+  color: var(--rose-soft);
+  transform: translateX(3px);
+}
+
+.author-link svg {
+  width: 15px;
+  height: 15px;
+  fill: none;
+  stroke: var(--rose);
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0.85;
+  flex-shrink: 0;
+}
+
+/* ============================================================
+   信息块 · 梳妆台抽屉
+   ============================================================ */
+.info-block {
+  margin: 0 20px 12px;
+  padding: 14px 16px 14px 20px;
+  background: var(--bg-panel);
+  border: 1px solid var(--line-soft);
+  border-radius: 12px;
+  position: relative;
+  transition: border-color 0.3s;
+}
+
+.info-block::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 14px;
+  bottom: 14px;
+  width: 2px;
+  background: linear-gradient(180deg, var(--rose), var(--gold));
+  border-radius: 2px;
+  opacity: 0.6;
+}
+
+.info-block:hover {
+  border-color: hsla(330, 55%, 68%, 0.25);
+}
+
+.info-label {
+  font-family: "Noto Serif SC", "Songti SC", serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 3px;
+  color: var(--rose-soft);
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.info-label .label-icon {
+  width: 14px;
+  height: 14px;
+  opacity: 0.7;
+}
+
+.info-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.info-list li {
+  font-size: 0.74rem;
+  line-height: 1.75;
+  color: var(--text-sub);
+  padding-left: 16px;
+  position: relative;
+}
+
+.info-list li::before {
+  content: '❀';
+  position: absolute;
+  left: 0;
+  color: var(--rose);
+  opacity: 0.55;
+  font-size: 0.65rem;
+  top: 2px;
+}
+
+.allow { color: hsl(150, 35%, 62%); }
+.warn { color: hsl(350, 55%, 62%); }
+.feature { color: var(--rose-soft); }
+.highlight { color: var(--gold); font-weight: 600; }
+
+/* ============================================================
+   插图数量展示 · 特别区块
+   ============================================================ */
+.illustration-count {
+  margin: 16px 20px 12px;
+  padding: 18px 20px;
+  background:
+    linear-gradient(135deg, hsla(330, 35%, 20%, 0.6), hsla(290, 22%, 12%, 0.6));
+  border: 1px solid hsla(330, 55%, 68%, 0.2);
+  border-radius: 16px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.illustration-count::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: conic-gradient(from 0deg, transparent 0deg, hsla(330, 60%, 60%, 0.06) 90deg, transparent 180deg, hsla(40, 70%, 60%, 0.04) 270deg, transparent 360deg);
+  animation: rotate 20s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes rotate {
+  to { transform: rotate(360deg); }
+}
+
+.illustration-count > * { position: relative; z-index: 1; }
+
+.ic-label {
+  font-size: 0.66rem;
+  letter-spacing: 3px;
+  color: var(--text-mute);
+  margin-bottom: 8px;
+}
+
+.ic-number {
+  font-family: "Noto Serif SC", "Songti SC", serif;
+  font-size: 2.4rem;
+  font-weight: 800;
+  letter-spacing: 3px;
+  background: linear-gradient(135deg, var(--rose-soft), var(--gold));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 30px var(--rose-glow);
+  line-height: 1;
+  margin-bottom: 6px;
+}
+
+.ic-desc {
+  font-size: 0.7rem;
+  letter-spacing: 1px;
+  color: var(--text-sub);
+}
+
+.ic-tags {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+
+.ic-tag {
+  padding: 3px 12px;
+  font-size: 0.62rem;
+  letter-spacing: 1px;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: hsla(330, 25%, 18%, 0.5);
+  color: var(--text-sub);
+}
+
+.ic-tag.sfw { border-color: hsla(150, 35%, 55%, 0.3); color: hsl(150, 40%, 70%); }
+.ic-tag.nsfw { border-color: hsla(350, 50%, 60%, 0.3); color: hsl(350, 60%, 72%); }
+
+/* ============================================================
+   画廊 · 拍立得相册
+   ============================================================ */
+.gallery-section {
+  margin: 20px 16px 12px;
+}
+
+.gallery-head {
+  text-align: center;
+  margin-bottom: 18px;
+  padding: 0 4px;
+}
+
+.gallery-title {
+  font-family: "Noto Serif SC", "Songti SC", serif;
+  font-size: 1rem;
+  letter-spacing: 5px;
+  color: var(--rose-soft);
+  margin-bottom: 6px;
+}
+
+.gallery-sub {
+  font-size: 0.66rem;
+  letter-spacing: 3px;
+  color: var(--text-mute);
+  font-style: italic;
+}
+
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  padding: 4px;
+}
+
+@media (max-width: 520px) {
+  .gallery-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+}
+
+/* 拍立得相片 */
+.polaroid {
+  position: relative;
+  background: linear-gradient(160deg, #fdfbf7, #ede3d0);
+  padding: 6px 6px 26px 6px;
+  border-radius: 2px;
+  box-shadow:
+    0 4px 14px rgba(0, 0, 0, 0.45),
+    0 1px 0 rgba(255, 255, 255, 0.4) inset;
+  cursor: pointer;
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s;
+  transform-origin: center;
+}
+
+.polaroid:nth-child(odd) { transform: rotate(-1.5deg); }
+.polaroid:nth-child(even) { transform: rotate(1.2deg); }
+.polaroid:nth-child(3n) { transform: rotate(-0.8deg); }
+.polaroid:nth-child(4n) { transform: rotate(1.8deg); }
+
+.polaroid:hover {
+  transform: rotate(0deg) scale(1.04);
+  box-shadow:
+    0 10px 28px rgba(0, 0, 0, 0.55),
+    0 0 24px var(--rose-glow);
+  z-index: 5;
+}
+
+.polaroid img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 1px;
+  background: hsla(300, 15%, 15%, 0.5);
+  opacity: 0;
+  transition: opacity 0.5s;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+}
+
+.polaroid img.loaded { opacity: 1; }
+
+/* 拍立得底部手写体 */
+.polaroid-caption {
+  position: absolute;
+  bottom: 6px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-family: "Noto Serif SC", "Songti SC", serif;
+  font-size: 0.56rem;
+  color: #a08a95;
+  letter-spacing: 1px;
+  font-style: italic;
+}
+
+/* 蕾丝边角 */
+.polaroid::before,
+.polaroid::after {
+  content: '';
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  opacity: 0.35;
+  pointer-events: none;
+}
+
+.polaroid::before {
+  top: 2px;
+  left: 2px;
+  background: radial-gradient(circle at 0 0, var(--rose-deep) 30%, transparent 70%);
+  border-radius: 0 0 100% 0;
+}
+
+.polaroid::after {
+  bottom: 2px;
+  right: 2px;
+  background: radial-gradient(circle at 100% 100%, var(--rose-deep) 30%, transparent 70%);
+  border-radius: 100% 0 0 0;
+}
+
+/* ============================================================
+   故事卡片 · 梳妆台上的信
+   ============================================================ */
+.story-card {
+  margin: 24px 20px 16px;
+  padding: 26px 22px 22px;
+  background:
+    linear-gradient(180deg, hsla(330, 25%, 16%, 0.85), hsla(290, 22%, 11%, 0.9));
+  border: 1px solid hsla(330, 50%, 55%, 0.18);
+  border-radius: 3px 3px 16px 16px;
+  cursor: pointer;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.4s;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
+}
+
+/* 顶部蜡封感 */
+.story-card::before {
+  content: '';
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--rose-deep), hsla(330, 45%, 30%, 0.9));
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+  z-index: 2;
+}
+
+/* 底部蕾丝 */
+.story-card::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 6px;
+  background:
+    radial-gradient(circle at 6px 6px, transparent 4px, var(--rose-deep) 4px 5px, transparent 5px) 0 0 / 12px 6px repeat-x;
+  opacity: 0.5;
+}
+
+.story-card:hover {
+  border-color: hsla(330, 55%, 68%, 0.4);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45), 0 0 36px var(--rose-glow);
+}
+
+.story-icon {
+  width: 36px;
+  height: 36px;
+  margin: 4px auto 12px;
+  opacity: 0.7;
+}
+
+.story-icon svg { width: 100%; height: 100%; }
+
+.story-title {
+  font-family: "Noto Serif SC", "Songti SC", serif;
+  font-size: 1rem;
+  letter-spacing: 5px;
+  color: var(--rose-soft);
+  margin-bottom: 12px;
+}
+
+.story-desc {
+  font-size: 0.74rem;
+  line-height: 1.95;
+  color: var(--text-sub);
+  letter-spacing: 0.3px;
+}
+
+.story-desc em {
+  color: var(--rose);
+  font-style: normal;
+  font-weight: 600;
+}
+
+/* ============================================================
+   底部
+   ============================================================ */
+.footer {
+  margin-top: 20px;
+  padding: 18px 20px 6px;
+  text-align: center;
+  position: relative;
+}
+
+.footer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 20%;
+  right: 20%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--rose), transparent);
+  opacity: 0.4;
+}
+
+.footer-deco {
+  font-size: 0.7rem;
+  letter-spacing: 5px;
+  color: var(--rose);
+  opacity: 0.65;
+  margin-bottom: 6px;
+  animation: decoGlow 3s ease-in-out infinite;
+}
+
+@keyframes decoGlow {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.9; }
+}
+
+.footer-name {
+  font-size: 0.66rem;
+  letter-spacing: 2px;
+  color: var(--text-mute);
+}
+
+/* ============================================================
+   灯箱
+   ============================================================ */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  background: rgba(8, 4, 10, 0.96);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  opacity: 0;
+  transition: opacity 0.3s;
+  cursor: pointer;
+}
+
+.lightbox.open { display: flex; opacity: 1; }
+
+.lightbox img {
+  max-width: 92vw;
+  max-height: 88vh;
+  border-radius: 6px;
+  border: 3px solid var(--cream);
+  box-shadow:
+    0 0 60px rgba(0, 0, 0, 0.9),
+    0 0 0 1px hsla(330, 55%, 68%, 0.3);
+  object-fit: contain;
+}
+
+.lightbox-close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 40px;
+  height: 40px;
+  border: 1px solid hsla(330, 55%, 68%, 0.4);
+  background: hsla(330, 30%, 16%, 0.85);
+  border-radius: 50%;
+  color: var(--rose-soft);
+  font-size: 18px;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lightbox-close:hover {
+  transform: rotate(90deg);
+  background: hsla(330, 40%, 24%, 0.9);
+}
+
+/* ============================================================
+   响应式
+   ============================================================ */
+@media (max-width: 460px) {
+  .container { border-radius: 22px; }
+  .hero { height: 200px; }
+  .hero-title { font-size: 1.3rem; }
+  .mirror-frame { width: 170px; height: 140px; }
+  .author-card { margin: 0 14px 12px; padding: 20px 14px 16px; }
+  .info-block { margin: 0 14px 10px; padding: 12px 14px 12px 16px; }
+  .illustration-count { margin: 14px 14px 10px; padding: 16px 14px; }
+  .ic-number { font-size: 2rem; }
+  .gallery-section { margin: 16px 12px 10px; }
+  .gallery-grid { gap: 8px; }
+  .story-card { margin: 20px 14px 12px; padding: 22px 16px 18px; }
+  .author-avatar { width: 68px; height: 68px; }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- 顶部 · 化妆镜 -->
+  <div class="hero">
+    <div class="petal"></div>
+    <div class="petal"></div>
+    <div class="petal"></div>
+    <div class="petal"></div>
+    <div class="mirror-glow"></div>
+    <div class="mirror-frame"></div>
+    <div class="hero-content">
+      <div class="hero-sub">BORN FOR YOU</div>
+      <h1 class="hero-title">为你而生</h1>
+      <div class="hero-desc">—— 妈妈，本来就是为你而生的 ——</div>
+    </div>
+  </div>
+
+  <!-- 蕾丝分隔线 -->
+  <div class="lace-divider">
+    <svg viewBox="0 0 320 20" preserveAspectRatio="none" fill="none">
+      <defs>
+        <pattern id="lacePattern" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
+          <circle cx="10" cy="10" r="4" stroke="hsl(330, 55%, 68%)" stroke-width="0.5" opacity="0.35"/>
+          <circle cx="10" cy="10" r="2" stroke="hsl(330, 55%, 68%)" stroke-width="0.5" opacity="0.25"/>
+        </pattern>
+      </defs>
+      <path d="M0 10 L320 10" stroke="hsl(330, 55%, 68%)" stroke-width="0.5" opacity="0.15"/>
+      <rect x="0" y="4" width="320" height="12" fill="url(#lacePattern)" opacity="0.7"/>
+      <circle cx="160" cy="10" r="3" fill="hsl(40, 70%, 62%)" opacity="0.5"/>
+      <circle cx="160" cy="10" r="6" fill="none" stroke="hsl(40, 70%, 62%)" stroke-width="0.5" opacity="0.3"/>
+    </svg>
+  </div>
+
+  <!-- 作者卡片 · 香水瓶标签 -->
+  <div class="author-card">
+    <img class="author-avatar" src="https://cdn.jsdelivr.net/gh/sanshui19516/CG@main/%E5%A4%B4%E5%83%8F.png" alt="三年的水" />
+    <div class="author-name">三 年 的 水</div>
+    <div class="author-tagline">为你而生 · 原案</div>
+    <div class="author-links">
+      <a class="author-link" href="https://discord.com/channels/1134557553011998840/1516980193195987075/1516980193195987075" target="_blank" rel="noopener noreferrer">
+        <svg viewBox="0 0 24 24"><path d="M4 6h16v12H4z"/><path d="M8 10h8"/><path d="M8 14h5"/></svg>
+        <span>原帖链接</span>
+      </a>
+      <a class="author-link" href="https://discord.com/channels/1134557553011998840/1516980193195987075/1516980193195987075" target="_blank" rel="noopener noreferrer">
+        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+        <span>作品集锦</span>
+      </a>
+      <a class="author-link" href="https://discord.com/channels/1134557553011998840/1516980193195987075/1516980470871621794" target="_blank" rel="noopener noreferrer">
+        <svg viewBox="0 0 24 24"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg>
+        <span>关注作者</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- 发布信息 -->
+  <div class="info-block">
+    <div class="info-label">
+      <svg class="label-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      发布信息
+    </div>
+    <ul class="info-list">
+      <li>仅发布于 Discord 类脑</li>
+      <li>作者：三年的水</li>
+    </ul>
+  </div>
+
+  <!-- 授权说明 -->
+  <div class="info-block">
+    <div class="info-label">
+      <svg class="label-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/></svg>
+      授权说明
+    </div>
+    <ul class="info-list">
+      <li><span class="allow">✓ 允许二改（需署名）</span></li>
+      <li><span class="allow">✓ 二改后需标注出处</span></li>
+      <li><span class="warn">✕ 禁止商用</span></li>
+      <li><span class="warn">✕ 禁止墙内二传</span></li>
+    </ul>
+  </div>
+
+  <!-- 本卡包含 -->
+  <div class="info-block">
+    <div class="info-label">
+      <svg class="label-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 12v10H4V12"/><path d="M2 7h20v5H2z"/><path d="M12 22V7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>
+      本卡包含
+    </div>
+    <ul class="info-list">
+      <li><span class="feature">MVU 变量系统 · 实时追踪陈雅琴的全部状态</span></li>
+      <li><span class="feature">16 周时间线 · 24 个链式事件</span></li>
+      <li><span class="feature">三面性动态人设 · 女强人 / 撒娇妈妈 / 为他而生</span></li>
+      <li><span class="feature">场景控制器 · 13 个可用场景</span></li>
+      <li><span class="feature">服装 / 称谓 / 生理期 / 怀孕 · 全联动</span></li>
+      <li><span class="highlight">400+ 张插图 · SFW &amp; NSFW 双轨</span></li>
+    </ul>
+  </div>
+
+  <!-- 使用说明 -->
+  <div class="info-block">
+    <div class="info-label">
+      <svg class="label-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+      使用说明
+    </div>
+    <ul class="info-list">
+      <li>导入角色卡到 SillyTavern</li>
+      <li>开启 MVU 变量系统</li>
+      <li>开启提示词模板</li>
+      <li>如果出现状态栏尾部代码块未渲染情况请看帖子标注</li>
+      <li>开始对话 · 从暑假第一天开始</li>
+    </ul>
+  </div>
+
+  <!-- 特色系统 -->
+  <div class="info-block">
+    <div class="info-label">
+      <svg class="label-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg>
+      特色系统
+    </div>
+    <ul class="info-list">
+      <li>叙事调性 · 四阶段推进（暗示 / 边界 / 突破 / 日常化）</li>
+      <li>命定归属 · 从「为妈妈」到「为你而生」的确认过程</li>
+      <li>自慰仪式 · 深夜独处时的秘密日常</li>
+      <li>衣着暴露度 · 随场景/阶段自动调整的穿着细节</li>
+      <li>幸福反应 · 被顶到最深处时的泪水与撒娇</li>
+      <li>家族压力 · 姥姥催促再婚、家族知情状态推进</li>
+    </ul>
+  </div>
+
+  <!-- 插图数量 · 特别展示 -->
+  <div class="illustration-count">
+    <div class="ic-label">插 图 收 录</div>
+    <div class="ic-number">400+</div>
+    <div class="ic-desc">正文中通过 &lt;SFW_IMG&gt; / &lt;NSFW_IMG&gt; 标签自动渲染</div>
+    <div class="ic-tags">
+      <span class="ic-tag sfw">SFW · 日常与氛围</span>
+      <span class="ic-tag nsfw">NSFW · 亲密场景</span>
+      <span class="ic-tag">手机 / 电脑双端适配</span>
+    </div>
+  </div>
+
+  <!-- 公益声明 -->
+  <div class="info-block">
+    <div class="info-label">
+      <svg class="label-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      公益声明
+    </div>
+    <ul class="info-list">
+      <li>本角色卡为作者「三年的水」免费分享的公益作品，仅供个人娱乐与创作交流使用。</li>
+      <li>严禁任何形式的商业用途，包括转卖、收费下载、打包售卖或用于盈利性直播 / 视频。</li>
+      <li>如通过付费渠道获得，请立即退款并举报贩卖者，维护创作者与您自身的权益。</li>
+      <li>感谢您的支持与理解。—— 作者：三年的水</li>
+    </ul>
+  </div>
+
+  <!-- 画廊 · 拍立得 -->
+  <div class="gallery-section">
+    <div class="gallery-head">
+      <div class="gallery-title">私 藏 相 册</div>
+      <div class="gallery-sub">点击任意画面，进入那个夜晚</div>
+    </div>
+    <div class="gallery-grid" id="galleryGrid"></div>
+  </div>
+
+  <!-- 故事卡片 -->
+  <div class="story-card" id="storyCard">
+    <div class="story-icon">
+      <svg viewBox="0 0 48 48" fill="none" stroke="hsl(330, 55%, 68%)" stroke-width="1.4">
+        <path d="M24 38s-12-7.5-12-16a6 6 0 0 1 12-2 6 6 0 0 1 12 2c0 8.5-12 16-12 16z"/>
+        <path d="M24 10v6M18 13l3 4M30 13l-3 4"/>
+      </svg>
+    </div>
+    <div class="story-title">那 天 下 午</div>
+    <div class="story-desc">
+      下课铃响，他把最后一本书塞进书包。<br>
+      手机震了一下，是妈妈的消息：<em>"宝宝今天几点回来？"</em><br>
+      他没有立刻回。<br>
+      推开家门的时候，屋里传来赤脚踩在地板上的声响。<br>
+      她穿着那条黑色薄睡裙，靠在沙发边，抬头看他。<br>
+      <em>"宝宝回来啦～"</em>
+    </div>
+  </div>
+
+  <!-- 底部 -->
+  <div class="footer">
+    <div class="footer-deco">✦ 请 多 多 评 论 ✦</div>
+    <div class="footer-name">by 三年的水</div>
+  </div>
+
+</div>
+
+<!-- 灯箱 -->
+<div class="lightbox" id="lightbox">
+  <button class="lightbox-close" id="lightboxClose" aria-label="关闭">✕</button>
+  <img id="lightboxImg" src="" alt="" />
+</div>
+
+<script>
+(function() {
+  'use strict';
+
+  /* ============================================================
+     ⚠️ 画廊图片配置 · 14 张
+     ============================================================ */
+  const GALLERY_IMAGES = [
+    'https://cdn.jsdelivr.net/gh/sanshui19516/Plot-Advancement-Illustration-@main/%E4%B8%BA%E4%BD%A0%E8%80%8C%E7%94%9F/%E8%B6%85%E9%93%BE/CG%20(1).jpg',
+    'https://cdn.jsdelivr.net/gh/sanshui19516/Plot-Advancement-Illustration-@main/%E4%B8%BA%E4%BD%A0%E8%80%8C%E7%94%9F/%E8%B6%85%E9%93%BE/CG%20(2).jpg',
+    'https://cdn.jsdelivr.net/gh/sanshui19516/Plot-Advancement-Illustration-@main/%E4%B8%BA%E4%BD%A0%E8%80%8C%E7%94%9F/%E8%B6%85%E9%93%BE/CG%20(3).jpg',
+    'https://cdn.jsdelivr.net/gh/sanshui19516/Plot-Advancement-Illustration-@main/%E4%B8%BA%E4%BD%A0%E8%80%8C%E7%94%9F/%E8%B6%85%E9%93%BE/CG%20(4).jpg',
+    'https://cdn.jsdelivr.net/gh/sanshui19516/Plot-Advancement-Illustration-@main/%E4%B8%BA%E4%BD%A0%E8%80%8C%E7%94%9F/%E8%B6%85%E9%93%BE/CG%20(5).jpg',
+    'https://cdn.jsdelivr.net/gh/sanshui19516/Plot-Advancement-Illustration-@main/%E4%B8%BA%E4%BD%A0%E8%80%8C%E7%94%9F/%E8%B6%85%E9%93%BE/CG%20(6).jpg',
+    'https://cdn.jsdelivr.net/gh/sanshui19516/Plot-Advancement-Illustration-@main/%E4%B8%BA%E4%BD%A0%E8%80%8C%E7%94%9F/%E8%B6%85%E9%93%BE/CG%20(7).jpg',
+    'https://cdn.jsdelivr.net/gh/sanshui19516/Plot-Advancement-Illustration-@main/%E4%B8%BA%E4%BD%A0%E8%80%8C%E7%94%9F/%E8%B6%85%E9%93%BE/CG%20(8).jpg',
+    'https://cdn.jsdelivr.net/gh/sanshui19516/Plot-Advancement-Illustration-@main/%E4%B8%BA%E4%BD%A0%E8%80%8C%E7%94%9F/%E8%B6%85%E9%93%BE/CG%20(9).jpg',
+    'https://cdn.jsdelivr.net/gh/sanshui19516/Plot-Advancement-Illustration-@main/%E4%B8%BA%E4%BD%A0%E8%80%8C%E7%94%9F/%E8%B6%85%E9%93%BE/CG%20(10).jpg',
+    'https://cdn.jsdelivr.net/gh/sanshui19516/Plot-Advancement-Illustration-@main/%E4%B8%BA%E4%BD%A0%E8%80%8C%E7%94%9F/%E8%B6%85%E9%93%BE/CG%20(11).jpg',
+    'https://cdn.jsdelivr.net/gh/sanshui19516/Plot-Advancement-Illustration-@main/%E4%B8%BA%E4%BD%A0%E8%80%8C%E7%94%9F/%E8%B6%85%E9%93%BE/CG%20(12).jpg',
+    'https://cdn.jsdelivr.net/gh/sanshui19516/Plot-Advancement-Illustration-@main/%E4%B8%BA%E4%BD%A0%E8%80%8C%E7%94%9F/%E8%B6%85%E9%93%BE/CG%20(13).jpg',
+    'https://cdn.jsdelivr.net/gh/sanshui19516/Plot-Advancement-Illustration-@main/%E4%B8%BA%E4%BD%A0%E8%80%8C%E7%94%9F/%E8%B6%85%E9%93%BE/CG%20(14).jpg'
+  ];
+
+  /* 每张图下方的手写小字 */
+  const GALLERY_CAPTIONS = [
+    '她最喜欢的那条',
+    '傍晚的光',
+    '等你回来的姿势',
+    '刚洗完澡',
+    '看着你的眼神',
+    '假装不经意',
+    '一个人的时候',
+    '镜子里的自己',
+    '厨房里',
+    '客厅沙发上',
+    '深夜',
+    '衣帽间',
+    '窗外在下雨',
+    '只有我们'
+  ];
+
+  const galleryGrid = document.getElementById('galleryGrid');
+  const lightbox = document.getElementById('lightbox');
+  const lightboxImg = document.getElementById('lightboxImg');
+  const lightboxClose = document.getElementById('lightboxClose');
+
+  /* 渲染拍立得 */
+  GALLERY_IMAGES.forEach(function(url, index) {
+    const polaroid = document.createElement('div');
+    polaroid.className = 'polaroid';
+
+    const img = document.createElement('img');
+    img.src = url;
+    img.alt = 'CG ' + (index + 1);
+    img.loading = 'lazy';
+    img.decoding = 'async';
+
+    img.onload = function() { this.classList.add('loaded'); };
+    img.onerror = function() {
+      this.onerror = null;
+      this.src = 'data:image/svg+xml,' + encodeURIComponent(
+        '<svg xmlns="http://www.w3.org/2000/svg" width="200" height="267" viewBox="0 0 200 267">' +
+        '<rect width="200" height="267" fill="#2a1828"/>' +
+        '<text x="100" y="133" fill="#c08db0" font-family="serif" font-size="13" text-anchor="middle" opacity="0.7">CG ' + (index + 1) + '</text>' +
+        '</svg>'
+      );
+      this.classList.add('loaded');
+    };
+
+    polaroid.appendChild(img);
+
+    const caption = document.createElement('div');
+    caption.className = 'polaroid-caption';
+    caption.textContent = GALLERY_CAPTIONS[index] || '';
+    polaroid.appendChild(caption);
+
+    polaroid.addEventListener('click', function() { openLightbox(index); });
+
+    galleryGrid.appendChild(polaroid);
+  });
+
+  /* 灯箱 */
+  function openLightbox(index) {
+    lightboxImg.src = GALLERY_IMAGES[index];
+    lightbox.classList.add('open');
+  }
+
+  function closeLightbox() {
+    lightbox.classList.remove('open');
+    setTimeout(function() { lightboxImg.src = ''; }, 300);
+  }
+
+  lightboxClose.addEventListener('click', function(e) {
+    e.stopPropagation();
+    closeLightbox();
+  });
+
+  lightbox.addEventListener('click', function(e) {
+    if (e.target === lightbox) closeLightbox();
+  });
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeLightbox();
+  });
+
+  /* ============================================================
+     故事卡片 · 跳转索引 2
+     ============================================================ */
+  async function switchOpening(swipeId) {
+    console.log('[作者介绍页] 尝试跳转到索引:', swipeId);
+    try {
+      let messages;
+      try {
+        messages = await getChatMessages?.('0', { include_swipe: true });
+      } catch (e) {
+        const context = window.SillyTavern?.getContext?.() || window.parent?.SillyTavern?.getContext?.();
+        messages = context?.chat;
+      }
+      if (messages && messages.length > 0) {
+        const userMessage = messages[0];
+        if (userMessage && userMessage.swipes && userMessage.swipes.length > swipeId) {
+          const targetSwipe = userMessage.swipes[swipeId];
+          const ctx = window.SillyTavern?.getContext?.() || window.parent?.SillyTavern?.getContext?.();
+          const setChatMessage = window.setChatMessage || ctx?.setChatMessage;
+          if (typeof setChatMessage === 'function') {
+            await setChatMessage(targetSwipe, 0, { swipe_id: swipeId, refresh: 'display_and_render_current' });
+            return;
+          }
+          if (typeof userMessage.setSwipe === 'function') {
+            userMessage.setSwipe(swipeId);
+            return;
+          }
+        }
+      }
+    } catch (e) {
+      console.warn('[作者介绍页] 方法1失败:', e);
+    }
+
+    try {
+      if (typeof window.parent?.triggerSlash === 'function') {
+        window.parent.triggerSlash('/trigger');
+        return;
+      }
+      if (typeof window.triggerSlash === 'function') {
+        window.triggerSlash('/trigger');
+        return;
+      }
+    } catch (e) {
+      console.warn('[作者介绍页] 方法2失败:', e);
+    }
+  }
+
+  document.getElementById('storyCard').addEventListener('click', async function() {
+    const card = this;
+    card.style.opacity = '0.6';
+    card.style.pointerEvents = 'none';
+    try {
+      await switchOpening(2);
+    } catch (err) {
+      console.error('[作者介绍页] 跳转失败:', err);
+    } finally {
+      setTimeout(function() {
+        card.style.opacity = '1';
+        card.style.pointerEvents = 'auto';
+      }, 500);
+    }
+  });
+
+  console.log('[为你而生 · 作者介绍] 已加载，画廊 ' + GALLERY_IMAGES.length + ' 张');
+})();
+</script>
+
+</body>
+</html>
