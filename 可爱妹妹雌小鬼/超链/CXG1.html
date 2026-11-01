@@ -1,0 +1,1161 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>只准喜欢我！ · 欢迎</title>
+<style>
+@font-face {
+  font-family: "ZSFT-ga";
+  src: url("https://fontsapi.zeoseven.com/ga/main.woff2") format("woff2");
+  font-display: swap;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --rose: hsl(340, 72%, 66%);
+  --rose-light: hsl(340, 78%, 82%);
+  --rose-deep: hsl(340, 55%, 48%);
+  --wine: hsl(345, 58%, 42%);
+  --wine-dark: hsl(345, 62%, 26%);
+  --paper-cream: hsl(40, 40%, 96%);
+  --paper-dark: hsl(40, 25%, 84%);
+  --ink: hsl(340, 20%, 25%);
+  --gold: hsl(35, 58%, 62%);
+  --gold-deep: hsl(35, 48%, 44%);
+  --gold-bright: hsl(35, 68%, 72%);
+}
+
+html, body {
+  width: 100%;
+  background: transparent;
+  font-family: "PingFang SC", "Microsoft YaHei", -apple-system, sans-serif;
+  overflow-x: hidden;
+}
+
+body {
+  padding: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.stage {
+  width: 100%;
+  max-width: 680px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 10px;
+  border-radius: 18px;
+  background:
+    radial-gradient(ellipse at 30% 20%, hsla(345, 25%, 16%, 0.85) 0%, transparent 60%),
+    radial-gradient(ellipse at 70% 80%, hsla(340, 30%, 12%, 0.9) 0%, transparent 65%),
+    linear-gradient(160deg, hsl(345, 20%, 10%) 0%, hsl(340, 22%, 6%) 100%);
+  overflow: hidden;
+}
+
+.stage::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    repeating-linear-gradient(92deg, transparent 0 40px, hsla(30, 25%, 30%, 0.06) 40px 42px, transparent 42px 45px),
+    repeating-linear-gradient(88deg, transparent 0 60px, hsla(30, 25%, 30%, 0.04) 60px 63px, transparent 63px 70px);
+  pointer-events: none;
+}
+
+.stage::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 40%, hsla(345, 60%, 55%, 0.12) 0%, transparent 55%);
+  pointer-events: none;
+}
+
+.petals {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.petal {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: radial-gradient(circle, hsla(345, 60%, 70%, 0.9) 0%, hsla(345, 55%, 50%, 0.4) 100%);
+  border-radius: 50% 0 50% 0;
+  opacity: 0.5;
+  animation: petal-fall linear infinite;
+}
+
+@keyframes petal-fall {
+  0% { transform: translateY(-20px) rotate(0deg); opacity: 0; }
+  10% { opacity: 0.6; }
+  90% { opacity: 0.5; }
+  100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+}
+
+.book {
+  position: relative;
+  width: 100%;
+  max-width: 640px;
+  height: 0;
+  padding-bottom: 62.5%;
+  z-index: 5;
+  filter: drop-shadow(0 22px 55px rgba(0, 0, 0, 0.75));
+  overflow: visible;
+}
+
+.book::before {
+  content: '';
+  position: absolute;
+  top: 6%;
+  bottom: 6%;
+  left: -6px;
+  width: 12px;
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0.55) 0%, rgba(0, 0, 0, 0.15) 60%, transparent 100%);
+  border-radius: 5px 0 0 5px;
+  filter: blur(3px);
+  z-index: -1;
+}
+
+.book::after {
+  content: '';
+  position: absolute;
+  top: 4%;
+  bottom: 4%;
+  right: -8px;
+  width: 14px;
+  background: repeating-linear-gradient(90deg,
+    hsla(40, 40%, 88%, 0.9) 0 1px,
+    hsla(40, 30%, 78%, 0.9) 1px 2px);
+  border-radius: 0 3px 3px 0;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.35);
+  z-index: 1;
+}
+
+.book-inner {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.page {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 6px;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 1;
+  transform: translateX(0);
+  transition: transform 0.55s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.55s ease;
+}
+
+.page.active {
+  opacity: 1;
+  pointer-events: auto;
+  z-index: 5;
+  transform: translateX(0);
+}
+
+.page.flip-out {
+  transform: translateX(-100%);
+  opacity: 0;
+  z-index: 4;
+  pointer-events: none;
+}
+
+.page.flip-in {
+  transform: translateX(100%);
+  opacity: 0;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.page-cover {
+  background:
+    radial-gradient(ellipse at 30% 15%, hsl(340, 25%, 18%) 0%, transparent 55%),
+    radial-gradient(ellipse at 70% 85%, hsl(345, 28%, 10%) 0%, transparent 60%),
+    linear-gradient(145deg, hsl(340, 22%, 14%) 0%, hsl(340, 25%, 6%) 100%);
+  border: 1px solid hsl(340, 35%, 22%);
+  box-shadow: inset 0 1px 0 hsl(340, 35%, 26%), inset 0 -3px 12px rgba(0, 0, 0, 0.6);
+  padding: 6px;
+  cursor: pointer;
+}
+
+.page-cover::before {
+  content: '';
+  position: absolute;
+  inset: 6px;
+  border-radius: 4px;
+  background-image:
+    repeating-linear-gradient(45deg, transparent 0 8px, hsla(340, 55%, 55%, 0.03) 8px 9px),
+    repeating-linear-gradient(-45deg, transparent 0 8px, hsla(340, 55%, 55%, 0.03) 8px 9px);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.page-cover::after {
+  content: '';
+  position: absolute;
+  inset: 12px;
+  border: 1px dashed hsla(340, 50%, 40%, 0.4);
+  border-radius: 2px;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.ribbon {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 24px;
+  height: 52px;
+  background: linear-gradient(180deg, var(--rose) 0%, var(--wine) 60%, var(--wine-dark) 100%);
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 82%, 0 100%);
+  box-shadow: 0 6px 16px rgba(120, 30, 70, 0.5);
+  z-index: 10;
+  animation: ribbon-sway 4s ease-in-out infinite;
+  transform-origin: top center;
+}
+
+@keyframes ribbon-sway {
+  0%, 100% { transform: translateX(-50%) rotate(0deg); }
+  50% { transform: translateX(-50%) rotate(2.5deg); }
+}
+
+.wax-seal {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, hsla(345, 70%, 50%, 0.95) 0%, hsla(345, 65%, 32%, 1) 70%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 8;
+  box-shadow:
+    0 6px 16px rgba(0, 0, 0, 0.6),
+    inset -2px -3px 6px rgba(0, 0, 0, 0.35),
+    inset 2px 3px 6px hsla(345, 60%, 70%, 0.25);
+  transform: rotate(-8deg);
+}
+
+.wax-seal::before {
+  content: '';
+  position: absolute;
+  inset: 6px;
+  border-radius: 50%;
+  border: 1.5px solid hsla(35, 55%, 65%, 0.4);
+}
+
+.wax-seal .seal-text {
+  font-family: "ZSFT-ga", "Georgia", serif;
+  font-size: 19px;
+  color: var(--gold-bright);
+  font-weight: 700;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+  line-height: 1;
+}
+
+.cover-content {
+  position: relative;
+  z-index: 3;
+  width: 100%;
+  height: 100%;
+  padding: 28px 32px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  text-align: center;
+}
+
+.cover-by {
+  font-family: "Georgia", serif;
+  font-size: 8.5px;
+  color: hsla(345, 40%, 65%, 0.55);
+  letter-spacing: 4px;
+  font-style: italic;
+}
+
+.cover-seal-line {
+  width: 40px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  margin: 6px 0 4px;
+}
+
+.cover-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  justify-content: center;
+}
+
+.cover-title-1 {
+  font-family: "ZSFT-ga", "Georgia", serif;
+  font-size: 24px;
+  color: var(--rose-light);
+  letter-spacing: 8px;
+  text-shadow: 0 0 24px hsla(345, 65%, 55%, 0.5), 0 2px 8px rgba(0, 0, 0, 0.6);
+  line-height: 1.1;
+}
+
+.cover-title-2 {
+  font-family: "ZSFT-ga", "Georgia", serif;
+  font-size: 18px;
+  color: var(--gold-bright);
+  letter-spacing: 4px;
+  text-shadow: 0 0 20px hsla(35, 65%, 55%, 0.4), 0 2px 6px rgba(0, 0, 0, 0.6);
+  line-height: 1.2;
+}
+
+.cover-divider {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 55%;
+  margin: 4px 0;
+}
+
+.cover-divider::before,
+.cover-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, hsla(35, 50%, 55%, 0.5), transparent);
+}
+
+.cover-divider .divider-ornament {
+  font-family: "Georgia", serif;
+  font-size: 10px;
+  color: var(--gold);
+  opacity: 0.75;
+}
+
+.cover-subtitle {
+  font-family: "ZSFT-ga", "Georgia", serif;
+  font-size: 10px;
+  color: hsla(340, 45%, 72%, 0.85);
+  letter-spacing: 2px;
+  line-height: 1.7;
+  font-style: italic;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+.cover-hint {
+  font-family: "Georgia", serif;
+  font-size: 9.5px;
+  color: hsla(35, 55%, 65%, 0.65);
+  letter-spacing: 3px;
+  font-style: italic;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.cover-hint .hint-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--rose);
+  box-shadow: 0 0 10px var(--rose);
+  animation: hint-pulse 1.8s ease-in-out infinite;
+}
+
+@keyframes hint-pulse {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.3); }
+}
+
+.page-inner {
+  background:
+    radial-gradient(ellipse at 50% 30%, hsl(40, 45%, 97%) 0%, transparent 70%),
+    linear-gradient(180deg, var(--paper-cream) 0%, var(--paper-dark) 100%);
+  border: 1px solid hsl(35, 25%, 70%);
+}
+
+.page-inner::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(0deg,
+    transparent 0 26px,
+    hsla(340, 25%, 60%, 0.08) 26px 27px);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.page-inner::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  box-shadow:
+    inset 0 0 30px hsla(40, 30%, 60%, 0.25),
+    inset 0 0 4px hsla(340, 25%, 50%, 0.15);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.page-inner .inner-content {
+  position: relative;
+  z-index: 3;
+  width: 100%;
+  height: 100%;
+  padding: 20px 26px 14px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.page-number {
+  position: absolute;
+  top: 10px;
+  right: 22px;
+  font-family: "Georgia", serif;
+  font-size: 9px;
+  color: hsla(340, 25%, 55%, 0.55);
+  letter-spacing: 1px;
+  font-style: italic;
+  z-index: 4;
+}
+
+.page-number::before { content: '— '; }
+.page-number::after { content: ' —'; }
+
+.page-chapter {
+  font-family: "ZSFT-ga", "Georgia", serif;
+  font-size: 15px;
+  color: var(--wine);
+  letter-spacing: 5px;
+  text-align: center;
+  margin-bottom: 2px;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
+  flex-shrink: 0;
+}
+
+.page-chapter::after {
+  content: '';
+  display: block;
+  width: 55%;
+  height: 1px;
+  margin: 6px auto 0;
+  background: linear-gradient(90deg, transparent, hsla(345, 50%, 55%, 0.5), transparent);
+}
+
+.page-subtitle {
+  font-family: "Georgia", serif;
+  font-size: 8px;
+  color: hsla(340, 25%, 55%, 0.65);
+  letter-spacing: 3px;
+  text-align: center;
+  font-style: italic;
+  margin-bottom: 10px;
+  flex-shrink: 0;
+}
+
+.page-1 .inner-content {
+  padding: 20px 26px 14px;
+}
+
+.page-1-body {
+  display: flex;
+  flex: 1 1 0;
+  gap: 16px;
+  min-height: 0;
+  margin-bottom: 6px;
+}
+
+.page-1-left {
+  flex: 1.2;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+  min-height: 0;
+}
+
+.序言正文 {
+  font-family: "ZSFT-ga", "Georgia", serif;
+  font-size: 11px;
+  color: var(--ink);
+  line-height: 1.95;
+  letter-spacing: 0.4px;
+  text-indent: 2em;
+}
+
+.序言正文 em {
+  font-style: normal;
+  color: var(--wine);
+  font-weight: 600;
+}
+
+.序言正文 strong {
+  color: var(--rose-deep);
+  font-weight: 700;
+}
+
+.序言正文 .signature-line {
+  display: block;
+  text-align: right;
+  font-style: italic;
+  color: var(--wine);
+  font-size: 10px;
+  margin-top: 6px;
+  text-indent: 0;
+}
+
+.page-1-right {
+  flex: 1;
+  position: relative;
+  min-width: 0;
+  min-height: 0;
+}
+
+.mini-polaroid {
+  position: absolute;
+  width: 76px;
+  background: linear-gradient(180deg, #fefdfb 0%, #f5f0e6 100%);
+  padding: 3px 3px 16px 3px;
+  border-radius: 2px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35), 0 1px 0 rgba(255, 255, 255, 0.7) inset;
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  cursor: pointer;
+  z-index: 3;
+}
+
+.mini-polaroid:hover {
+  z-index: 999 !important;
+  transform: rotate(0deg) scale(1.15) !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.55), 0 0 20px hsla(345, 65%, 55%, 0.4);
+}
+
+.mini-polaroid img {
+  width: 100%;
+  aspect-ratio: 3/4;
+  object-fit: cover;
+  display: block;
+  background: hsl(340, 20%, 15%);
+}
+
+.mini-polaroid::before {
+  content: '';
+  position: absolute;
+  top: -4px;
+  left: 50%;
+  transform: translateX(-50%) rotate(-3deg);
+  width: 22px;
+  height: 8px;
+  background: linear-gradient(135deg, rgba(240, 230, 180, 0.85), rgba(220, 210, 160, 0.85));
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  z-index: 4;
+}
+
+.mini-polaroid:nth-child(1) { top: 8%; left: 4%; transform: rotate(-8deg); }
+.mini-polaroid:nth-child(2) { top: 20%; right: 2%; transform: rotate(6deg); z-index: 4; }
+.mini-polaroid:nth-child(3) { bottom: 6%; left: 30%; transform: rotate(-3deg); z-index: 2; }
+
+.page-nav {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 8px;
+  border-top: 1px dashed hsla(340, 30%, 55%, 0.3);
+  position: relative;
+  z-index: 4;
+  flex-shrink: 0;
+}
+
+.page-nav-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: "ZSFT-ga", "Georgia", serif;
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: var(--wine);
+  padding: 6px 22px;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+}
+
+.page-nav-btn:hover { color: var(--rose-deep); letter-spacing: 3px; }
+.page-nav-btn:active { transform: scale(0.96); }
+.page-nav-btn::after { content: '→'; font-family: "Georgia", serif; font-size: 13px; transition: transform 0.3s; }
+.page-nav-btn:hover::after { transform: translateX(4px); }
+
+.enter-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 9px 30px;
+  background: linear-gradient(135deg, var(--wine) 0%, var(--wine-dark) 100%);
+  border: 1.5px solid var(--gold);
+  border-radius: 26px;
+  color: var(--rose-light);
+  font-family: "ZSFT-ga", "Georgia", serif;
+  font-size: 12px;
+  letter-spacing: 4px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: 0 8px 22px rgba(120, 40, 70, 0.45), inset 0 1px 0 hsla(35, 60%, 70%, 0.25), 0 0 20px hsla(345, 65%, 55%, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.enter-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, transparent 30%, hsla(35, 60%, 70%, 0.2) 50%, transparent 70%);
+  transform: translateX(-100%);
+  transition: transform 0.6s ease;
+}
+
+.enter-btn:hover {
+  transform: translateY(-2px);
+  border-color: var(--gold-bright);
+  color: var(--gold-bright);
+  box-shadow: 0 12px 30px rgba(120, 40, 70, 0.6), inset 0 1px 0 hsla(35, 60%, 70%, 0.35), 0 0 32px hsla(345, 65%, 55%, 0.4);
+}
+
+.enter-btn:hover::before { transform: translateX(100%); }
+.enter-btn:active { transform: translateY(0) scale(0.97); }
+
+.enter-btn .btn-icon {
+  font-size: 13px;
+  animation: icon-breathe 2.5s ease-in-out infinite;
+}
+
+@keyframes icon-breathe {
+  0%, 100% { opacity: 0.75; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.12); }
+}
+
+.page-2 .inner-content {
+  padding: 20px 26px 14px;
+}
+
+.page-2-body {
+  flex: 1 1 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.stage-row {
+  flex: 1 1 0;
+  min-height: 0;
+  display: flex;
+  gap: 8px;
+}
+
+.stage-card {
+  flex: 1 1 0;
+  min-width: 0;
+  min-height: 0;
+  position: relative;
+  overflow: hidden;
+  border-radius: 4px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25), 0 1px 0 rgba(255, 255, 255, 0.6) inset;
+  background: hsl(340, 25%, 20%);
+  transition: transform 0.3s ease;
+}
+
+.stage-card:hover {
+  transform: translateY(-2px) scale(1.02);
+  z-index: 10;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4), 0 0 20px hsla(345, 65%, 55%, 0.35);
+}
+
+.stage-card img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.stage-card::after {
+  content: attr(data-name);
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 8px 4px 4px;
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.4) 60%, transparent 100%);
+  color: var(--gold-bright);
+  font-family: "ZSFT-ga", "Georgia", serif;
+  font-size: 8.5px;
+  text-align: center;
+  letter-spacing: 2px;
+  font-weight: 600;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+  z-index: 2;
+}
+
+@keyframes lbFadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes lbImgIn {
+  from { opacity: 0; transform: scale(0.85); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* ============================================================
+   ★ 手机端：竖版 3:4 ★
+   ============================================================ */
+@media (max-width: 600px) {
+  body { padding: 10px; }
+  .stage { padding: 12px 8px; border-radius: 14px; }
+
+  /* 书本改竖版 */
+  .book {
+    width: 100%;
+    max-width: 100%;
+    height: 0;
+    padding-bottom: 133.333%;  /* 3:4 竖版 */
+  }
+
+  /* 封面 */
+  .cover-content { padding: 32px 22px 24px; }
+  .cover-title-1 { font-size: 22px; letter-spacing: 6px; }
+  .cover-title-2 { font-size: 15px; letter-spacing: 3px; }
+  .cover-subtitle { font-size: 10px; letter-spacing: 2px; }
+  .cover-by { font-size: 8.5px; letter-spacing: 3px; }
+  .ribbon { width: 22px; height: 48px; top: -11px; }
+  .wax-seal { width: 46px; height: 46px; top: 12px; right: 12px; }
+  .wax-seal .seal-text { font-size: 17px; }
+  .wax-seal::before { inset: 5px; }
+
+  /* 内页通用 */
+  .page-inner .inner-content { padding: 18px 18px 12px; }
+  .page-chapter { font-size: 14px; letter-spacing: 4px; }
+  .page-subtitle { font-size: 8px; letter-spacing: 2.5px; margin-bottom: 8px; }
+
+  /* 第一页 · 竖排：文字上、照片下 */
+  .page-1-body {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .page-1-left {
+    flex: 0 0 auto;
+    justify-content: flex-start;
+  }
+
+  .序言正文 {
+    font-size: 11px;
+    line-height: 1.9;
+  }
+
+  .page-1-right {
+    flex: 1 1 0;
+    min-height: 160px;
+    position: relative;
+  }
+
+  .mini-polaroid { width: 68px; padding: 3px 3px 14px 3px; }
+  .mini-polaroid:nth-child(1) { top: 6%; left: 8%; transform: rotate(-8deg); }
+  .mini-polaroid:nth-child(2) { top: 18%; right: 6%; transform: rotate(6deg); z-index: 4; }
+  .mini-polaroid:nth-child(3) { bottom: 8%; left: 32%; transform: rotate(-3deg); z-index: 2; }
+
+  /* 第二页 · 2 列 × 3 行 */
+  .page-2-body {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: repeat(3, 1fr);
+    gap: 6px;
+    flex: 1 1 0;
+    min-height: 0;
+    margin-bottom: 8px;
+    flex-direction: unset;  /* 覆盖 flex column */
+  }
+
+  .stage-row {
+    display: contents;
+  }
+
+  .stage-card {
+    min-width: 0;
+    min-height: 0;
+  }
+
+  .stage-card::after {
+    font-size: 8px;
+    letter-spacing: 1.5px;
+    padding: 6px 3px 3px;
+  }
+
+  /* 按钮 */
+  .page-nav-btn { font-size: 11px; padding: 8px 18px; }
+  .enter-btn { padding: 10px 26px; font-size: 12px; letter-spacing: 3px; }
+  .enter-btn .btn-icon { font-size: 12px; }
+}
+</style>
+</head>
+<body>
+
+<div class="stage" id="stageRoot">
+
+  <div class="petals" id="petals"></div>
+
+  <div class="book">
+    <div class="book-inner">
+
+      <div class="page page-cover active" id="pageCover">
+        <div class="ribbon"></div>
+        <div class="wax-seal">
+          <span class="seal-text">禁</span>
+        </div>
+        <div class="cover-content">
+          <div>
+            <div class="cover-by">— BY 三年的水 —</div>
+            <div class="cover-seal-line"></div>
+          </div>
+
+          <div class="cover-center">
+            <div class="cover-title-1">只准喜欢我！</div>
+            <div class="cover-title-2">妹妹的寸止调教日记</div>
+            <div class="cover-divider">
+              <span class="divider-ornament">❖</span>
+            </div>
+            <div class="cover-subtitle">
+              又名：寸止与宣告<br>
+              妹妹才是哥哥的妻子
+            </div>
+          </div>
+
+          <div class="cover-hint">
+            <span class="hint-dot"></span>
+            <span>轻触 · 翻开第一页</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="page page-inner page-1" id="page1">
+        <div class="page-number">0 1</div>
+        <div class="inner-content">
+          <div class="page-chapter">序 · 缘起</div>
+          <div class="page-subtitle">P R O L O G U E</div>
+
+          <div class="page-1-body">
+            <div class="page-1-left">
+              <p class="序言正文">
+                父母从不回家。<br><br>
+                这栋别墅里，只有我和她——<br>
+                我的妹妹，<strong>星野 アリス</strong>。<br><br>
+                她一直在看着我，一直在等我。<br><br>
+                直到那天，她靠过来，说：<br>
+                <em>「哥哥只能看着我。」</em><br><br>
+                然后，她开始——<br>
+                <strong>寸止。</strong>
+                <span class="signature-line">—— 哥哥 · {{user}}</span>
+              </p>
+            </div>
+            <div class="page-1-right">
+              <div class="mini-polaroid">
+                <img src="https://testingcf.jsdelivr.net/gh/sanshui19516/Plot-Advancement-Illustration-@main/%E5%8F%AF%E7%88%B1%E5%A6%B9%E5%A6%B9%E9%9B%8C%E5%B0%8F%E9%AC%BC/%E9%9B%8C%E5%B0%8F%E9%AC%BC%20(1).jpg" alt="记忆一" loading="lazy" />
+              </div>
+              <div class="mini-polaroid">
+                <img src="https://testingcf.jsdelivr.net/gh/sanshui19516/Plot-Advancement-Illustration-@main/%E5%8F%AF%E7%88%B1%E5%A6%B9%E5%A6%B9%E9%9B%8C%E5%B0%8F%E9%AC%BC/%E9%9B%8C%E5%B0%8F%E9%AC%BC%20(8).jpg" alt="记忆二" loading="lazy" />
+              </div>
+              <div class="mini-polaroid">
+                <img src="https://testingcf.jsdelivr.net/gh/sanshui19516/Plot-Advancement-Illustration-@main/%E5%8F%AF%E7%88%B1%E5%A6%B9%E5%A6%B9%E9%9B%8C%E5%B0%8F%E9%AC%BC/%E9%9B%8C%E5%B0%8F%E9%AC%BC%20(15).jpg" alt="记忆三" loading="lazy" />
+              </div>
+            </div>
+          </div>
+
+          <div class="page-nav">
+            <button class="page-nav-btn" id="btnNext">翻 至 下 一 页</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="page page-inner page-2" id="page2">
+        <div class="page-number">0 2</div>
+        <div class="inner-content">
+          <div class="page-chapter">六章 · 命运</div>
+          <div class="page-subtitle">S I X · S T A G E S</div>
+
+          <div class="page-2-body">
+            <div class="stage-row">
+              <div class="stage-card" data-name="初见丝袜">
+                <img src="https://testingcf.jsdelivr.net/gh/sanshui19516/Plot-Advancement-Illustration-@main/%E5%8F%AF%E7%88%B1%E5%A6%B9%E5%A6%B9%E9%9B%8C%E5%B0%8F%E9%AC%BC/%E5%88%9D%E8%A7%81%E4%B8%9D%E8%A2%9C.jpg" alt="初见丝袜" loading="lazy" />
+              </div>
+              <div class="stage-card" data-name="边界渐融">
+                <img src="https://testingcf.jsdelivr.net/gh/sanshui19516/Plot-Advancement-Illustration-@main/%E5%8F%AF%E7%88%B1%E5%A6%B9%E5%A6%B9%E9%9B%8C%E5%B0%8F%E9%AC%BC/%E8%BE%B9%E7%95%8C%E6%B8%90%E8%9E%8D.jpg" alt="边界渐融" loading="lazy" />
+              </div>
+              <div class="stage-card" data-name="寸止宣言">
+                <img src="https://testingcf.jsdelivr.net/gh/sanshui19516/Plot-Advancement-Illustration-@main/%E5%8F%AF%E7%88%B1%E5%A6%B9%E5%A6%B9%E9%9B%8C%E5%B0%8F%E9%AC%BC/%E5%AF%B8%E6%AD%A2%E5%AE%A3%E8%A8%80.jpg" alt="寸止宣言" loading="lazy" />
+              </div>
+            </div>
+            <div class="stage-row">
+              <div class="stage-card" data-name="独占之实">
+                <img src="https://testingcf.jsdelivr.net/gh/sanshui19516/Plot-Advancement-Illustration-@main/%E5%8F%AF%E7%88%B1%E5%A6%B9%E5%A6%B9%E9%9B%8C%E5%B0%8F%E9%AC%BC/%E7%8B%AC%E5%8D%A0%E4%B9%8B%E5%AE%9E.jpg" alt="独占之实" loading="lazy" />
+              </div>
+              <div class="stage-card" data-name="妻子之名">
+                <img src="https://testingcf.jsdelivr.net/gh/sanshui19516/Plot-Advancement-Illustration-@main/%E5%8F%AF%E7%88%B1%E5%A6%B9%E5%A6%B9%E9%9B%8C%E5%B0%8F%E9%AC%BC/%E5%A6%BB%E5%AD%90%E4%B9%8B%E5%90%8D.jpg" alt="妻子之名" loading="lazy" />
+              </div>
+              <div class="stage-card" data-name="笼中金丝雀">
+                <img src="https://testingcf.jsdelivr.net/gh/sanshui19516/Plot-Advancement-Illustration-@main/%E5%8F%AF%E7%88%B1%E5%A6%B9%E5%A6%B9%E9%9B%8C%E5%B0%8F%E9%AC%BC/%E7%AC%BC%E4%B8%AD%E9%87%91%E4%B8%9D%E9%9B%80.jpg" alt="笼中金丝雀" loading="lazy" />
+              </div>
+            </div>
+          </div>
+
+          <div class="page-nav">
+            <button class="enter-btn" id="btnEnter">
+              <span class="btn-icon">🖋</span>
+              <span>进 入 · 契 约</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<script>
+function initPetals() {
+  const container = document.getElementById('petals');
+  if (!container) return;
+  for (let i = 0; i < 14; i++) {
+    const p = document.createElement('div');
+    p.className = 'petal';
+    p.style.left = (Math.random() * 100) + '%';
+    p.style.top = '-20px';
+    p.style.animationDuration = (8 + Math.random() * 8) + 's';
+    p.style.animationDelay = (Math.random() * 8) + 's';
+    p.style.transform = 'scale(' + (0.6 + Math.random() * 0.7) + ')';
+    container.appendChild(p);
+  }
+}
+
+let currentPage = 0;
+const PAGES = ['pageCover', 'page1', 'page2'];
+
+function goToPage(idx) {
+  if (idx === currentPage || idx < 0 || idx >= PAGES.length) return;
+
+  const oldEl = document.getElementById(PAGES[currentPage]);
+  const newEl = document.getElementById(PAGES[idx]);
+  if (!oldEl || !newEl) return;
+
+  newEl.classList.remove('active', 'flip-out');
+  newEl.classList.add('flip-in');
+  void newEl.offsetWidth;
+
+  oldEl.classList.remove('active', 'flip-in');
+  oldEl.classList.add('flip-out');
+
+  setTimeout(() => {
+    newEl.classList.remove('flip-in');
+    newEl.classList.add('active');
+  }, 30);
+
+  setTimeout(() => {
+    oldEl.classList.remove('flip-out');
+  }, 600);
+
+  currentPage = idx;
+}
+
+function bindEvents() {
+  const cover = document.getElementById('pageCover');
+  if (cover) {
+    cover.addEventListener('click', function() {
+      if (currentPage === 0) goToPage(1);
+    });
+  }
+
+  const btnNext = document.getElementById('btnNext');
+  if (btnNext) {
+    btnNext.addEventListener('click', function(e) {
+      e.stopPropagation();
+      if (currentPage === 1) goToPage(2);
+    });
+  }
+
+  const btnEnter = document.getElementById('btnEnter');
+  if (btnEnter) {
+    btnEnter.addEventListener('click', function(e) {
+      e.stopPropagation();
+      switchOpening(1);
+    });
+  }
+
+  document.querySelectorAll('.mini-polaroid').forEach(el => {
+    el.addEventListener('click', function(e) {
+      e.stopPropagation();
+      const img = this.querySelector('img');
+      if (img) openLightbox(img.src);
+    });
+  });
+}
+
+function openLightbox(src) {
+  const old = document.getElementById('welcome-lightbox');
+  if (old) old.remove();
+
+  if (!document.getElementById('lb-style')) {
+    const style = document.createElement('style');
+    style.id = 'lb-style';
+    style.textContent = `
+      @keyframes lbFadeIn { from { opacity: 0; } to { opacity: 1; } }
+      @keyframes lbImgIn {
+        from { opacity: 0; transform: scale(0.85); }
+        to { opacity: 1; transform: scale(1); }
+      }
+    `;
+    document.head.appendChild(style);
+  }
+
+  const overlay = document.createElement('div');
+  overlay.id = 'welcome-lightbox';
+  overlay.style.cssText = `
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 999999;
+    background: rgba(0,0,0,0.93); backdrop-filter: blur(14px);
+    display: flex; align-items: center; justify-content: center;
+    padding: 20px; cursor: pointer;
+    opacity: 0; animation: lbFadeIn 0.3s ease forwards;
+  `;
+
+  const img = document.createElement('img');
+  img.src = src;
+  img.style.cssText = `
+    max-width: 92vw; max-height: 88vh;
+    object-fit: contain; border-radius: 6px;
+    box-shadow: 0 24px 80px rgba(0,0,0,0.9), 0 0 60px hsla(345,60%,50%,0.35);
+    animation: lbImgIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  `;
+
+  overlay.appendChild(img);
+  document.body.appendChild(overlay);
+
+  overlay.addEventListener('click', function(e) {
+    if (e.target === overlay || e.target === img) overlay.remove();
+  });
+
+  document.addEventListener('keydown', function escHandler(e) {
+    if (e.key === 'Escape') {
+      overlay.remove();
+      document.removeEventListener('keydown', escHandler);
+    }
+  });
+}
+
+async function switchOpening(swipeId) {
+  try {
+    let messages;
+    try {
+      messages = await getChatMessages?.('0', { include_swipe: true });
+    } catch (e) {
+      const context = window.SillyTavern?.getContext?.();
+      messages = context?.chat?.messages;
+    }
+    if (messages && messages.length > 0) {
+      const userMessage = messages[0];
+      if (userMessage && userMessage.swipes && userMessage.swipes.length > swipeId) {
+        const targetSwipe = userMessage.swipes[swipeId];
+        const setChatMessage = window.setChatMessage || window.SillyTavern?.getContext?.()?.setChatMessage;
+        if (typeof setChatMessage === 'function') {
+          await setChatMessage(targetSwipe, 0, { swipe_id: swipeId, refresh: 'display_and_render_current' });
+          return;
+        }
+        if (typeof userMessage.setSwipe === 'function') {
+          userMessage.setSwipe(swipeId);
+          return;
+        }
+      }
+    }
+  } catch (e) {}
+
+  try {
+    if (typeof window.parent.triggerSlash === 'function') { window.parent.triggerSlash('/trigger'); return; }
+    if (typeof window.parent.fillInput === 'function') { window.parent.fillInput('/trigger'); return; }
+    if (typeof window.triggerSlash === 'function') { window.triggerSlash('/trigger'); return; }
+  } catch (e) {}
+}
+
+function syncHeight() {
+  try {
+    const stage = document.getElementById('stageRoot');
+    if (!stage) return;
+    const height = stage.offsetHeight;
+    if (!height || height < 100) return;
+
+    const frame = window.frameElement;
+    if (frame && frame.tagName === 'IFRAME') {
+      frame.style.height = height + 'px';
+      frame.style.minHeight = 'unset';
+      frame.style.maxHeight = 'unset';
+      frame.style.overflow = 'hidden';
+    }
+
+    try {
+      const iframes = window.parent.document.querySelectorAll('iframe');
+      for (let i = 0; i < iframes.length; i++) {
+        const ifr = iframes[i];
+        try {
+          if (ifr.contentWindow === window) {
+            ifr.style.height = height + 'px';
+            ifr.style.minHeight = 'unset';
+            ifr.style.maxHeight = 'unset';
+            ifr.style.overflow = 'hidden';
+            break;
+          }
+        } catch (e) {}
+      }
+    } catch (e) {}
+  } catch (e) {}
+}
+
+function init() {
+  initPetals();
+  bindEvents();
+  syncHeight();
+  setTimeout(syncHeight, 100);
+  setTimeout(syncHeight, 300);
+  setTimeout(syncHeight, 600);
+  setTimeout(syncHeight, 1000);
+  setInterval(syncHeight, 800);
+  window.addEventListener('resize', syncHeight);
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', init);
+} else {
+  init();
+}
+</script>
+
+</body>
+</html>
