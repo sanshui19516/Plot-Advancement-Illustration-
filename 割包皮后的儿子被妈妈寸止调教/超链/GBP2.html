@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>妈妈的寸止之爱 · 作者介绍</title>
+
+<style>
+@import url("https://fontsapi.zeoseven.com/370/main/result.css");
+
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+:root {
+  --paper: #f4ecd8;
+  --paper-2: #ece0c8;
+  --paper-3: #ddd0b4;
+  --paper-edge: #d4c3a0;
+  --ink: #3a2a1a;
+  --ink-2: #6b5540;
+  --ink-3: #9a856d;
+  --accent: #8b3a3a;
+  --accent-2: #c47a6a;
+  --gold: #b8955a;
+  --gold-2: #d4b98a;
+  --shadow: rgba(58, 42, 26, 0.18);
+  --font-main: "KTXP-GlowRound", 'Georgia', 'Songti SC', serif;
+  --font-hand: "KTXP-GlowRound", 'KaiTi', 'STKaiti', serif;
+  --mono: 'DIN', 'Courier New', 'Consolas', monospace;
+}
+
+html, body {
+  background: transparent;
+  margin: 0;
+  padding: 0;
+  min-height: auto;
+}
+
+body {
+  font-family: var(--font-main);
+  font-weight: normal;
+  color: var(--ink);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 16px 10px 28px;
+  line-height: 1.6;
+}
+
+/* ══════════════════════════════════════
+   主容器：手账本
+   ══════════════════════════════════════ */
+.page {
+  width: 100%;
+  max-width: 620px;
+  position: relative;
+  background:
+    radial-gradient(ellipse at 15% 8%, rgba(255,248,225,0.55) 0%, transparent 45%),
+    radial-gradient(ellipse at 85% 92%, rgba(200,170,120,0.18) 0%, transparent 50%),
+    linear-gradient(150deg, var(--paper) 0%, var(--paper-2) 50%, var(--paper-3) 100%);
+  border-radius: 8px;
+  border: 1px solid rgba(180,160,120,0.4);
+  box-shadow:
+    0 2px 0 var(--paper-edge),
+    0 4px 0 rgba(180,160,120,0.28),
+    0 20px 50px rgba(58,42,26,0.22),
+    inset 0 0 100px rgba(200,170,120,0.07);
+  padding: 26px 20px 24px 30px;
+  overflow: hidden;
+}
+
+/* 纸张纤维 */
+.page::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    repeating-linear-gradient(0deg, transparent 0, transparent 2px, rgba(120,90,60,0.014) 2px, rgba(120,90,60,0.014) 3px),
+    repeating-linear-gradient(90deg, transparent 0, transparent 3px, rgba(120,90,60,0.01) 3px, rgba(120,90,60,0.01) 4px);
+  pointer-events: none;
+  z-index: 0;
+}
+/* 左侧装订孔虚线 */
+.page::after {
+  content: '';
+  position: absolute;
+  top: 20px; bottom: 20px; left: 14px;
+  width: 1px;
+  background: repeating-linear-gradient(to bottom, transparent 0, transparent 6px, rgba(139,58,58,0.16) 6px, rgba(139,58,58,0.16) 9px);
+  pointer-events: none;
+}
+.page > * { position: relative; z-index: 1; }
+
+/* ══════════════════════════════════════
+   封面标题
+   ══════════════════════════════════════ */
+.cover {
+  text-align: center;
+  padding: 8px 0 22px;
+  position: relative;
+}
+.cover::after {
+  content: '';
+  display: block;
+  width: 70%;
+  height: 1px;
+  margin: 18px auto 0;
+  background: linear-gradient(90deg, transparent, rgba(139,58,58,0.35), transparent);
+}
+
+.cover-ribbon {
+  display: inline-block;
+  font-family: var(--font-hand);
+  font-size: 11px;
+  letter-spacing: 4px;
+  color: var(--accent);
+  padding: 2px 14px;
+  border-top: 1px solid var(--accent);
+  border-bottom: 1px solid var(--accent);
+  margin-bottom: 12px;
+  opacity: 0.75;
+}
+
+.cover-title {
+  font-family: var(--font-hand);
+  font-size: clamp(24px, 6vw, 34px);
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: 5px;
+  line-height: 1.25;
+  text-shadow: 0 1px 0 rgba(255,255,255,0.5), 0 2px 8px rgba(58,42,26,0.1);
+}
+
+.cover-sub {
+  font-family: var(--font-hand);
+  font-size: clamp(11px, 2.8vw, 13px);
+  color: var(--ink-2);
+  letter-spacing: 3px;
+  margin-top: 8px;
+  font-style: italic;
+}
+
+.cover-author {
+  margin-top: 14px;
+  font-family: var(--mono);
+  font-size: clamp(10px, 2.4vw, 11px);
+  color: var(--ink-3);
+  letter-spacing: 2px;
+}
+.cover-author span {
+  color: var(--accent);
+  font-weight: 700;
+  font-size: 1.1em;
+}
+
+/* ══════════════════════════════════════
+   主视觉：照片拼贴墙
+   ══════════════════════════════════════ */
+.collage {
+  position: relative;
+  width: 100%;
+  height: 380px;
+  margin: 6px 0 26px;
+}
+
+/* 通用照片框 */
+.photo {
+  position: absolute;
+  background: #fdfaf2;
+  padding: 7px 7px 26px;
+  border-radius: 2px;
+  box-shadow:
+    0 6px 20px rgba(58,42,26,0.25),
+    0 1px 3px rgba(58,42,26,0.15);
+  transition: transform 0.4s ease, box-shadow 0.4s ease, z-index 0s;
+  cursor: default;
+}
+.photo:hover {
+  z-index: 50 !important;
+  transform: scale(1.04) rotate(0deg) !important;
+  box-shadow: 0 14px 36px rgba(58,42,26,0.35);
+}
+.photo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 1px;
+}
+
+/* 胶带 */
+.photo::before {
+  content: '';
+  position: absolute;
+  top: -9px; left: 50%;
+  transform: translateX(-50%) rotate(-2deg);
+  width: 52px; height: 16px;
+  background: rgba(190,160,110,0.55);
+  border-left: 1px dashed rgba(255,255,255,0.35);
+  border-right: 1px dashed rgba(255,255,255,0.35);
+  box-shadow: 0 1px 4px rgba(58,42,26,0.15);
+  z-index: 2;
+}
+/* 手写注释 */
+.photo .caption {
+  position: absolute;
+  bottom: 5px; left: 0; right: 0;
+  text-align: center;
+  font-family: var(--font-hand);
+  font-size: 10px;
+  color: var(--ink-2);
+  letter-spacing: 1px;
+  opacity: 0.85;
+}
+
+/* 大主图：母子阶段 */
+.photo-main {
+  width: 48%;
+  aspect-ratio: 3/4;
+  left: 6%;
+  top: 42px;
+  transform: rotate(-4deg);
+  z-index: 10;
+}
+
+/* 右上：厨房 */
+.photo-kitchen {
+  width: 34%;
+  aspect-ratio: 4/5;
+  right: 3%;
+  top: 0;
+  transform: rotate(5deg);
+  z-index: 8;
+}
+
+/* 右上偏下：儿子的房间 */
+.photo-room {
+  width: 30%;
+  aspect-ratio: 4/5;
+  right: 12%;
+  top: 128px;
+  transform: rotate(-3deg);
+  z-index: 6;
+}
+
+/* 右下：海边 */
+.photo-beach {
+  width: 40%;
+  aspect-ratio: 16/10;
+  right: 2%;
+  bottom: 4px;
+  transform: rotate(4deg);
+  z-index: 9;
+}
+
+/* 左下：卫生间/界模糊 */
+.photo-bath {
+  width: 30%;
+  aspect-ratio: 4/5;
+  left: 0;
+  bottom: 10px;
+  transform: rotate(-6deg);
+  z-index: 7;
+}
+
+/* 小圆头像：心软 */
+.avatar-circle {
+  position: absolute;
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 3px solid #fdfaf2;
+  box-shadow: 0 6px 18px rgba(58,42,26,0.3);
+  right: 22%;
+  bottom: 6px;
+  transform: rotate(-8deg);
+  z-index: 12;
+  background: var(--paper-2);
+}
+.avatar-circle img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* ══════════════════════════════════════
+   内容区块通用
+   ══════════════════════════════════════ */
+.block {
+  margin-bottom: 22px;
+  position: relative;
+}
+
+.block-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+  padding-bottom: 6px;
+  border-bottom: 1px dashed rgba(139,58,58,0.25);
+}
+
+.block-title::before {
+  content: '';
+  width: 3px;
+  height: 18px;
+  background: linear-gradient(to bottom, var(--accent), var(--accent-2));
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.block-title-text {
+  font-family: var(--font-hand);
+  font-size: clamp(15px, 3.4vw, 17px);
+  color: var(--ink);
+  letter-spacing: 3px;
+  font-weight: 700;
+}
+
+.block-title-en {
+  margin-left: auto;
+  font-family: var(--mono);
+  font-size: 9px;
+  color: var(--ink-3);
+  letter-spacing: 2px;
+  opacity: 0.7;
+}
+
+/* 列表项 */
+.list-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 6px 0;
+  font-family: var(--font-hand);
+  font-size: clamp(12px, 2.9vw, 14px);
+  color: var(--ink-2);
+  line-height: 1.65;
+  letter-spacing: 0.5px;
+}
+.list-item::before {
+  content: '◆';
+  flex-shrink: 0;
+  color: var(--accent);
+  font-size: 8px;
+  margin-top: 7px;
+  opacity: 0.7;
+}
+.list-item.no-bullet::before { display: none; }
+
+.list-item strong {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+/* 关于这张卡 */
+.about-text {
+  font-family: var(--font-hand);
+  font-size: clamp(13px, 3vw, 15px);
+  color: var(--ink-2);
+  line-height: 2;
+  letter-spacing: 1px;
+  padding: 14px 16px;
+  background: rgba(255,248,225,0.45);
+  border-left: 3px solid var(--accent);
+  border-radius: 2px;
+  position: relative;
+}
+.about-text::before {
+  content: '❝';
+  position: absolute;
+  top: 4px; left: 6px;
+  font-family: Georgia, serif;
+  font-size: 22px;
+  color: var(--accent);
+  opacity: 0.25;
+}
+
+/* ══════════════════════════════════════
+   作者信息卡
+   ══════════════════════════════════════ */
+.author-card {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  padding: 16px;
+  background: rgba(255,248,225,0.4);
+  border: 1px dashed rgba(139,58,58,0.25);
+  border-radius: 4px;
+  margin-bottom: 14px;
+}
+
+.author-avatar {
+  flex-shrink: 0;
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid rgba(212,185,138,0.8);
+  box-shadow: 0 4px 14px rgba(58,42,26,0.25);
+  background: var(--paper-2);
+}
+.author-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.author-info { flex: 1; min-width: 0; }
+.author-name {
+  font-family: var(--font-hand);
+  font-size: clamp(15px, 3.4vw, 17px);
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: 2px;
+  margin-bottom: 2px;
+}
+.author-badge {
+  font-family: var(--font-hand);
+  font-size: 11px;
+  color: var(--accent);
+  letter-spacing: 2px;
+  opacity: 0.85;
+}
+
+/* 作者链接 */
+.author-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+.author-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 12px;
+  font-family: var(--font-hand);
+  font-size: 11px;
+  letter-spacing: 1px;
+  color: var(--accent);
+  text-decoration: none;
+  background: rgba(139,58,58,0.06);
+  border: 1px solid rgba(139,58,58,0.22);
+  border-radius: 2px;
+  transition: all 0.25s ease;
+}
+.author-link:hover {
+  background: var(--accent);
+  color: var(--paper);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(139,58,58,0.25);
+}
+.author-link::before {
+  content: '↗';
+  font-size: 10px;
+  opacity: 0.7;
+}
+
+/* ══════════════════════════════════════
+   授权说明 — 印章式
+   ══════════════════════════════════════ */
+.license-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.license-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: rgba(255,248,225,0.35);
+  border: 1px solid rgba(139,58,58,0.15);
+  border-radius: 2px;
+  font-family: var(--font-hand);
+  font-size: clamp(11px, 2.7vw, 13px);
+  letter-spacing: 0.5px;
+}
+.license-item.allow { color: hsl(140, 30%, 32%); }
+.license-item.deny { color: var(--accent); }
+.license-mark {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+}
+.license-item.allow .license-mark {
+  background: rgba(140, 180, 140, 0.25);
+  color: hsl(140, 40%, 30%);
+}
+.license-item.deny .license-mark {
+  background: rgba(139, 58, 58, 0.15);
+  color: var(--accent);
+}
+
+/* ══════════════════════════════════════
+   本卡包含 — 便签卡片式
+   ══════════════════════════════════════ */
+.contains-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.contains-item {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 9px 14px;
+  background: linear-gradient(135deg, rgba(255,248,225,0.7), rgba(250,240,200,0.5));
+  border-left: 3px solid var(--gold);
+  border-radius: 2px;
+  font-family: var(--font-hand);
+  font-size: clamp(12px, 2.9vw, 14px);
+  color: var(--ink-2);
+  letter-spacing: 0.5px;
+  position: relative;
+}
+.contains-item .num {
+  flex-shrink: 0;
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--gold);
+  font-weight: 700;
+  min-width: 20px;
+  letter-spacing: 1px;
+  padding-top: 2px;
+}
+
+/* ══════════════════════════════════════
+   使用说明
+   ══════════════════════════════════════ */
+.usage-list {
+  counter-reset: usage;
+}
+.usage-item {
+  counter-increment: usage;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 8px 0;
+  font-family: var(--font-hand);
+  font-size: clamp(12px, 2.9vw, 14px);
+  color: var(--ink-2);
+  line-height: 1.65;
+}
+.usage-item::before {
+  content: counter(usage, decimal-leading-zero);
+  flex-shrink: 0;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--accent);
+  font-weight: 700;
+  min-width: 24px;
+  padding-top: 2px;
+  opacity: 0.7;
+}
+
+/* 提示横幅（针对"未渲染代码块"那句） */
+.usage-tip {
+  margin-top: 12px;
+  padding: 10px 14px;
+  background: rgba(139,58,58,0.07);
+  border: 1px dashed rgba(139,58,58,0.35);
+  border-radius: 3px;
+  font-family: var(--font-hand);
+  font-size: clamp(11px, 2.7vw, 13px);
+  color: var(--ink);
+  line-height: 1.7;
+  letter-spacing: 0.5px;
+  position: relative;
+  padding-left: 36px;
+}
+.usage-tip::before {
+  content: '⚠';
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 15px;
+  color: var(--accent);
+  opacity: 0.8;
+}
+
+/* ══════════════════════════════════════
+   特色系统
+   ══════════════════════════════════════ */
+.features-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.feature-tag {
+  display: inline-block;
+  padding: 6px 14px;
+  background: rgba(139,58,58,0.06);
+  border: 1px solid rgba(139,58,58,0.22);
+  border-radius: 14px;
+  font-family: var(--font-hand);
+  font-size: clamp(11px, 2.7vw, 12px);
+  color: var(--accent);
+  letter-spacing: 1px;
+  transition: all 0.25s ease;
+}
+.feature-tag:hover {
+  background: rgba(139,58,58,0.14);
+  transform: translateY(-1px);
+}
+
+/* ══════════════════════════════════════
+   公益声明
+   ══════════════════════════════════════ */
+.public-welfare {
+  padding: 14px 16px;
+  background: rgba(139,58,58,0.05);
+  border: 1px solid rgba(139,58,58,0.2);
+  border-radius: 3px;
+  font-family: var(--font-hand);
+  font-size: clamp(11px, 2.7vw, 13px);
+  color: var(--ink-2);
+  line-height: 1.85;
+  letter-spacing: 0.5px;
+}
+.public-welfare .pw-title {
+  font-weight: 700;
+  color: var(--accent);
+  font-size: 1.05em;
+  letter-spacing: 2px;
+  display: block;
+  margin-bottom: 6px;
+}
+.public-welfare p { margin-bottom: 5px; }
+.public-welfare p:last-child { margin-bottom: 0; }
+
+/* ══════════════════════════════════════
+   开始按钮
+   ══════════════════════════════════════ */
+.start-wrapper {
+  display: flex;
+  justify-content: center;
+  margin: 28px 0 16px;
+  position: relative;
+}
+
+.start-btn {
+  position: relative;
+  padding: 14px 46px;
+  background: linear-gradient(135deg, var(--accent) 0%, #6e2a2a 100%);
+  color: var(--paper);
+  border: none;
+  border-radius: 3px;
+  font-family: var(--font-hand);
+  font-size: clamp(15px, 3.4vw, 17px);
+  font-weight: 700;
+  letter-spacing: 5px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow:
+    0 4px 0 #5a2222,
+    0 8px 20px rgba(58,42,26,0.35);
+  overflow: hidden;
+}
+.start-btn::before {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 100%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.18), transparent);
+  transition: left 0.7s ease;
+}
+.start-btn:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 6px 0 #5a2222,
+    0 12px 28px rgba(58,42,26,0.45);
+}
+.start-btn:hover::before { left: 100%; }
+.start-btn:active {
+  transform: translateY(2px);
+  box-shadow:
+    0 2px 0 #5a2222,
+    0 4px 12px rgba(58,42,26,0.3);
+}
+.start-btn .start-icon {
+  display: inline-block;
+  margin-left: 8px;
+  font-size: 0.85em;
+  opacity: 0.85;
+}
+
+/* ══════════════════════════════════════
+   页脚
+   ══════════════════════════════════════ */
+.footer {
+  text-align: center;
+  padding-top: 20px;
+  margin-top: 10px;
+  border-top: 1px dashed rgba(139,58,58,0.2);
+  font-family: var(--font-hand);
+  font-size: clamp(10px, 2.4vw, 12px);
+  color: var(--ink-3);
+  letter-spacing: 4px;
+  font-style: italic;
+}
+.footer::before { content: '◇ '; color: var(--accent); opacity: 0.6; }
+.footer::after { content: ' ◇'; color: var(--accent); opacity: 0.6; }
+
+/* ══════════════════════════════════════
+   响应式
+   ══════════════════════════════════════ */
+@media (max-width: 520px) {
+  body { padding: 10px 6px 22px; }
+  .page { padding: 22px 14px 20px 22px; border-radius: 6px; }
+  .page::after { left: 10px; }
+
+  .collage { height: 300px; margin: 4px 0 20px; }
+  .photo-main { width: 46%; left: 2%; top: 34px; }
+  .photo-kitchen { width: 34%; right: 2%; top: 0; }
+  .photo-room { width: 28%; right: 10%; top: 100px; }
+  .photo-beach { width: 42%; right: 0; bottom: 4px; }
+  .photo-bath { width: 28%; left: 0; bottom: 6px; }
+  .avatar-circle { width: 54px; height: 54px; right: 24%; bottom: 2px; }
+
+  .block { margin-bottom: 18px; }
+  .block-title { margin-bottom: 10px; }
+
+  .author-card { padding: 12px; gap: 12px; }
+  .author-avatar { width: 58px; height: 58px; }
+  .license-grid { grid-template-columns: 1fr; gap: 6px; }
+  .author-links { gap: 6px; }
+  .author-link { font-size: 10px; padding: 4px 10px; }
+
+  .start-btn { padding: 12px 36px; letter-spacing: 4px; }
+}
+
+@media (min-width: 720px) {
+  .page { max-width: 680px; padding: 32px 28px 28px 38px; }
+  .collage { height: 420px; }
+  .photo-main { width: 46%; left: 8%; top: 46px; }
+  .photo-beach { width: 40%; right: 4%; bottom: 8px; }
+  .avatar-circle { width: 78px; height: 78px; }
+}
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- ═══════ 封面 ═══════ -->
+  <div class="cover">
+    <span class="cover-ribbon">AUTHOR · INTRO</span>
+    <h1 class="cover-title">妈妈的寸止之爱</h1>
+    <div class="cover-sub">✦ 割包皮后的儿子，被妈妈察觉，也帮了他 ✦</div>
+    <div class="cover-author">作者：<span>三年的水</span></div>
+  </div>
+
+  <!-- ═══════ 照片拼贴墙 ═══════ -->
+  <div class="collage">
+    <div class="photo photo-main">
+      <img src="https://cdn.jsdelivr.net/gh/sanshui19516/Plot-Advancement-Illustration-@main/%E5%89%B2%E5%8C%85%E7%9A%AE%E5%90%8E%E7%9A%84%E5%84%BF%E5%AD%90%E8%A2%AB%E5%A6%88%E5%A6%88%E5%AF%B8%E6%AD%A2%E8%B0%83%E6%95%99/%E9%85%8D%E5%9B%BE/%E5%85%B3%E7%B3%BB%E9%98%B6%E6%AE%B5-%E6%AF%8D%E5%AD%90.jpg" alt="母子" loading="lazy" />
+      <div class="caption">最初的她</div>
+    </div>
+
+    <div class="photo photo-kitchen">
+      <img src="https://cdn.jsdelivr.net/gh/sanshui19516/Plot-Advancement-Illustration-@main/%E5%89%B2%E5%8C%85%E7%9A%AE%E5%90%8E%E7%9A%84%E5%84%BF%E5%AD%90%E8%A2%AB%E5%A6%88%E5%A6%88%E5%AF%B8%E6%AD%A2%E8%B0%83%E6%95%99/%E9%85%8D%E5%9B%BE/%E5%9C%BA%E6%99%AF-%E5%8E%A8%E6%88%BF.jpg" alt="厨房" loading="lazy" />
+      <div class="caption">厨房的傍晚</div>
+    </div>
+
+    <div class="photo photo-room">
+      <img src="https://cdn.jsdelivr.net/gh/sanshui19516/Plot-Advancement-Illustration-@main/%E5%89%B2%E5%8C%85%E7%9A%AE%E5%90%8E%E7%9A%84%E5%84%BF%E5%AD%90%E8%A2%AB%E5%A6%88%E5%A6%88%E5%AF%B8%E6%AD%A2%E8%B0%83%E6%95%99/%E9%85%8D%E5%9B%BE/%E5%9C%BA%E6%99%AF-%E5%84%BF%E5%AD%90%E7%9A%84%E6%88%BF%E9%97%B4.jpg" alt="儿子房间" loading="lazy" />
+      <div class="caption">关上的门</div>
+    </div>
+
+    <div class="photo photo-bath">
+      <img src="https://cdn.jsdelivr.net/gh/sanshui19516/Plot-Advancement-Illustration-@main/%E5%89%B2%E5%8C%85%E7%9A%AE%E5%90%8E%E7%9A%84%E5%84%BF%E5%AD%90%E8%A2%AB%E5%A6%88%E5%A6%88%E5%AF%B8%E6%AD%A2%E8%B0%83%E6%95%99/%E9%85%8D%E5%9B%BE/%E5%9C%BA%E6%99%AF-%E5%8D%AB%E7%94%9F%E9%97%B4.jpg" alt="卫生间" loading="lazy" />
+      <div class="caption">一个人呆着</div>
+    </div>
+
+    <div class="photo photo-beach">
+      <img src="https://cdn.jsdelivr.net/gh/sanshui19516/Plot-Advancement-Illustration-@main/%E5%89%B2%E5%8C%85%E7%9A%AE%E5%90%8E%E7%9A%84%E5%84%BF%E5%AD%90%E8%A2%AB%E5%A6%88%E5%A6%88%E5%AF%B8%E6%AD%A2%E8%B0%83%E6%95%99/%E9%85%8D%E5%9B%BE/%E5%9C%BA%E6%99%AF-%E6%B5%B7%E8%BE%B9.jpg" alt="海边" loading="lazy" />
+      <div class="caption">结局 · 那片海</div>
+    </div>
+
+    <div class="avatar-circle">
+      <img src="https://cdn.jsdelivr.net/gh/sanshui19516/Plot-Advancement-Illustration-@main/%E5%89%B2%E5%8C%85%E7%9A%AE%E5%90%8E%E7%9A%84%E5%84%BF%E5%AD%90%E8%A2%AB%E5%A6%88%E5%A6%88%E5%AF%B8%E6%AD%A2%E8%B0%83%E6%95%99/%E9%85%8D%E5%9B%BE/%E6%83%85%E7%BB%AA-%E5%BF%83%E8%BD%AF.jpg" alt="心软" loading="lazy" />
+    </div>
+  </div>
+
+  <!-- ═══════ 关于这张卡 ═══════ -->
+  <div class="block">
+    <div class="block-title">
+      <span class="block-title-text">关于这张卡</span>
+      <span class="block-title-en">ABOUT</span>
+    </div>
+    <div class="about-text">
+      一个单亲母亲，一个割了包皮之后变得敏感又自卑的儿子。<br>
+      本来只是一句「要不要妈妈帮帮你」。<br>
+      后来这句「帮你」，被拉得越来越长。<br>
+      从旁观，到手，到胸口，到更远的地方。<br>
+      她说这是治疗。她一遍一遍地告诉自己。<br>
+      但她比谁都清楚——<br>
+      她只是在找一个不那么难看的名字，来叫自己已经做到的事。
+    </div>
+  </div>
+
+  <!-- ═══════ 作者信息 ═══════ -->
+  <div class="block">
+    <div class="block-title">
+      <span class="block-title-text">作者</span>
+      <span class="block-title-en">AUTHOR</span>
+    </div>
+    <div class="author-card">
+      <div class="author-avatar">
+        <img src="https://cdn.jsdelivr.net/gh/sanshui19516/CG@main/%E5%A4%B4%E5%83%8F.png" alt="三年的水" />
+      </div>
+      <div class="author-info">
+        <div class="author-name">三年的水</div>
+        <div class="author-badge">✦ 妈妈的寸止之爱 ✦</div>
+        <div class="author-links">
+          <a class="author-link" href="https://discord.com/channels/1134557553011998840/1516980193195987075/1516980193195987075" target="_blank" rel="noopener noreferrer">原帖链接</a>
+          <a class="author-link" href="https://discord.com/channels/1134557553011998840/1516980193195987075/1516980193195987075" target="_blank" rel="noopener noreferrer">作品集锦</a>
+          <a class="author-link" href="https://discord.com/channels/1134557553011998840/1516980193195987075/1516980470871621794" target="_blank" rel="noopener noreferrer">关注作者</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════ 发布信息 ═══════ -->
+  <div class="block">
+    <div class="block-title">
+      <span class="block-title-text">发布信息</span>
+      <span class="block-title-en">RELEASE</span>
+    </div>
+    <div class="list-item">仅发布于 <strong>Discord 类脑</strong></div>
+    <div class="list-item">作者：<strong>三年的水</strong></div>
+  </div>
+
+  <!-- ═══════ 授权说明 ═══════ -->
+  <div class="block">
+    <div class="block-title">
+      <span class="block-title-text">授权说明</span>
+      <span class="block-title-en">LICENSE</span>
+    </div>
+    <div class="license-grid">
+      <div class="license-item allow"><span class="license-mark">✓</span>允许二改（需授权）</div>
+      <div class="license-item allow"><span class="license-mark">✓</span>二改后需标注出处</div>
+      <div class="license-item deny"><span class="license-mark">✕</span>禁止商用</div>
+      <div class="license-item deny"><span class="license-mark">✕</span>禁止墙内二传</div>
+    </div>
+  </div>
+
+  <!-- ═══════ 本卡包含 ═══════ -->
+  <div class="block">
+    <div class="block-title">
+      <span class="block-title-text">本卡包含</span>
+      <span class="block-title-en">CONTENTS</span>
+    </div>
+    <div class="contains-list">
+      <div class="contains-item"><span class="num">01</span>完整 MVU 变量系统（好感度 / 羞耻值 / 欲望值 / 自我说服度 / 疲劳值）</div>
+      <div class="contains-item"><span class="num">02</span>24 个主线事件 + 13 个日常事件</div>
+      <div class="contains-item"><span class="num">03</span>六阶段训练线：旁观 → 手交 → 乳交 → 足交口交 → 高强度寸止 → 性交突破</div>
+      <div class="contains-item"><span class="num">04</span>关系阶段系统：母子 → 界限模糊 → 越界确认 → 关系确认 → 伴侣</div>
+      <div class="contains-item"><span class="num">05</span>真实生理周期与怀孕线（28 天周期 / 安全期 / 排卵期判定）</div>
+      <div class="contains-item"><span class="num">06</span>「妈妈的寸止之爱」手账状态栏 + 事件卷宗翻页</div>
+    </div>
+  </div>
+
+  <!-- ═══════ 使用说明 ═══════ -->
+  <div class="block">
+    <div class="block-title">
+      <span class="block-title-text">使用说明</span>
+      <span class="block-title-en">HOW TO USE</span>
+    </div>
+    <div class="usage-list">
+      <div class="usage-item">导入角色卡到 SillyTavern。</div>
+      <div class="usage-item">开启 MVU 变量系统。</div>
+      <div class="usage-item">开启提示词模板。</div>
+      <div class="usage-item">确认「状态栏」「选项」「作者介绍」三条局部正则已启用。</div>
+      <div class="usage-item">开始对话，享受故事。</div>
+    </div>
+    <div class="usage-tip">
+      如果状态栏尾部出现未渲染的代码块，请查看原帖帖内标注的问题答疑。
+    </div>
+  </div>
+
+  <!-- ═══════ 特色系统 ═══════ -->
+  <div class="block">
+    <div class="block-title">
+      <span class="block-title-text">特色系统</span>
+      <span class="block-title-en">FEATURES</span>
+    </div>
+    <div class="features-list">
+      <span class="feature-tag">六阶段训练线</span>
+      <span class="feature-tag">关系阶段双轴</span>
+      <span class="feature-tag">自我说服度波动</span>
+      <span class="feature-tag">乳汁触发条件</span>
+      <span class="feature-tag">真实生理周期</span>
+      <span class="feature-tag">怀孕判定系统</span>
+      <span class="feature-tag">疲劳与微动作</span>
+      <span class="feature-tag">服装季节联动</span>
+      <span class="feature-tag">事件卷宗翻页</span>
+      <span class="feature-tag">手账状态栏</span>
+    </div>
+  </div>
+
+  <!-- ═══════ 公益声明 ═══════ -->
+  <div class="block">
+    <div class="public-welfare">
+      <span class="pw-title">⚠ 公益声明 · 禁止商用</span>
+      <p>本角色卡为作者「三年的水」免费分享的公益作品，仅供个人娱乐与创作交流使用。</p>
+      <p>严禁任何形式的商业用途，包括转卖、收费下载、打包售卖或用于盈利性直播/视频。</p>
+      <p>如通过付费渠道获得，请立即退款并举报贩卖者，维护创作者与您自身的权益。</p>
+      <p>感谢您的支持与理解。—— 作者：三年的水</p>
+    </div>
+  </div>
+
+  <!-- ═══════ 开始按钮 ═══════ -->
+  <div class="start-wrapper">
+    <button class="start-btn" onclick="switchOpening(2)">
+      开始故事
+      <span class="start-icon">✦</span>
+    </button>
+  </div>
+
+  <!-- ═══════ 页脚 ═══════ -->
+  <div class="footer">请多多评论 · by 三年的水</div>
+
+</div>
+
+<script>
+(function(){
+'use strict';
+
+/* 跳转到指定开场白索引 */
+async function switchOpening(swipeId) {
+  try {
+    var messages;
+    try {
+      messages = await getChatMessages?.('0', { include_swipe: true });
+    } catch (e) {
+      var context = window.SillyTavern?.getContext?.();
+      messages = context?.chat?.messages;
+    }
+    if (messages && messages.length > 0) {
+      var userMessage = messages[0];
+      if (userMessage && userMessage.swipes && userMessage.swipes.length > swipeId) {
+        var targetSwipe = userMessage.swipes[swipeId];
+        var setChatMessage = window.setChatMessage || window.SillyTavern?.getContext?.()?.setChatMessage;
+        if (typeof setChatMessage === 'function') {
+          await setChatMessage(targetSwipe, 0, { swipe_id: swipeId, refresh: 'display_and_render_current' });
+          return;
+        }
+        if (typeof userMessage.setSwipe === 'function') {
+          userMessage.setSwipe(swipeId);
+          return;
+        }
+      }
+    }
+  } catch (e) {}
+
+  try {
+    if (typeof window.parent.triggerSlash === 'function') {
+      window.parent.triggerSlash('/trigger');
+      return;
+    }
+    if (typeof window.fillInput === 'function') {
+      window.fillInput('/trigger');
+      return;
+    }
+    if (typeof window.triggerSlash === 'function') {
+      window.triggerSlash('/trigger');
+      return;
+    }
+  } catch (e) {}
+}
+
+window.switchOpening = switchOpening;
+
+/* 高度同步（外链模式下防止 iframe 塌陷） */
+function syncHeight() {
+  try {
+    var page = document.querySelector('.page');
+    if (!page) return;
+    var height = page.offsetHeight + 40;
+    if (!height || height < 100) return;
+
+    var frame = window.frameElement;
+    if (frame && frame.tagName === 'IFRAME') {
+      frame.style.height = height + 'px';
+      frame.style.minHeight = 'unset';
+      frame.style.maxHeight = 'unset';
+      frame.style.overflow = 'hidden';
+    }
+
+    try {
+      var iframes = window.parent.document.querySelectorAll('iframe');
+      for (var i = 0; i < iframes.length; i++) {
+        try {
+          if (iframes[i].contentWindow === window) {
+            iframes[i].style.height = height + 'px';
+            iframes[i].style.minHeight = 'unset';
+            iframes[i].style.maxHeight = 'unset';
+            iframes[i].style.overflow = 'hidden';
+            break;
+          }
+        } catch (e) {}
+      }
+    } catch (e) {}
+  } catch (e) {}
+}
+
+syncHeight();
+setTimeout(syncHeight, 100);
+setTimeout(syncHeight, 300);
+setTimeout(syncHeight, 600);
+setTimeout(syncHeight, 1000);
+setInterval(syncHeight, 800);
+window.addEventListener('resize', syncHeight);
+
+})();
+</script>
+
+</body>
+</html>
