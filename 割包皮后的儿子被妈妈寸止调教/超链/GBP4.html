@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>选项栏</title>
+<style>
+@import url("https://fontsapi.zeoseven.com/370/main/result.css");
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --paper: #f4ecd8;
+  --paper-2: #ece0c8;
+  --paper-3: #ddd0b4;
+  --ink: #3a2a1a;
+  --ink-2: #6b5540;
+  --ink-3: #9a856d;
+  --accent: #8b3a3a;
+  --accent-2: #c47a6a;
+  --gold: #b8955a;
+  --shadow: rgba(58, 42, 26, 0.18);
+  --font-main: "KTXP-GlowRound", 'Georgia', 'Songti SC', serif;
+}
+
+html, body {
+  background: transparent;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-main);
+  display: flex;
+  justify-content: center;
+  padding: 10px;
+}
+
+.options-wrap {
+  width: 100%;
+  max-width: 560px;
+  background: 
+    radial-gradient(ellipse at 20% 10%, rgba(255,248,225,0.5) 0%, transparent 50%),
+    linear-gradient(135deg, var(--paper) 0%, var(--paper-2) 55%, var(--paper-3) 100%);
+  border-radius: 6px;
+  border: 1px solid rgba(180,160,120,0.35);
+  box-shadow: 0 4px 20px var(--shadow);
+  padding: 16px 18px 18px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* 纸张纹理 */
+.options-wrap::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    repeating-linear-gradient(0deg, transparent 0, transparent 2px, rgba(120,90,60,0.015) 2px, rgba(120,90,60,0.015) 3px);
+  pointer-events: none;
+}
+
+.options-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 10px;
+  margin-bottom: 14px;
+  border-bottom: 1px dashed rgba(139,58,58,0.25);
+  position: relative;
+}
+
+.options-title {
+  font-family: var(--font-main);
+  font-size: 15px;
+  color: var(--ink);
+  letter-spacing: 3px;
+  font-weight: 600;
+}
+
+.options-title::before {
+  content: '◆';
+  color: var(--accent);
+  margin-right: 8px;
+  font-size: 10px;
+}
+
+.options-hint {
+  font-size: 11px;
+  color: var(--ink-3);
+  letter-spacing: 1px;
+  font-style: italic;
+}
+
+.options-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  position: relative;
+}
+
+.option-item {
+  position: relative;
+  background: linear-gradient(135deg, #fff8dc 0%, #faf0c8 100%);
+  border-radius: 2px;
+  padding: 14px 16px 14px 58px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 
+    2px 3px 10px rgba(58,42,26,0.12),
+    0 0 0 1px rgba(139,58,58,0.06);
+  transform: rotate(-0.3deg);
+}
+
+.option-item:nth-child(2) { transform: rotate(0.4deg); }
+.option-item:nth-child(3) { transform: rotate(-0.2deg); }
+
+/* 胶带 */
+.option-item::before {
+  content: '';
+  position: absolute;
+  top: -6px;
+  left: 20px;
+  width: 36px;
+  height: 12px;
+  background: rgba(190,160,110,0.6);
+  transform: rotate(-4deg);
+  box-shadow: 0 1px 3px rgba(58,42,26,0.15);
+}
+
+.option-item:nth-child(2)::before {
+  left: auto;
+  right: 24px;
+  transform: rotate(5deg);
+}
+
+.option-item:nth-child(3)::before {
+  left: 28px;
+  transform: rotate(-2deg);
+}
+
+/* 编号印章 */
+.option-num {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 2px solid var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-main);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--accent);
+  background: rgba(139,58,58,0.04);
+  transition: all 0.3s ease;
+}
+
+.option-text {
+  font-family: var(--font-main);
+  font-size: 15px;
+  color: var(--ink);
+  line-height: 1.5;
+  letter-spacing: 0.5px;
+  word-wrap: break-word;
+  font-weight: 500;
+}
+
+.option-arrow {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--ink-3);
+  font-size: 16px;
+  transition: all 0.3s ease;
+  opacity: 0.6;
+}
+
+/* 悬停 */
+.option-item:hover {
+  transform: translateY(-3px) rotate(0);
+  box-shadow: 
+    4px 8px 20px rgba(58,42,26,0.2),
+    0 0 0 1px rgba(139,58,58,0.15);
+}
+
+.option-item:hover .option-num {
+  background: var(--accent);
+  color: var(--paper);
+  transform: translateY(-50%) scale(1.08);
+}
+
+.option-item:hover .option-arrow {
+  color: var(--accent);
+  transform: translateY(-50%) translateX(4px);
+  opacity: 1;
+}
+
+.option-item:active {
+  transform: translateY(-1px) scale(0.99);
+  transition-duration: 0.08s;
+}
+
+.option-item.disabled {
+  opacity: 0.4;
+  pointer-events: none;
+  transform: none !important;
+}
+
+/* 空状态 */
+.empty-state {
+  text-align: center;
+  padding: 24px 12px;
+  color: var(--ink-3);
+  font-size: 13px;
+  letter-spacing: 2px;
+  font-style: italic;
+}
+
+/* 响应式 */
+@media (max-width: 520px) {
+  .options-wrap { padding: 12px 14px 14px; }
+  .options-title { font-size: 14px; letter-spacing: 2px; }
+  .option-item { padding: 12px 14px 12px 52px; }
+  .option-num { width: 30px; height: 30px; font-size: 13px; }
+  .option-text { font-size: 14px; }
+}
+</style>
+</head>
+<body>
+
+<div class="options-wrap" id="optionsWrap">
+  <div class="options-header">
+    <span class="options-title">选择你的行动</span>
+    <span class="options-hint">点击即发送</span>
+  </div>
+  <div class="options-list" id="optionsList"></div>
+</div>
+
+<!-- 外链数据容器 -->
+<div id="options-data" style="display:none;">$1</div>
+
+<script>
+(function(){
+'use strict';
+
+var NUMS = ['壹', '贰', '叁', '肆', '伍'];
+
+function $(id) { return document.getElementById(id); }
+
+/* 外链模式：从 #options-data 读取 */
+function getRawOptions() {
+  var container = $('options-data');
+  if (container) {
+    return container.textContent.trim();
+  }
+  return '';
+}
+
+/* 发送到输入框 */
+function sendOption(text) {
+  if (!text) return;
+  /* 优先用酒馆原生 */
+  if (typeof triggerSlash === 'function') {
+    triggerSlash('/send ' + text + '|/trigger');
+    return;
+  }
+  /* 兜底 DOM */
+  try {
+    var textarea = document.querySelector('#send_textarea') ||
+      (window.parent && window.parent.document.querySelector('#send_textarea'));
+    if (textarea) {
+      textarea.value = text;
+      textarea.dispatchEvent(new Event('input', { bubbles: true }));
+      textarea.focus();
+      var sendBtn = document.querySelector('#send_button') ||
+        document.querySelector('#send_btn');
+      if (sendBtn) setTimeout(function(){ sendBtn.click(); }, 80);
+    }
+  } catch(e) { console.error(e); }
+}
+
+/* 渲染 */
+function render() {
+  var raw = getRawOptions();
+  var listEl = $('optionsList');
+  if (!listEl) return;
+
+  var items = [];
+  if (raw) {
+    items = raw.split('|').map(function(s){ return s.trim(); }).filter(function(s){ return s.length > 0; });
+  }
+
+  if (items.length === 0) {
+    listEl.innerHTML = '<div class="empty-state">— 等待行动选项 —</div>';
+    return;
+  }
+
+  /* 只取前 3 个 */
+  items = items.slice(0, 3);
+
+  var html = '';
+  items.forEach(function(opt, idx) {
+    var safeText = opt
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+    html += '<div class="option-item" data-opt="' + safeText + '">';
+    html += '<span class="option-num">' + (NUMS[idx] || (idx + 1)) + '</span>';
+    html += '<span class="option-text">' + safeText + '</span>';
+    html += '<span class="option-arrow">→</span>';
+    html += '</div>';
+  });
+  listEl.innerHTML = html;
+
+  /* 绑定点击 */
+  var itemEls = listEl.querySelectorAll('.option-item');
+  itemEls.forEach(function(el) {
+    el.addEventListener('click', function() {
+      if (el.classList.contains('disabled')) return;
+      var text = el.getAttribute('data-opt');
+      if (!text) return;
+      /* 全部禁用防连点 */
+      itemEls.forEach(function(e){ e.classList.add('disabled'); });
+      sendOption(text);
+      /* 5 秒后恢复 */
+      setTimeout(function(){
+        itemEls.forEach(function(e){ e.classList.remove('disabled'); });
+      }, 5000);
+    });
+  });
+}
+
+/* 初始化 */
+function init() {
+  render();
+  /* 监听 #options-data 的变化（外链加载器会注入） */
+  var dataContainer = $('options-data');
+  if (dataContainer && typeof MutationObserver === 'function') {
+    var lastText = dataContainer.textContent;
+    var observer = new MutationObserver(function() {
+      if (dataContainer.textContent !== lastText) {
+        lastText = dataContainer.textContent;
+        render();
+      }
+    });
+    observer.observe(dataContainer, { childList: true, characterData: true, subtree: true });
+  }
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', init);
+} else {
+  init();
+}
+
+})();
+</script>
+
+</body>
+</html>
