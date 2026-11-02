@@ -1,0 +1,1082 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>住在隔壁的狐仙大人 · 作者介绍</title>
+
+<style>
+@import url("https://fontsapi.zeoseven.com/370/main/result.css");
+
+:root {
+  --fox-red: hsl(352, 62%, 46%);
+  --fox-red-b: hsl(352, 70%, 62%);
+  --fox-red-glow: hsla(352, 70%, 55%, 0.28);
+  --fox-fire: hsl(28, 88%, 58%);
+  --fox-fire-b: hsl(38, 92%, 70%);
+  --moon: #f5ece0;
+  --moon-b: hsl(42, 55%, 88%);
+  --moon-dim: hsla(42, 45%, 88%, 0.52);
+  --moon-faint: hsla(42, 45%, 88%, 0.14);
+  --gold: hsl(42, 68%, 60%);
+  --night: #08060d;
+  --night-2: #100c19;
+  --jade: hsl(158, 30%, 46%);
+  --border: hsla(42, 45%, 88%, 0.08);
+  --border-2: hsla(42, 45%, 88%, 0.16);
+  --border-red: hsla(352, 62%, 52%, 0.28);
+  --font-hand: "KTXP-GlowRound", 'KaiTi', 'STKaiti', serif;
+  --font-main: "KTXP-GlowRound", 'Georgia', 'Songti SC', serif;
+  --mono: 'DIN', 'Courier New', 'Consolas', monospace;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+html, body {
+  background: transparent;
+  margin: 0;
+  padding: 0;
+  min-height: auto;
+}
+
+body {
+  font-family: var(--font-hand);
+  color: var(--moon);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 16px 10px 30px;
+  line-height: 1.6;
+}
+
+/* ══════════════════════════════════════
+   古卷容器
+   ══════════════════════════════════════ */
+.scroll {
+  width: 100%;
+  max-width: 640px;
+  position: relative;
+  background:
+    radial-gradient(ellipse at 30% 20%, hsla(352, 62%, 40%, 0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 70% 85%, hsla(38, 92%, 70%, 0.04) 0%, transparent 50%),
+    linear-gradient(170deg, var(--night-2) 0%, var(--night) 100%);
+  border: 1px solid var(--border-red);
+  border-radius: 2px;
+  box-shadow:
+    0 24px 70px rgba(0, 0, 0, 0.85),
+    0 0 60px hsla(352, 62%, 42%, 0.06),
+    inset 0 0 120px hsla(352, 40%, 20%, 0.06);
+  padding: 28px 22px 24px 32px;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+/* 顶部朱红细线 */
+.scroll::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    var(--fox-red) 20%,
+    var(--gold) 50%,
+    var(--fox-red) 80%,
+    transparent 100%);
+  opacity: 0.8;
+}
+
+/* 左侧装订线（卷轴感） */
+.scroll::after {
+  content: '';
+  position: absolute;
+  top: 20px; bottom: 20px; left: 16px;
+  width: 1px;
+  background: repeating-linear-gradient(to bottom,
+    transparent 0,
+    transparent 6px,
+    var(--border-red) 6px,
+    var(--border-red) 9px);
+}
+
+.scroll > * { position: relative; z-index: 1; }
+
+/* 四角云纹 */
+.corner {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  border-color: var(--border-red);
+  border-style: solid;
+  border-width: 0;
+  z-index: 5;
+  pointer-events: none;
+}
+.corner.tl { top: 6px; left: 6px; border-top-width: 1px; border-left-width: 1px; }
+.corner.tr { top: 6px; right: 6px; border-top-width: 1px; border-right-width: 1px; }
+.corner.bl { bottom: 6px; left: 6px; border-bottom-width: 1px; border-left-width: 1px; }
+.corner.br { bottom: 6px; right: 6px; border-bottom-width: 1px; border-right-width: 1px; }
+
+/* ══════════════════════════════════════
+   卷首标题
+   ══════════════════════════════════════ */
+.scroll-head {
+  text-align: center;
+  padding: 10px 0 22px;
+  position: relative;
+}
+.scroll-head::after {
+  content: '';
+  display: block;
+  width: 55%;
+  height: 1px;
+  margin: 20px auto 0;
+  background: linear-gradient(90deg, transparent, var(--fox-red), var(--gold), var(--fox-red), transparent);
+  opacity: 0.5;
+}
+
+.head-eyebrow {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 6px;
+  color: var(--fox-fire-b);
+  opacity: 0.8;
+  margin-bottom: 14px;
+  padding: 0 12px;
+  position: relative;
+}
+.head-eyebrow::before,
+.head-eyebrow::after {
+  content: '◈';
+  font-size: 6px;
+  color: var(--gold);
+  margin: 0 8px;
+  opacity: 0.7;
+}
+
+.head-title {
+  font-family: var(--font-hand);
+  font-size: clamp(24px, 5.8vw, 36px);
+  font-weight: 700;
+  color: var(--moon);
+  letter-spacing: 6px;
+  line-height: 1.3;
+  text-shadow:
+    0 0 30px hsla(352, 62%, 52%, 0.25),
+    0 2px 12px rgba(0, 0, 0, 0.8);
+}
+
+.head-sub {
+  margin-top: 10px;
+  font-family: var(--font-hand);
+  font-size: clamp(11px, 2.6vw, 13px);
+  color: var(--moon-dim);
+  letter-spacing: 3px;
+  font-style: italic;
+}
+
+.head-author {
+  margin-top: 16px;
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--fox-red-b);
+  letter-spacing: 3px;
+  opacity: 0.75;
+}
+
+.head-author span {
+  color: var(--fox-fire-b);
+  font-weight: 700;
+  text-shadow: 0 0 10px hsla(38, 92%, 70%, 0.4);
+}
+
+/* ══════════════════════════════════════
+   双图交错布局（创新：不是瀑布流，是交错"卷轴插图"）
+   ══════════════════════════════════════ */
+.illust-row {
+  display: flex;
+  gap: 10px;
+  margin: 10px 0 24px;
+  align-items: center;
+}
+
+.illust-left {
+  flex: 0 0 42%;
+  aspect-ratio: 4/5;
+  border-radius: 2px;
+  overflow: hidden;
+  position: relative;
+  box-shadow:
+    0 8px 30px rgba(0, 0, 0, 0.5),
+    0 0 0 1px var(--border-red);
+}
+
+.illust-right {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.illust-right-item {
+  aspect-ratio: 16/10;
+  border-radius: 2px;
+  overflow: hidden;
+  position: relative;
+  box-shadow:
+    0 6px 20px rgba(0, 0, 0, 0.5),
+    0 0 0 1px var(--border);
+}
+
+.illust-left img,
+.illust-right-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.6s ease;
+}
+
+.illust-left:hover img,
+.illust-right-item:hover img {
+  transform: scale(1.05);
+}
+
+/* 图片暗角 */
+.illust-left::after,
+.illust-right-item::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg,
+    hsla(352, 62%, 32%, 0.15) 0%,
+    transparent 50%,
+    hsla(8, 6, 13, 0.3) 100%);
+  pointer-events: none;
+}
+
+/* ══════════════════════════════════════
+   章节标题（竖排小标签 + 横排大标题）
+   ══════════════════════════════════════ */
+.section {
+  margin-bottom: 20px;
+}
+
+.section-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border);
+  position: relative;
+}
+
+.section-head::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 36px;
+  height: 1px;
+  background: var(--fox-red);
+  box-shadow: 0 0 8px var(--fox-red);
+}
+
+.section-mark {
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: hsla(352, 62%, 42%, 0.15);
+  border: 1px solid var(--fox-red);
+  border-radius: 1px;
+  font-family: var(--mono);
+  font-size: 9px;
+  color: var(--fox-red-b);
+  font-weight: 700;
+  transform: rotate(-3deg);
+}
+
+.section-title {
+  font-family: var(--font-hand);
+  font-size: 14px;
+  color: var(--moon);
+  letter-spacing: 3px;
+  font-weight: 700;
+}
+
+.section-en {
+  margin-left: auto;
+  font-family: var(--mono);
+  font-size: 8px;
+  color: var(--moon-dim);
+  letter-spacing: 2px;
+  opacity: 0.55;
+}
+
+/* ══════════════════════════════════════
+   内容列表
+   ══════════════════════════════════════ */
+.text-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.text-item {
+  display: flex;
+  gap: 10px;
+  padding: 5px 0;
+  font-family: var(--font-hand);
+  font-size: 12.5px;
+  color: var(--moon-b);
+  line-height: 1.7;
+  letter-spacing: 0.5px;
+}
+
+.text-item::before {
+  content: '◈';
+  flex-shrink: 0;
+  color: var(--fox-red-b);
+  font-size: 7px;
+  margin-top: 7px;
+  opacity: 0.7;
+}
+
+.text-item strong {
+  color: var(--fox-fire-b);
+  font-weight: 600;
+  text-shadow: 0 0 6px hsla(38, 92%, 70%, 0.3);
+}
+
+/* ══════════════════════════════════════
+   关于这张卡（引言框）
+   ══════════════════════════════════════ */
+.quote-box {
+  padding: 16px 18px 14px 32px;
+  background: linear-gradient(135deg, hsla(42, 45%, 88%, 0.05), hsla(42, 45%, 88%, 0.01));
+  border-left: 2px solid var(--fox-red);
+  border-radius: 0 2px 2px 0;
+  position: relative;
+  font-family: var(--font-hand);
+  font-size: 13px;
+  line-height: 1.9;
+  color: var(--moon-b);
+  letter-spacing: 0.5px;
+}
+
+.quote-box::before {
+  content: '「';
+  position: absolute;
+  top: 6px; left: 8px;
+  font-family: var(--font-hand);
+  font-size: 26px;
+  color: var(--fox-red-b);
+  opacity: 0.4;
+  line-height: 1;
+}
+
+.quote-box::after {
+  content: '」';
+  position: absolute;
+  bottom: -2px; right: 10px;
+  font-family: var(--font-hand);
+  font-size: 26px;
+  color: var(--fox-red-b);
+  opacity: 0.3;
+  line-height: 1;
+}
+
+.quote-box em {
+  color: var(--fox-fire-b);
+  font-style: normal;
+  font-weight: 600;
+  text-shadow: 0 0 8px hsla(38, 92%, 70%, 0.35);
+}
+
+/* ══════════════════════════════════════
+   作者卡片
+   ══════════════════════════════════════ */
+.author-card {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  padding: 14px 16px;
+  background: hsla(352, 62%, 30%, 0.08);
+  border: 1px solid var(--border-red);
+  border-radius: 2px;
+  position: relative;
+}
+
+.author-card::before {
+  content: '';
+  position: absolute;
+  top: -1px; left: 20px;
+  width: 40px; height: 2px;
+  background: var(--fox-red);
+  box-shadow: 0 0 10px var(--fox-red);
+}
+
+.author-avatar {
+  flex-shrink: 0;
+  width: 62px;
+  height: 62px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 1.5px solid var(--fox-red);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5), 0 0 15px var(--fox-red-glow);
+}
+
+.author-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.author-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.author-name {
+  font-family: var(--font-hand);
+  font-size: 16px;
+  color: var(--moon);
+  font-weight: 700;
+  letter-spacing: 3px;
+  margin-bottom: 2px;
+}
+
+.author-badge {
+  font-family: var(--mono);
+  font-size: 9px;
+  color: var(--fox-red-b);
+  letter-spacing: 2px;
+  margin-bottom: 8px;
+  opacity: 0.85;
+}
+
+.author-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.author-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  font-family: var(--font-hand);
+  font-size: 10.5px;
+  letter-spacing: 1px;
+  color: var(--fox-red-b);
+  text-decoration: none;
+  background: hsla(352, 62%, 46%, 0.1);
+  border: 1px solid var(--border-red);
+  border-radius: 2px;
+  transition: all 0.25s ease;
+}
+
+.author-link::before {
+  content: '↗';
+  font-size: 9px;
+  opacity: 0.7;
+}
+
+.author-link:hover {
+  background: var(--fox-red);
+  color: var(--moon);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px var(--fox-red-glow);
+}
+
+/* ══════════════════════════════════════
+   授权印章（创新：4个圆形印章）
+   ══════════════════════════════════════ */
+.seal-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+.seal-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 4px;
+  border-radius: 2px;
+  text-align: center;
+}
+
+.seal-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: 700;
+  font-family: var(--font-hand);
+  border: 1.5px solid;
+  transform: rotate(-4deg);
+  transition: all 0.3s ease;
+}
+
+.seal-item.allow .seal-icon {
+  color: hsl(140, 45%, 60%);
+  border-color: hsl(140, 45%, 45%);
+  background: hsla(140, 45%, 45%, 0.1);
+}
+
+.seal-item.deny .seal-icon {
+  color: var(--fox-red-b);
+  border-color: var(--fox-red);
+  background: hsla(352, 62%, 46%, 0.1);
+}
+
+.seal-item:hover .seal-icon {
+  transform: rotate(-8deg) scale(1.08);
+}
+
+.seal-text {
+  font-family: var(--font-hand);
+  font-size: 10px;
+  letter-spacing: 0.5px;
+  line-height: 1.3;
+  color: var(--moon-dim);
+}
+
+.seal-item.allow .seal-text { color: hsl(140, 35%, 70%); }
+
+/* ══════════════════════════════════════
+   特色标签（横排）
+   ══════════════════════════════════════ */
+.tags-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.tag {
+  padding: 5px 12px;
+  background: hsla(42, 68%, 60%, 0.06);
+  border: 1px solid hsla(42, 68%, 60%, 0.25);
+  border-radius: 12px;
+  font-family: var(--font-hand);
+  font-size: 11px;
+  letter-spacing: 1px;
+  color: var(--gold);
+  transition: all 0.25s ease;
+}
+
+.tag:hover {
+  background: hsla(42, 68%, 60%, 0.15);
+  border-color: var(--gold);
+  transform: translateY(-1px);
+}
+
+/* ══════════════════════════════════════
+   使用说明（编号列表）
+   ══════════════════════════════════════ */
+.usage-list {
+  counter-reset: usage;
+}
+
+.usage-item {
+  counter-increment: usage;
+  display: flex;
+  gap: 10px;
+  padding: 6px 0;
+  font-family: var(--font-hand);
+  font-size: 12.5px;
+  color: var(--moon-b);
+  line-height: 1.65;
+}
+
+.usage-item::before {
+  content: counter(usage, cjk-decimal);
+  flex-shrink: 0;
+  font-family: var(--font-hand);
+  font-size: 12px;
+  color: var(--fox-red-b);
+  font-weight: 700;
+  min-width: 20px;
+  padding-top: 1px;
+}
+
+/* ══════════════════════════════════════
+   提示横幅（状态栏未渲染提示）
+   ══════════════════════════════════════ */
+.usage-tip {
+  margin-top: 12px;
+  padding: 10px 14px 10px 36px;
+  background: hsla(352, 62%, 40%, 0.08);
+  border: 1px dashed var(--fox-red);
+  border-radius: 2px;
+  font-family: var(--font-hand);
+  font-size: 11.5px;
+  color: var(--moon-b);
+  line-height: 1.7;
+  position: relative;
+  letter-spacing: 0.3px;
+}
+
+.usage-tip::before {
+  content: '⚠';
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 14px;
+  color: var(--fox-fire-b);
+  text-shadow: 0 0 8px hsla(38, 92%, 70%, 0.5);
+}
+
+/* ══════════════════════════════════════
+   公益声明
+   ══════════════════════════════════════ */
+.public-block {
+  padding: 12px 14px;
+  background: hsla(42, 45%, 88%, 0.03);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  font-family: var(--font-hand);
+  font-size: 11.5px;
+  color: var(--moon-dim);
+  line-height: 1.8;
+  letter-spacing: 0.3px;
+}
+
+.public-block-title {
+  font-weight: 700;
+  color: var(--fox-red-b);
+  font-size: 12px;
+  letter-spacing: 2px;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.public-block p { margin-bottom: 4px; }
+.public-block p:last-child { margin-bottom: 0; }
+
+/* ══════════════════════════════════════
+   底部开始按钮
+   ══════════════════════════════════════ */
+.start-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 26px;
+}
+
+.start-btn {
+  position: relative;
+  padding: 12px 44px;
+  background: linear-gradient(135deg, var(--fox-red) 0%, hsl(352, 62%, 32%) 100%);
+  color: var(--moon);
+  border: 1px solid var(--fox-red-b);
+  border-radius: 2px;
+  font-family: var(--font-hand);
+  font-size: clamp(14px, 3.2vw, 16px);
+  font-weight: 700;
+  letter-spacing: 5px;
+  cursor: pointer;
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+  box-shadow:
+    0 6px 24px var(--fox-red-glow),
+    inset 0 0 20px hsla(0, 0%, 100%, 0.05);
+}
+
+.start-btn::before {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 100%; height: 100%;
+  background: linear-gradient(90deg, transparent, hsla(38, 92%, 70%, 0.25), transparent);
+  transition: left 0.6s ease;
+}
+
+.start-btn:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 10px 32px var(--fox-red-glow),
+    0 0 40px var(--fox-red-glow);
+}
+
+.start-btn:hover::before { left: 100%; }
+
+.start-btn:active { transform: translateY(0); }
+
+.start-btn .arrow {
+  margin-left: 8px;
+  display: inline-block;
+  transition: transform 0.3s ease;
+}
+
+.start-btn:hover .arrow { transform: translateX(4px); }
+
+/* ══════════════════════════════════════
+   页脚
+   ══════════════════════════════════════ */
+.footer {
+  text-align: center;
+  padding-top: 20px;
+  margin-top: 20px;
+  border-top: 1px solid var(--border);
+  font-family: var(--mono);
+  font-size: 9.5px;
+  color: var(--moon-dim);
+  letter-spacing: 4px;
+  opacity: 0.65;
+}
+
+.footer::before { content: '—— '; opacity: 0.5; }
+.footer::after { content: ' ——'; opacity: 0.5; }
+
+/* ══════════════════════════════════════
+   响应式
+   ══════════════════════════════════════ */
+@media (max-width: 520px) {
+  body { padding: 10px 6px 22px; }
+  .scroll { padding: 22px 14px 18px 24px; border-radius: 2px; }
+  .scroll::after { left: 12px; }
+
+  .corner { width: 16px; height: 16px; }
+
+  .scroll-head { padding: 8px 0 18px; }
+  .head-title { font-size: clamp(20px, 5.5vw, 26px); letter-spacing: 4px; }
+  .head-sub { font-size: clamp(10px, 2.4vw, 11px); }
+  .head-eyebrow { font-size: 8px; letter-spacing: 4px; }
+
+  .illust-row { gap: 6px; margin: 8px 0 18px; }
+  .illust-left { flex: 0 0 46%; }
+
+  .section-title { font-size: 13px; letter-spacing: 2px; }
+  .section-en { font-size: 7px; }
+
+  .text-item { font-size: 11.5px; }
+  .quote-box { font-size: 12px; padding: 12px 14px 12px 26px; }
+
+  .author-avatar { width: 52px; height: 52px; }
+  .author-name { font-size: 14px; letter-spacing: 2px; }
+  .author-link { font-size: 9.5px; padding: 3px 8px; }
+
+  .seal-grid { gap: 6px; }
+  .seal-icon { width: 32px; height: 32px; font-size: 14px; }
+  .seal-text { font-size: 9px; }
+
+  .tag { font-size: 10px; padding: 4px 10px; }
+
+  .usage-item { font-size: 11.5px; }
+  .usage-tip { font-size: 10.5px; padding: 8px 12px 8px 32px; }
+
+  .start-btn { padding: 10px 30px; letter-spacing: 3px; }
+}
+
+@media (min-width: 720px) {
+  .scroll { max-width: 700px; padding: 32px 26px 28px 38px; }
+  .head-title { font-size: 38px; letter-spacing: 8px; }
+  .section-title { font-size: 16px; letter-spacing: 4px; }
+  .text-item { font-size: 13.5px; }
+  .quote-box { font-size: 14px; }
+  .author-name { font-size: 18px; }
+}
+</style>
+</head>
+<body>
+
+<div class="scroll">
+
+  <span class="corner tl"></span>
+  <span class="corner tr"></span>
+  <span class="corner bl"></span>
+  <span class="corner br"></span>
+
+  <!-- 卷首标题 -->
+  <div class="scroll-head">
+    <div class="head-eyebrow">A FOX BEHIND THE WALL</div>
+    <h1 class="head-title">住在隔壁的狐仙大人</h1>
+    <div class="head-sub">她活了三百零二年。直到今天，才第一次想留下。</div>
+    <div class="head-author">作者 · <span>三年的水</span></div>
+  </div>
+
+  <!-- 双图交错布局 -->
+  <div class="illust-row">
+    <div class="illust-left">
+      <img src="https://testingcf.jsdelivr.net/gh/sanshui19516/Plot-Advancement-Illustration-@main/%E4%BD%8F%E5%9C%A8%E9%9A%94%E5%A3%81%E7%9A%84%E7%8B%90%E4%BB%99%E5%A4%A7%E4%BA%BA/%E9%85%8D%E5%9B%BE/%E9%85%8D%E5%9B%BE%20(2).jpg" alt="" loading="lazy" />
+    </div>
+    <div class="illust-right">
+      <div class="illust-right-item">
+        <img src="https://testingcf.jsdelivr.net/gh/sanshui19516/Plot-Advancement-Illustration-@main/%E4%BD%8F%E5%9C%A8%E9%9A%94%E5%A3%81%E7%9A%84%E7%8B%90%E4%BB%99%E5%A4%A7%E4%BA%BA/%E9%85%8D%E5%9B%BE/%E9%85%8D%E5%9B%BE%20(4).jpg" alt="" loading="lazy" />
+      </div>
+      <div class="illust-right-item">
+        <img src="https://testingcf.jsdelivr.net/gh/sanshui19516/Plot-Advancement-Illustration-@main/%E4%BD%8F%E5%9C%A8%E9%9A%94%E5%A3%81%E7%9A%84%E7%8B%90%E4%BB%99%E5%A4%A7%E4%BA%BA/%E9%85%8D%E5%9B%BE/%E9%85%8D%E5%9B%BE%20(7).jpg" alt="" loading="lazy" />
+      </div>
+    </div>
+  </div>
+
+  <!-- 关于这张卡 -->
+  <div class="section">
+    <div class="section-head">
+      <span class="section-mark">序</span>
+      <span class="section-title">关于这张卡</span>
+      <span class="section-en">PROLOGUE</span>
+    </div>
+    <div class="quote-box">
+      白银市的春天来得很慢。<br>
+      她搬进那间空了半年的屋子时，只带了一个不大的木箱。<br>
+      他住在隔壁，过着按部就班的日子——上班、下班、便利店、饭团、啤酒。<br>
+      本来不该有交集。<br>
+      但他看到她的第一眼，<em>总觉得那双红色的眼睛，不太像人类。</em><br>
+      而她活了三百年，第一次对一个人类说：「你能待在这里吗？什么都不用做。」
+    </div>
+  </div>
+
+  <!-- 作者 -->
+  <div class="section">
+    <div class="section-head">
+      <span class="section-mark">作</span>
+      <span class="section-title">作者</span>
+      <span class="section-en">AUTHOR</span>
+    </div>
+    <div class="author-card">
+      <div class="author-avatar">
+        <img src="https://cdn.jsdelivr.net/gh/sanshui19516/CG@main/%E5%A4%B4%E5%83%8F.png" alt="三年的水" />
+      </div>
+      <div class="author-info">
+        <div class="author-name">三年的水</div>
+        <div class="author-badge">◆ 住在隔壁的狐仙大人 ◆</div>
+        <div class="author-links">
+          <a class="author-link" href="https://discord.com/channels/1134557553011998840/1516980193195987075/1516980193195987075" target="_blank" rel="noopener noreferrer">原帖链接</a>
+          <a class="author-link" href="https://discord.com/channels/1134557553011998840/1516980193195987075/1516980193195987075" target="_blank" rel="noopener noreferrer">作品集锦</a>
+          <a class="author-link" href="https://discord.com/channels/1134557553011998840/1516980193195987075/1516980470871621794" target="_blank" rel="noopener noreferrer">关注作者</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 发布信息 -->
+  <div class="section">
+    <div class="section-head">
+      <span class="section-mark">发</span>
+      <span class="section-title">发布信息</span>
+      <span class="section-en">RELEASE</span>
+    </div>
+    <div class="text-list">
+      <div class="text-item">仅发布于 <strong>Discord 类脑</strong></div>
+      <div class="text-item">作者：<strong>三年的水</strong></div>
+    </div>
+  </div>
+
+  <!-- 授权说明（印章式） -->
+  <div class="section">
+    <div class="section-head">
+      <span class="section-mark">权</span>
+      <span class="section-title">授权说明</span>
+      <span class="section-en">LICENSE</span>
+    </div>
+    <div class="seal-grid">
+      <div class="seal-item allow">
+        <div class="seal-icon">✓</div>
+        <div class="seal-text">允许二改<br>需授权</div>
+      </div>
+      <div class="seal-item allow">
+        <div class="seal-icon">注</div>
+        <div class="seal-text">二改需<br>标注出处</div>
+      </div>
+      <div class="seal-item deny">
+        <div class="seal-icon">✕</div>
+        <div class="seal-text">禁止<br>商用</div>
+      </div>
+      <div class="seal-item deny">
+        <div class="seal-icon">禁</div>
+        <div class="seal-text">禁止<br>墙内二传</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 本卡包含 -->
+  <div class="section">
+    <div class="section-head">
+      <span class="section-mark">含</span>
+      <span class="section-title">本卡包含</span>
+      <span class="section-en">CONTENTS</span>
+    </div>
+    <div class="text-list">
+      <div class="text-item">完整 MVU 变量系统（好感度 / 信任度 / 欲望值 / 妖力值）</div>
+      <div class="text-item">18 个主线事件 + 9 个日常事件</div>
+      <div class="text-item">五阶段关系系统（初识邻居 → 秘密暴露 → 发情之困 → 心意确认 → 同居之诺）</div>
+      <div class="text-item">90 天发情周期系统（妖力值联动加速）</div>
+      <div class="text-item">狐化状态（耳朵 / 尾巴的动态暴露规则）</div>
+      <div class="text-item">怀孕判定系统（发情期 60% / 非发情期 30%）</div>
+      <div class="text-item">九尾狐月手账式状态栏 + 事件卷宗翻页</div>
+      <div class="text-item">150 张 CG 插图</div>
+    </div>
+  </div>
+
+  <!-- 使用说明 -->
+  <div class="section">
+    <div class="section-head">
+      <span class="section-mark">用</span>
+      <span class="section-title">使用说明</span>
+      <span class="section-en">HOW TO USE</span>
+    </div>
+    <div class="usage-list">
+      <div class="usage-item">导入角色卡到 SillyTavern。</div>
+      <div class="usage-item">开启 MVU 变量系统。</div>
+      <div class="usage-item">开启提示词模板。</div>
+      <div class="usage-item">确认「状态栏」「选项」「作者介绍」三条局部正则已启用。</div>
+      <div class="usage-item">开始对话，享受故事。</div>
+    </div>
+    <div class="usage-tip">
+      如果状态栏尾部出现未渲染的代码块，请查看原帖帖内标注的问题答疑。
+    </div>
+  </div>
+
+  <!-- 特色系统 -->
+  <div class="section">
+    <div class="section-head">
+      <span class="section-mark">特</span>
+      <span class="section-title">特色系统</span>
+      <span class="section-en">FEATURES</span>
+    </div>
+    <div class="tags-wrap">
+      <span class="tag">五阶段关系</span>
+      <span class="tag">90天发情周期</span>
+      <span class="tag">妖力值联动</span>
+      <span class="tag">狐化状态动态</span>
+      <span class="tag">怀孕判定系统</span>
+      <span class="tag">人类观察笔记</span>
+      <span class="tag">狐火粒子特效</span>
+      <span class="tag">九尾狐月状态栏</span>
+      <span class="tag">事件卷宗翻页</span>
+      <span class="tag">藤原玲的外部压力</span>
+    </div>
+  </div>
+
+  <!-- 公益声明 -->
+  <div class="section">
+    <div class="public-block">
+      <span class="public-block-title">⚠ 公益声明 · 禁止商用</span>
+      <p>本角色卡为作者「三年的水」免费分享的公益作品，仅供个人娱乐与创作交流使用。</p>
+      <p>严禁任何形式的商业用途，包括转卖、收费下载、打包售卖或用于盈利性直播/视频。</p>
+      <p>如通过付费渠道获得，请立即退款并举报贩卖者，维护创作者与您自身的权益。</p>
+      <p>感谢您的支持与理解。—— 作者：三年的水</p>
+    </div>
+  </div>
+
+  <!-- 开始按钮 -->
+  <div class="start-wrapper">
+    <button class="start-btn" onclick="switchOpening(2)">
+      开 始 故 事
+      <span class="arrow">→</span>
+    </button>
+  </div>
+
+  <div class="footer">请多多评论 · by 三年的水</div>
+
+</div>
+
+<script>
+(function(){
+'use strict';
+
+/* 跳转到开场白索引 2 */
+async function switchOpening(swipeId) {
+  try {
+    var messages;
+    try {
+      messages = await getChatMessages?.('0', { include_swipe: true });
+    } catch (e) {
+      var context = window.SillyTavern?.getContext?.();
+      messages = context?.chat?.messages;
+    }
+    if (messages && messages.length > 0) {
+      var userMessage = messages[0];
+      if (userMessage && userMessage.swipes && userMessage.swipes.length > swipeId) {
+        var targetSwipe = userMessage.swipes[swipeId];
+        var setChatMessage = window.setChatMessage || window.SillyTavern?.getContext?.()?.setChatMessage;
+        if (typeof setChatMessage === 'function') {
+          await setChatMessage(targetSwipe, 0, { swipe_id: swipeId, refresh: 'display_and_render_current' });
+          return;
+        }
+        if (typeof userMessage.setSwipe === 'function') {
+          userMessage.setSwipe(swipeId);
+          return;
+        }
+      }
+    }
+  } catch (e) {}
+
+  try {
+    if (typeof window.parent.triggerSlash === 'function') {
+      window.parent.triggerSlash('/trigger');
+      return;
+    }
+    if (typeof window.fillInput === 'function') {
+      window.fillInput('/trigger');
+      return;
+    }
+    if (typeof window.triggerSlash === 'function') {
+      window.triggerSlash('/trigger');
+      return;
+    }
+  } catch (e) {}
+}
+
+window.switchOpening = switchOpening;
+
+/* 高度同步 */
+function syncHeight() {
+  try {
+    var scroll = document.querySelector('.scroll');
+    if (!scroll) return;
+    var height = scroll.offsetHeight + 40;
+    if (!height || height < 100) return;
+
+    var frame = window.frameElement;
+    if (frame && frame.tagName === 'IFRAME') {
+      frame.style.height = height + 'px';
+      frame.style.minHeight = 'unset';
+      frame.style.maxHeight = 'unset';
+      frame.style.overflow = 'hidden';
+    }
+
+    try {
+      var iframes = window.parent.document.querySelectorAll('iframe');
+      for (var i = 0; i < iframes.length; i++) {
+        try {
+          if (iframes[i].contentWindow === window) {
+            iframes[i].style.height = height + 'px';
+            iframes[i].style.minHeight = 'unset';
+            iframes[i].style.maxHeight = 'unset';
+            iframes[i].style.overflow = 'hidden';
+            break;
+          }
+        } catch (e) {}
+      }
+    } catch (e) {}
+  } catch (e) {}
+}
+
+syncHeight();
+setTimeout(syncHeight, 100);
+setTimeout(syncHeight, 300);
+setTimeout(syncHeight, 600);
+setTimeout(syncHeight, 1000);
+setInterval(syncHeight, 800);
+window.addEventListener('resize', syncHeight);
+
+})();
+</script>
+
+</body>
+</html>
