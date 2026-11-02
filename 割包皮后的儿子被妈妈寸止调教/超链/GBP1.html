@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>妈妈的寸止之爱</title>
+
+<style>
+@import url("https://fontsapi.zeoseven.com/370/main/result.css");
+
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+:root {
+  --light: hsl(38, 70%, 68%);
+  --light-dim: hsl(35, 55%, 45%);
+  --door: hsl(25, 22%, 8%);
+  --door-2: hsl(25, 22%, 12%);
+  --accent: hsl(355, 45%, 50%);
+  --paper: hsl(38, 30%, 88%);
+  --ink-3: hsl(35, 15%, 55%);
+  --font-main: "KTXP-GlowRound", 'Georgia', 'Songti SC', serif;
+  --font-hand: "KTXP-GlowRound", 'KaiTi', 'STKaiti', serif;
+  --mono: 'DIN', 'Courier New', 'Consolas', monospace;
+}
+
+html, body {
+  background: transparent;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  width: 100%;
+}
+
+body {
+  font-family: var(--font-main);
+  font-weight: normal;
+  color: var(--paper);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 10px;
+}
+
+/* ══════════════════════════════════════
+   舞台（16:9，padding-bottom 撑高）
+   ══════════════════════════════════════ */
+.stage {
+  position: relative;
+  width: 100%;
+  max-width: 780px;
+  height: 0;
+  padding-bottom: 56.25%;
+  overflow: hidden;
+  min-height: 380px;
+  border-radius: 6px;
+  background: var(--door);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  isolation: isolate;
+}
+
+.stage > * {
+  position: absolute;
+}
+
+/* ══════════════════════════════════════
+   背景：门板 + 光 + 门缝
+   ══════════════════════════════════════ */
+
+/* 左侧门板（暗部） */
+.door-panel {
+  left: 0;
+  top: 0;
+  width: 46%;
+  height: 100%;
+  background:
+    linear-gradient(to right, hsl(25,22%,6%) 0%, hsl(25,22%,10%) 70%, hsl(25,22%,13%) 100%),
+    repeating-linear-gradient(90deg, transparent 0, transparent 8px, rgba(0,0,0,0.1) 8px, rgba(0,0,0,0.1) 9px);
+  z-index: 2;
+}
+
+/* 门板上的纹理（木纹） */
+.door-panel::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, transparent 0%, transparent 45%, rgba(0,0,0,0.18) 50%, transparent 55%, transparent 100%),
+    repeating-linear-gradient(0deg, transparent 0, transparent 12px, rgba(255,255,255,0.008) 12px, rgba(255,255,255,0.008) 13px);
+  pointer-events: none;
+}
+
+/* 右侧：门打开后透出的光（主光区） */
+.door-light {
+  left: 45%;
+  top: 0;
+  width: 55%;
+  height: 100%;
+  background:
+    radial-gradient(ellipse 70% 90% at 0% 50%, hsl(38, 65%, 38%) 0%, hsl(35, 55%, 22%) 30%, hsl(28, 30%, 12%) 65%, hsl(25, 22%, 8%) 100%);
+  z-index: 1;
+}
+
+/* 光缝（视觉核心） */
+.light-slit {
+  left: 44.7%;
+  top: 0;
+  width: 4px;
+  height: 100%;
+  background: linear-gradient(180deg, hsl(38, 70%, 55%) 0%, hsl(40, 75%, 72%) 50%, hsl(38, 70%, 55%) 100%);
+  box-shadow:
+    0 0 20px hsl(38, 70%, 55%),
+    0 0 45px hsl(38, 65%, 45%),
+    0 0 90px hsl(38, 60%, 38%);
+  animation: slit-breathe 4s ease-in-out infinite;
+  z-index: 8;
+}
+
+@keyframes slit-breathe {
+  0%, 100% { opacity: 0.88; box-shadow: 0 0 20px hsl(38,70%,55%), 0 0 45px hsl(38,65%,45%), 0 0 90px hsl(38,60%,38%); }
+  50%      { opacity: 1;    box-shadow: 0 0 28px hsl(40,75%,68%), 0 0 60px hsl(38,70%,55%), 0 0 120px hsl(38,65%,48%); }
+}
+
+/* 光斑（在光里的浮动粒子） */
+.light-glow {
+  left: 46%;
+  top: 10%;
+  width: 45%;
+  height: 80%;
+  background: radial-gradient(circle at 20% 40%, hsla(40, 75%, 70%, 0.18) 0%, transparent 40%);
+  filter: blur(20px);
+  z-index: 1;
+  animation: glow-shift 8s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes glow-shift {
+  0%, 100% { transform: translate(0, 0); opacity: 0.7; }
+  50%      { transform: translate(4%, -3%); opacity: 1; }
+}
+
+/* 底部渐暗 */
+.vignette-bottom {
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 40%;
+  background: linear-gradient(to top, hsla(25, 22%, 4%, 0.85) 0%, transparent 100%);
+  z-index: 5;
+  pointer-events: none;
+}
+
+/* 顶部渐暗 */
+.vignette-top {
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 30%;
+  background: linear-gradient(to bottom, hsla(25, 22%, 4%, 0.7) 0%, transparent 100%);
+  z-index: 5;
+  pointer-events: none;
+}
+
+/* 整体噪点 */
+.grain {
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-image:
+    repeating-linear-gradient(0deg, transparent 0, transparent 2px, rgba(255,255,255,0.008) 2px, rgba(255,255,255,0.008) 3px),
+    repeating-linear-gradient(90deg, transparent 0, transparent 3px, rgba(255,255,255,0.005) 3px, rgba(255,255,255,0.005) 4px);
+  z-index: 9;
+  pointer-events: none;
+  mix-blend-mode: overlay;
+}
+
+/* ══════════════════════════════════════
+   标题（左侧门板上，像刻上去的）
+   ══════════════════════════════════════ */
+.title-area {
+  left: 5%;
+  top: 14%;
+  z-index: 12;
+  max-width: 38%;
+  pointer-events: none;
+}
+
+.title-eyebrow {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: clamp(7px, 1.2vw, 9px);
+  letter-spacing: 3px;
+  color: var(--light);
+  opacity: 0.7;
+  padding: 2px 8px;
+  border-left: 2px solid var(--accent);
+  margin-bottom: 10px;
+}
+
+.title-main {
+  font-family: var(--font-hand);
+  font-size: clamp(22px, 4.4vw, 38px);
+  font-weight: 700;
+  color: var(--paper);
+  letter-spacing: 3px;
+  line-height: 1.2;
+  text-shadow:
+    0 0 20px hsla(38, 70%, 55%, 0.35),
+    0 2px 4px rgba(0,0,0,0.8);
+  margin-bottom: 6px;
+}
+
+.title-sub {
+  font-family: var(--font-hand);
+  font-size: clamp(10px, 1.8vw, 13px);
+  color: var(--light-dim);
+  letter-spacing: 2px;
+  line-height: 1.7;
+  opacity: 0.9;
+  max-width: 90%;
+}
+
+/* ══════════════════════════════════════
+   照片碎片（从门缝里透出来的记忆）
+   ══════════════════════════════════════ */
+.memories {
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 6;
+  pointer-events: none;
+}
+
+.memory {
+  position: absolute;
+  background: hsl(38, 25%, 85%);
+  padding: 4px 4px 14px;
+  border-radius: 2px;
+  box-shadow:
+    0 6px 24px rgba(0,0,0,0.5),
+    0 0 0 1px rgba(255,255,255,0.05);
+  overflow: hidden;
+  opacity: 0;
+  animation: memory-float 6s ease-in-out infinite;
+}
+
+.memory img {
+  display: block;
+  width: 100%;
+  height: calc(100% - 14px);
+  object-fit: cover;
+  border-radius: 1px;
+  filter: brightness(0.9) contrast(0.95);
+}
+
+.memory::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, hsla(38, 70%, 55%, 0.1) 0%, transparent 50%, hsla(25, 22%, 4%, 0.3) 100%);
+  pointer-events: none;
+}
+
+/* 每张照片的位置和动画延迟 */
+
+/* 左上 - 母子阶段 */
+.memory-1 {
+  left: 50%;
+  top: 10%;
+  width: 13%;
+  aspect-ratio: 3/4;
+  transform: rotate(4deg);
+  animation-delay: 0s;
+  z-index: 10;
+}
+
+/* 右上 - 儿子的房间 */
+.memory-2 {
+  left: 68%;
+  top: 8%;
+  width: 12%;
+  aspect-ratio: 4/5;
+  transform: rotate(-3deg);
+  animation-delay: 1.5s;
+  z-index: 9;
+}
+
+/* 右下 - 卫生间 */
+.memory-3 {
+  left: 74%;
+  top: 45%;
+  width: 13%;
+  aspect-ratio: 4/5;
+  transform: rotate(5deg);
+  animation-delay: 3s;
+  z-index: 10;
+}
+
+/* 中下 - 海边（离光最近，最亮） */
+.memory-4 {
+  left: 55%;
+  top: 58%;
+  width: 15%;
+  aspect-ratio: 16/10;
+  transform: rotate(-2deg);
+  animation-delay: 4.5s;
+  z-index: 11;
+}
+
+@keyframes memory-float {
+  0%   { opacity: 0; transform: translateY(10px) rotate(var(--r, 0deg)); }
+  15%  { opacity: 0.85; }
+  50%  { opacity: 1; transform: translateY(-4px) rotate(var(--r, 0deg)); }
+  85%  { opacity: 0.85; }
+  100% { opacity: 0; transform: translateY(-14px) rotate(var(--r, 0deg)); }
+}
+
+/* 单独设置旋转变量 */
+.memory-1 { --r: 4deg; }
+.memory-2 { --r: -3deg; }
+.memory-3 { --r: 5deg; }
+.memory-4 { --r: -2deg; }
+
+/* 光里的小尘埃 */
+.dust {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: var(--light);
+  border-radius: 50%;
+  opacity: 0;
+  animation: dust-float 7s linear infinite;
+  box-shadow: 0 0 4px var(--light);
+  z-index: 7;
+  pointer-events: none;
+}
+
+.dust-1 { left: 48%; top: 30%; animation-delay: 0s; }
+.dust-2 { left: 55%; top: 55%; animation-delay: 1s; }
+.dust-3 { left: 52%; top: 75%; animation-delay: 2s; }
+.dust-4 { left: 62%; top: 25%; animation-delay: 3s; }
+.dust-5 { left: 70%; top: 60%; animation-delay: 4s; }
+.dust-6 { left: 58%; top: 42%; animation-delay: 5s; }
+.dust-7 { left: 45%; top: 68%; animation-delay: 1.5s; }
+.dust-8 { left: 65%; top: 80%; animation-delay: 3.5s; }
+
+@keyframes dust-float {
+  0%   { opacity: 0; transform: translateY(0) scale(0.5); }
+  20%  { opacity: 0.9; }
+  50%  { opacity: 1; transform: translateY(-20px) scale(1); }
+  80%  { opacity: 0.6; }
+  100% { opacity: 0; transform: translateY(-40px) scale(0.3); }
+}
+
+/* ══════════════════════════════════════
+   底部：开始按钮 + 作者署名
+   ══════════════════════════════════════ */
+.bottom-area {
+  left: 50%;
+  bottom: 5%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  z-index: 15;
+}
+
+.start-btn {
+  position: relative;
+  padding: 11px 38px;
+  background: transparent;
+  border: 1px solid var(--light);
+  color: var(--light);
+  font-family: var(--font-hand);
+  font-size: clamp(13px, 2.2vw, 16px);
+  font-weight: 700;
+  letter-spacing: 4px;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+  border-radius: 2px;
+  box-shadow:
+    0 0 15px hsla(38, 70%, 55%, 0.2),
+    inset 0 0 15px hsla(38, 70%, 55%, 0.05);
+  text-shadow: 0 0 10px hsla(38, 70%, 68%, 0.5);
+}
+
+.start-btn::before {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 100%; height: 100%;
+  background: linear-gradient(90deg, transparent, hsla(38, 70%, 68%, 0.2), transparent);
+  transition: left 0.6s ease;
+}
+
+.start-btn:hover {
+  background: hsla(38, 70%, 55%, 0.1);
+  box-shadow:
+    0 0 30px hsla(38, 70%, 55%, 0.5),
+    inset 0 0 20px hsla(38, 70%, 55%, 0.15);
+  letter-spacing: 6px;
+  color: hsl(40, 75%, 78%);
+  border-color: hsl(40, 75%, 78%);
+}
+
+.start-btn:hover::before {
+  left: 100%;
+}
+
+.start-btn:active {
+  transform: scale(0.96);
+}
+
+.start-btn .arrow {
+  display: inline-block;
+  margin-left: 8px;
+  transition: transform 0.3s ease;
+}
+
+.start-btn:hover .arrow {
+  transform: translateX(4px);
+}
+
+.author-line {
+  font-family: var(--mono);
+  font-size: clamp(8px, 1.3vw, 10px);
+  color: var(--ink-3);
+  letter-spacing: 3px;
+  opacity: 0.7;
+}
+
+.author-line::before { content: 'by '; opacity: 0.5; }
+
+/* ══════════════════════════════════════
+   过场动画层
+   ══════════════════════════════════════ */
+.transition {
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 100;
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(ellipse at 50% 50%, hsl(40, 75%, 85%) 0%, hsl(38, 70%, 65%) 30%, hsl(30, 50%, 25%) 70%, #000 100%);
+  transition: opacity 0.8s ease;
+}
+
+.transition.active {
+  opacity: 1;
+}
+
+.transition.white-flash {
+  background: hsl(40, 85%, 92%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.transition.white-flash.on {
+  opacity: 1;
+}
+
+/* 光缝扩张动画（点击时触发） */
+.light-slit.expanding {
+  width: 100% !important;
+  left: 0 !important;
+  transition: width 0.9s cubic-bezier(0.6, 0, 0.4, 1), left 0.9s cubic-bezier(0.6, 0, 0.4, 1), box-shadow 0.9s ease;
+  box-shadow: 0 0 100px hsl(40, 75%, 72%), 0 0 300px hsl(38, 70%, 60%) !important;
+}
+
+/* 点击时照片淡出 */
+.memories.fade-out,
+.title-area.fade-out,
+.bottom-area.fade-out {
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+/* ══════════════════════════════════════
+   响应式
+   ══════════════════════════════════════ */
+@media (max-width: 640px) {
+  body { padding: 6px; }
+  .stage { min-height: 320px; border-radius: 4px; }
+  .title-area { left: 4%; top: 10%; }
+  .title-eyebrow { font-size: 7px; letter-spacing: 2px; }
+  .memory-1 { left: 48%; width: 15%; }
+  .memory-2 { left: 66%; width: 14%; top: 10%; }
+  .memory-3 { left: 72%; width: 15%; }
+  .memory-4 { left: 54%; width: 17%; top: 56%; }
+  .bottom-area { bottom: 4%; }
+  .start-btn { padding: 9px 28px; letter-spacing: 3px; }
+}
+
+@media (max-aspect-ratio: 1/1) {
+  .stage {
+    height: 88vh;
+    padding-bottom: 0;
+    min-height: 400px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .light-slit, .light-glow, .memory, .dust {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+  .memory { opacity: 0.85; }
+}
+</style>
+</head>
+
+<body>
+
+<div class="stage" id="stageRoot">
+
+  <!-- 门板（左侧暗部） -->
+  <div class="door-panel"></div>
+
+  <!-- 门后的光（右侧） -->
+  <div class="door-light"></div>
+
+  <!-- 光晕 -->
+  <div class="light-glow"></div>
+
+  <!-- 光缝 -->
+  <div class="light-slit" id="lightSlit"></div>
+
+  <!-- 顶部 / 底部渐暗 -->
+  <div class="vignette-top"></div>
+  <div class="vignette-bottom"></div>
+
+  <!-- 照片碎片 -->
+  <div class="memories" id="memories">
+    <div class="memory memory-1">
+      <img src="https://cdn.jsdelivr.net/gh/sanshui19516/Plot-Advancement-Illustration-@main/%E5%89%B2%E5%8C%85%E7%9A%AE%E5%90%8E%E7%9A%84%E5%84%BF%E5%AD%90%E8%A2%AB%E5%A6%88%E5%A6%88%E5%AF%B8%E6%AD%A2%E8%B0%83%E6%95%99/%E9%85%8D%E5%9B%BE/%E5%85%B3%E7%B3%BB%E9%98%B6%E6%AE%B5-%E6%AF%8D%E5%AD%90.jpg" alt="母子" loading="eager" />
+    </div>
+    <div class="memory memory-2">
+      <img src="https://cdn.jsdelivr.net/gh/sanshui19516/Plot-Advancement-Illustration-@main/%E5%89%B2%E5%8C%85%E7%9A%AE%E5%90%8E%E7%9A%84%E5%84%BF%E5%AD%90%E8%A2%AB%E5%A6%88%E5%A6%88%E5%AF%B8%E6%AD%A2%E8%B0%83%E6%95%99/%E9%85%8D%E5%9B%BE/%E5%9C%BA%E6%99%AF-%E5%84%BF%E5%AD%90%E7%9A%84%E6%88%BF%E9%97%B4.jpg" alt="儿子的房间" loading="eager" />
+    </div>
+    <div class="memory memory-3">
+      <img src="https://cdn.jsdelivr.net/gh/sanshui19516/Plot-Advancement-Illustration-@main/%E5%89%B2%E5%8C%85%E7%9A%AE%E5%90%8E%E7%9A%84%E5%84%BF%E5%AD%90%E8%A2%AB%E5%A6%88%E5%A6%88%E5%AF%B8%E6%AD%A2%E8%B0%83%E6%95%99/%E9%85%8D%E5%9B%BE/%E5%9C%BA%E6%99%AF-%E5%8D%AB%E7%94%9F%E9%97%B4.jpg" alt="卫生间" loading="eager" />
+    </div>
+    <div class="memory memory-4">
+      <img src="https://cdn.jsdelivr.net/gh/sanshui19516/Plot-Advancement-Illustration-@main/%E5%89%B2%E5%8C%85%E7%9A%AE%E5%90%8E%E7%9A%84%E5%84%BF%E5%AD%90%E8%A2%AB%E5%A6%88%E5%A6%88%E5%AF%B8%E6%AD%A2%E8%B0%83%E6%95%99/%E9%85%8D%E5%9B%BE/%E5%9C%BA%E6%99%AF-%E6%B5%B7%E8%BE%B9.jpg" alt="海边" loading="eager" />
+    </div>
+  </div>
+
+  <!-- 光里的尘埃 -->
+  <div class="dust dust-1"></div>
+  <div class="dust dust-2"></div>
+  <div class="dust dust-3"></div>
+  <div class="dust dust-4"></div>
+  <div class="dust dust-5"></div>
+  <div class="dust dust-6"></div>
+  <div class="dust dust-7"></div>
+  <div class="dust dust-8"></div>
+
+  <!-- 标题（门板上） -->
+  <div class="title-area" id="titleArea">
+    <span class="title-eyebrow">DOOR · BEFORE OPENING</span>
+    <h1 class="title-main">妈妈的<br>寸止之爱</h1>
+    <div class="title-sub">门后面的事，她一开始也不知道会变成这样。</div>
+  </div>
+
+  <!-- 底部：开始按钮 -->
+  <div class="bottom-area" id="bottomArea">
+    <button class="start-btn" id="startBtn">
+      推 开 这 扇 门
+      <span class="arrow">→</span>
+    </button>
+    <div class="author-line">三年的水</div>
+  </div>
+
+  <!-- 噪点 -->
+  <div class="grain"></div>
+
+  <!-- 过场层 -->
+  <div class="transition" id="transition"></div>
+  <div class="transition white-flash" id="whiteFlash"></div>
+
+</div>
+
+<script>
+(function(){
+'use strict';
+
+/* ══════════════════════════════════════════
+   跳转到开场白索引 1
+   ══════════════════════════════════════════ */
+async function switchOpening(swipeId) {
+  try {
+    var messages;
+    try {
+      messages = await getChatMessages?.('0', { include_swipe: true });
+    } catch (e) {
+      var context = window.SillyTavern?.getContext?.();
+      messages = context?.chat?.messages;
+    }
+    if (messages && messages.length > 0) {
+      var userMessage = messages[0];
+      if (userMessage && userMessage.swipes && userMessage.swipes.length > swipeId) {
+        var targetSwipe = userMessage.swipes[swipeId];
+        var setChatMessage = window.setChatMessage || window.SillyTavern?.getContext?.()?.setChatMessage;
+        if (typeof setChatMessage === 'function') {
+          await setChatMessage(targetSwipe, 0, { swipe_id: swipeId, refresh: 'display_and_render_current' });
+          return;
+        }
+        if (typeof userMessage.setSwipe === 'function') {
+          userMessage.setSwipe(swipeId);
+          return;
+        }
+      }
+    }
+  } catch (e) {}
+
+  try {
+    if (typeof window.parent.triggerSlash === 'function') {
+      window.parent.triggerSlash('/trigger');
+      return;
+    }
+    if (typeof window.fillInput === 'function') {
+      window.fillInput('/trigger');
+      return;
+    }
+    if (typeof window.triggerSlash === 'function') {
+      window.triggerSlash('/trigger');
+      return;
+    }
+  } catch (e) {}
+}
+
+/* ══════════════════════════════════════════
+   点击"推开门" → 过场动画
+   ══════════════════════════════════════════ */
+var isStarting = false;
+
+function startTransition() {
+  if (isStarting) return;
+  isStarting = true;
+
+  var btn = document.getElementById('startBtn');
+  var slit = document.getElementById('lightSlit');
+  var memories = document.getElementById('memories');
+  var titleArea = document.getElementById('titleArea');
+  var bottomArea = document.getElementById('bottomArea');
+  var transition = document.getElementById('transition');
+  var whiteFlash = document.getElementById('whiteFlash');
+
+  /* ① 按钮和文字先淡出 */
+  if (titleArea) titleArea.classList.add('fade-out');
+  if (bottomArea) bottomArea.classList.add('fade-out');
+  if (memories) memories.classList.add('fade-out');
+
+  /* ② 光缝裂开（900ms） */
+  setTimeout(function() {
+    if (slit) slit.classList.add('expanding');
+  }, 200);
+
+  /* ③ 光晕层覆盖全屏（在光缝扩张到一半时开始） */
+  setTimeout(function() {
+    if (transition) transition.classList.add('active');
+  }, 700);
+
+  /* ④ 白闪 */
+  setTimeout(function() {
+    if (whiteFlash) whiteFlash.classList.add('on');
+  }, 1100);
+
+  /* ⑤ 跳转（白闪后） */
+  setTimeout(function() {
+    switchOpening(1);
+  }, 1500);
+
+  /* ⑥ 白闪淡出（如果跳转失败，至少让画面恢复正常） */
+  setTimeout(function() {
+    if (whiteFlash) whiteFlash.classList.remove('on');
+    if (transition) transition.classList.remove('active');
+    if (titleArea) titleArea.classList.remove('fade-out');
+    if (bottomArea) bottomArea.classList.remove('fade-out');
+    if (memories) memories.classList.remove('fade-out');
+    if (slit) slit.classList.remove('expanding');
+    isStarting = false;
+  }, 3200);
+}
+
+/* 绑定按钮 */
+var startBtn = document.getElementById('startBtn');
+if (startBtn) {
+  startBtn.addEventListener('click', startTransition);
+}
+
+/* 回车键也可以触发 */
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Enter' && !isStarting) {
+    startTransition();
+  }
+});
+
+/* ══════════════════════════════════════════
+   高度同步（防止 iframe 塌陷）
+   ══════════════════════════════════════════ */
+function syncHeight() {
+  try {
+    var stage = document.getElementById('stageRoot');
+    if (!stage) return;
+    var height = stage.offsetHeight + 20;
+    if (!height || height < 100) return;
+
+    var frame = window.frameElement;
+    if (frame && frame.tagName === 'IFRAME') {
+      frame.style.height = height + 'px';
+      frame.style.minHeight = 'unset';
+      frame.style.maxHeight = 'unset';
+      frame.style.overflow = 'hidden';
+    }
+
+    try {
+      var iframes = window.parent.document.querySelectorAll('iframe');
+      for (var i = 0; i < iframes.length; i++) {
+        try {
+          if (iframes[i].contentWindow === window) {
+            iframes[i].style.height = height + 'px';
+            iframes[i].style.minHeight = 'unset';
+            iframes[i].style.maxHeight = 'unset';
+            iframes[i].style.overflow = 'hidden';
+            break;
+          }
+        } catch (e) {}
+      }
+    } catch (e) {}
+  } catch (e) {}
+}
+
+syncHeight();
+setTimeout(syncHeight, 100);
+setTimeout(syncHeight, 300);
+setTimeout(syncHeight, 600);
+setTimeout(syncHeight, 1000);
+setInterval(syncHeight, 800);
+window.addEventListener('resize', syncHeight);
+
+})();
+</script>
+
+</body>
+</html>
