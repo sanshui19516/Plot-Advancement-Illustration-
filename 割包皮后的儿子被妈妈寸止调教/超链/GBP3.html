@@ -1,0 +1,1272 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>妈妈的寸止之爱 · 状态栏</title>
+
+<style>
+@import url("https://fontsapi.zeoseven.com/370/main/result.css");
+
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+:root {
+  --paper: #f4ecd8;
+  --paper-2: #ece0c8;
+  --paper-3: #ddd0b4;
+  --paper-edge: #d4c3a0;
+  --ink: #3a2a1a;
+  --ink-2: #6b5540;
+  --ink-3: #9a856d;
+  --accent: #8b3a3a;
+  --accent-2: #c47a6a;
+  --gold: #b8955a;
+  --shadow: rgba(58, 42, 26, 0.18);
+  --font-main: "KTXP-GlowRound", 'Georgia', 'Songti SC', serif;
+  --font-hand: "KTXP-GlowRound", 'KaiTi', 'STKaiti', serif;
+  --mono: 'DIN', 'Courier New', 'Consolas', monospace;
+}
+
+html, body { background: transparent; min-height: auto; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font-main);
+  font-weight: normal;
+  color: var(--ink);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 14px 10px;
+  line-height: 1.5;
+}
+
+.book {
+  width: 100%;
+  max-width: 560px;
+  position: relative;
+  background:
+    radial-gradient(ellipse at 20% 10%, rgba(255,248,225,0.5) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 90%, rgba(200,170,120,0.15) 0%, transparent 55%),
+    linear-gradient(135deg, var(--paper) 0%, var(--paper-2) 55%, var(--paper-3) 100%);
+  border-radius: 6px;
+  box-shadow:
+    0 2px 0 var(--paper-edge),
+    0 4px 0 rgba(180,160,120,0.3),
+    0 16px 40px var(--shadow),
+    inset 0 0 80px rgba(200,170,120,0.08);
+  border: 1px solid rgba(180,160,120,0.35);
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.book::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    repeating-linear-gradient(0deg, transparent 0, transparent 2px, rgba(120,90,60,0.015) 2px, rgba(120,90,60,0.015) 3px),
+    repeating-linear-gradient(90deg, transparent 0, transparent 3px, rgba(120,90,60,0.01) 3px, rgba(120,90,60,0.01) 4px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.book::after {
+  content: '';
+  position: absolute;
+  top: 0; bottom: 0; left: 18px;
+  width: 1px;
+  background: repeating-linear-gradient(to bottom, transparent 0, transparent 8px, rgba(139,58,58,0.15) 8px, rgba(139,58,58,0.15) 10px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.book > * { position: relative; z-index: 1; }
+
+.toggle-btn {
+  position: absolute;
+  top: 10px; right: 12px;
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  border: 1px solid rgba(139,58,58,0.3);
+  background: rgba(244,236,216,0.95);
+  color: var(--accent);
+  font-size: 14px;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.25s ease;
+  z-index: 20;
+  box-shadow: 0 2px 6px var(--shadow);
+  font-family: var(--font-main);
+  line-height: 1;
+}
+.toggle-btn:hover { background: var(--accent); color: var(--paper); transform: rotate(15deg); }
+.book.collapsed .toggle-btn { position: static; flex-shrink: 0; margin-right: 4px; }
+
+.collapsed-view {
+  display: none;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px 12px 12px;
+  min-height: 56px;
+}
+.book.collapsed .collapsed-view { display: flex; }
+.book.collapsed .expanded-view { display: none; }
+
+.collapsed-view .ribbon {
+  width: 4px; height: 26px;
+  background: linear-gradient(to bottom, var(--accent), var(--accent-2));
+  border-radius: 2px;
+  flex-shrink: 0;
+  box-shadow: 0 0 8px rgba(139,58,58,0.3);
+}
+.collapsed-view .c-title {
+  font-family: var(--font-hand);
+  font-size: 15px;
+  color: var(--ink);
+  letter-spacing: 1px;
+  font-weight: 600;
+}
+.collapsed-view .c-stage {
+  margin-left: auto;
+  padding: 3px 10px;
+  border: 1px solid var(--accent);
+  border-radius: 2px;
+  color: var(--accent);
+  font-size: 12px;
+  font-family: var(--font-hand);
+  letter-spacing: 2px;
+  background: rgba(139,58,58,0.06);
+}
+.collapsed-view .c-stage::before { content: '◆'; margin-right: 4px; font-size: 8px; vertical-align: middle; }
+
+.view-wrapper { overflow: hidden; position: relative; }
+.view-inner {
+  display: flex;
+  width: 200%;
+  transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translateX(0);
+}
+.view-inner.show-events { transform: translateX(-50%); }
+.view-page { width: 50%; flex-shrink: 0; display: flex; flex-direction: column; }
+
+.hero { padding: 12px 12px 0; }
+
+.scene-banner {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 4px;
+  overflow: hidden;
+  border: 1px solid rgba(139,58,58,0.2);
+  box-shadow: inset 0 0 40px rgba(58,42,26,0.25), 0 2px 8px rgba(58,42,26,0.15);
+  background: #2a1f15;
+}
+.scene-img {
+  position: absolute; inset: 0;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  transition: opacity 0.6s ease;
+  opacity: 0;
+}
+.scene-img.visible { opacity: 1; }
+.scene-overlay {
+  position: absolute; inset: 0;
+  background:
+    linear-gradient(to bottom, rgba(20,14,8,0.55) 0%, transparent 35%, transparent 60%, rgba(20,14,8,0.75) 100%),
+    linear-gradient(to right, rgba(20,14,8,0.35) 0%, transparent 40%);
+  pointer-events: none;
+}
+.scene-info {
+  position: absolute; top: 10px; left: 12px;
+  color: var(--paper);
+  text-shadow: 0 1px 6px rgba(0,0,0,0.8);
+  z-index: 2;
+}
+.scene-name {
+  display: block;
+  font-family: var(--font-hand);
+  font-size: clamp(15px, 3.8vw, 18px);
+  letter-spacing: 3px;
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+.scene-time {
+  display: block;
+  font-family: var(--mono);
+  font-size: clamp(9px, 2.2vw, 11px);
+  letter-spacing: 1px;
+  opacity: 0.85;
+}
+
+.stage-avatar {
+  position: absolute;
+  bottom: 10px; right: 12px;
+  width: clamp(54px, 13vw, 72px);
+  height: clamp(54px, 13vw, 72px);
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid rgba(212,185,138,0.85);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.5), 0 0 0 3px rgba(244,236,216,0.15);
+  background: rgba(58,42,26,0.4);
+  z-index: 2;
+  transition: transform 0.4s ease;
+}
+.stage-avatar:hover { transform: scale(1.05); }
+.stage-avatar img { width: 100%; height: 100%; object-fit: cover; display: block; transition: opacity 0.5s ease; }
+
+.header {
+  padding: 14px 16px 10px 26px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 1px dashed rgba(139,58,58,0.2);
+  margin: 0 12px;
+  flex-wrap: wrap;
+}
+.header-title { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+.title-main {
+  font-family: var(--font-hand);
+  font-size: clamp(17px, 4.2vw, 20px);
+  font-weight: 600;
+  color: var(--ink);
+  letter-spacing: 3px;
+}
+.title-weather {
+  font-family: var(--mono);
+  font-size: clamp(10px, 2.4vw, 12px);
+  color: var(--ink-2);
+  letter-spacing: 1px;
+  padding: 2px 8px;
+  background: rgba(139,58,58,0.06);
+  border-radius: 2px;
+  border-left: 2px solid var(--accent);
+}
+.header-mood {
+  font-family: var(--font-hand);
+  font-size: clamp(12px, 2.8vw, 14px);
+  color: var(--accent);
+  letter-spacing: 1px;
+}
+
+.stage-row {
+  padding: 14px 16px 4px 26px;
+  margin: 0 12px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.stage-seal {
+  width: 72px; height: 72px;
+  flex-shrink: 0;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.stage-seal::before {
+  content: '';
+  position: absolute; inset: 0;
+  border-radius: 50%;
+  border: 2px solid var(--accent);
+  opacity: 0.75;
+  transform: rotate(-8deg);
+}
+.stage-seal::after {
+  content: '';
+  position: absolute; inset: 5px;
+  border-radius: 50%;
+  border: 1px solid var(--accent);
+  opacity: 0.4;
+  transform: rotate(6deg);
+}
+.seal-text {
+  font-family: var(--font-hand);
+  font-size: clamp(12px, 3vw, 15px);
+  color: var(--accent);
+  letter-spacing: 1px;
+  font-weight: 700;
+  text-align: center;
+  line-height: 1.15;
+  position: relative;
+  z-index: 1;
+  transform: rotate(-3deg);
+  max-width: 66px;
+  word-break: keep-all;
+}
+.stage-desc { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.stage-label {
+  font-family: var(--font-main);
+  font-size: clamp(9px, 2.2vw, 10px);
+  color: var(--ink-3);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+}
+.stage-emotion {
+  font-family: var(--font-hand);
+  font-size: clamp(13px, 3vw, 15px);
+  color: var(--ink-2);
+  letter-spacing: 1px;
+}
+
+.stats-grid {
+  padding: 14px 16px 10px 26px;
+  margin: 0 12px;
+  display: grid;
+  grid-template-columns: 1fr 1.3fr 1fr 1fr;
+  gap: 10px;
+  align-items: stretch;
+}
+.stat-card {
+  background: rgba(255,248,225,0.4);
+  border: 1px solid rgba(139,58,58,0.12);
+  border-radius: 3px;
+  padding: 12px 8px 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+  transition: border-color 0.3s ease;
+}
+.stat-card:hover { border-color: rgba(139,58,58,0.3); }
+
+.stat-label {
+  font-family: var(--font-hand);
+  font-size: clamp(12px, 3vw, 15px);
+  color: var(--ink);
+  letter-spacing: 2px;
+  text-align: center;
+  font-weight: 600;
+  padding-bottom: 4px;
+  border-bottom: 1px solid rgba(139,58,58,0.15);
+  width: 100%;
+}
+
+.thermo-wrapper { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.thermo {
+  width: 18px; height: 82px;
+  border-radius: 9px;
+  border: 2px solid var(--ink);
+  background: var(--paper);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column-reverse;
+  box-shadow: inset 0 2px 6px rgba(58,42,26,0.15);
+}
+.thermo-fill {
+  width: 100%;
+  background: linear-gradient(to top, #6e2a2a, #c44536 60%, #e07a5f);
+  transition: height 0.9s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 0 0 7px 7px;
+}
+.thermo-value {
+  font-family: var(--mono);
+  font-size: clamp(12px, 2.8vw, 14px);
+  color: var(--accent);
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+.thermo-max { color: var(--ink-3); font-size: 0.75em; font-weight: 400; }
+
+.water-bar {
+  width: 100%;
+  height: 12px;
+  background: rgba(212,195,160,0.6);
+  border-radius: 6px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: inset 0 1px 3px rgba(58,42,26,0.2);
+}
+.water-fill { height: 100%; border-radius: 6px; transition: width 0.9s cubic-bezier(0.4, 0, 0.2, 1); }
+.water-fill.shame { background: linear-gradient(90deg, #7a2a3a, #b8475f 60%, #d46f8a); }
+.water-fill.desire { background: linear-gradient(90deg, #8b3a20, #c47a3a 60%, #e0a55f); }
+.water-value {
+  font-family: var(--mono);
+  font-size: clamp(12px, 2.8vw, 14px);
+  color: var(--ink);
+  font-weight: 700;
+  align-self: flex-end;
+}
+
+.battery {
+  width: 62px; height: 24px;
+  border: 2px solid var(--ink);
+  border-radius: 3px;
+  padding: 2px;
+  position: relative;
+  background: rgba(255,248,225,0.5);
+}
+.battery::after {
+  content: '';
+  position: absolute;
+  right: -7px; top: 50%;
+  transform: translateY(-50%);
+  width: 4px; height: 10px;
+  background: var(--ink);
+  border-radius: 0 2px 2px 0;
+}
+.battery-fill {
+  height: 100%;
+  border-radius: 1px;
+  background: linear-gradient(90deg, #4a6b3a, #7fb069 60%, #a8c66c);
+  transition: width 0.9s ease, background 0.5s ease;
+}
+.battery-fill.warn { background: linear-gradient(90deg, #8b6a20, #d4a94a 60%, #e0c46a); }
+.battery-fill.danger { background: linear-gradient(90deg, #7a2020, #c44536 60%, #e07a5f); }
+.battery-value {
+  font-family: var(--mono);
+  font-size: clamp(12px, 2.8vw, 14px);
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.persuade-seal {
+  width: 62px; height: 62px;
+  border-radius: 50%;
+  background: conic-gradient(var(--accent) 0%, var(--accent) var(--p, 10%), rgba(212,195,160,0.5) var(--p, 10%), rgba(212,195,160,0.5) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: background 0.9s ease;
+}
+.persuade-seal::before {
+  content: '';
+  position: absolute;
+  inset: 5px;
+  border-radius: 50%;
+  background: var(--paper);
+  box-shadow: inset 0 0 8px rgba(58,42,26,0.1);
+}
+.persuade-seal span {
+  position: relative;
+  z-index: 1;
+  font-family: var(--mono);
+  font-size: clamp(13px, 3vw, 15px);
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.sub-stats {
+  padding: 4px 16px 10px 26px;
+  margin: 0 12px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px 18px;
+}
+.sub-stat { display: flex; align-items: center; gap: 6px; }
+.sub-label {
+  font-family: var(--font-hand);
+  font-size: clamp(11px, 2.7vw, 13px);
+  color: var(--ink-2);
+  letter-spacing: 1px;
+  min-width: 52px;
+  font-weight: 500;
+}
+.sub-bar {
+  flex: 1;
+  height: 5px;
+  background: rgba(212,195,160,0.7);
+  border-radius: 3px;
+  overflow: hidden;
+  box-shadow: inset 0 1px 2px rgba(58,42,26,0.15);
+}
+.sub-fill {
+  height: 100%;
+  border-radius: 3px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  transition: width 0.9s ease;
+}
+.sub-fill.sens { background: linear-gradient(90deg, #7a3a6e, #c47aa8 60%, #e0a5c4); }
+.sub-fill.conceal { background: linear-gradient(90deg, #3a4a5a, #6b8aa8 60%, #9ab8d4); }
+.sub-val {
+  font-family: var(--mono);
+  font-size: clamp(11px, 2.6vw, 13px);
+  color: var(--ink);
+  font-weight: 700;
+  min-width: 24px;
+  text-align: right;
+}
+
+.note {
+  margin: 12px 26px 12px 30px;
+  padding: 14px 16px 12px 70px;
+  background: linear-gradient(135deg, #fff8dc 0%, #faf0c8 100%);
+  border-radius: 2px;
+  box-shadow: 2px 4px 12px rgba(58,42,26,0.15), 0 0 0 1px rgba(139,58,58,0.08);
+  position: relative;
+  transform: rotate(-0.4deg);
+  min-height: 64px;
+  display: flex;
+  align-items: center;
+}
+.note::before {
+  content: '';
+  position: absolute;
+  top: -8px; left: 50%;
+  transform: translateX(-50%) rotate(-3deg);
+  width: 44px; height: 14px;
+  background: rgba(190,160,110,0.55);
+  border-left: 1px dashed rgba(255,255,255,0.3);
+  border-right: 1px dashed rgba(255,255,255,0.3);
+  box-shadow: 0 1px 4px rgba(58,42,26,0.15);
+}
+.note-avatar {
+  position: absolute;
+  left: 10px; top: 50%;
+  transform: translateY(-50%) rotate(2deg);
+  width: 50px; height: 50px;
+  border-radius: 3px;
+  overflow: hidden;
+  border: 2px solid rgba(139,58,58,0.2);
+  background: rgba(212,195,160,0.4);
+  box-shadow: 0 2px 6px rgba(58,42,26,0.15);
+}
+.note-avatar img { width: 100%; height: 100%; object-fit: cover; display: block; transition: opacity 0.5s ease; }
+.note-body { flex: 1; min-width: 0; }
+.note-text {
+  font-family: var(--font-hand);
+  font-size: clamp(13px, 3vw, 15px);
+  color: var(--ink);
+  line-height: 1.7;
+  letter-spacing: 0.5px;
+  word-wrap: break-word;
+}
+.note-author {
+  font-family: var(--font-main);
+  font-size: clamp(9px, 2.2vw, 10px);
+  color: var(--ink-3);
+  margin-top: 4px;
+  text-align: right;
+  letter-spacing: 1px;
+  font-style: italic;
+}
+
+.training-row {
+  margin: 0 26px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  padding: 8px 0;
+}
+.training-item {
+  background: rgba(255,248,225,0.4);
+  border: 1px dashed rgba(139,58,58,0.2);
+  border-radius: 3px;
+  padding: 8px 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 6px;
+}
+.training-label {
+  font-family: var(--font-hand);
+  font-size: clamp(11px, 2.7vw, 13px);
+  color: var(--ink-2);
+  letter-spacing: 1px;
+  font-weight: 500;
+}
+.training-val {
+  font-family: var(--font-hand);
+  font-size: clamp(12px, 3vw, 14px);
+  color: var(--accent);
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+.event-progress {
+  margin: 8px 26px 4px;
+  padding: 10px 12px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background 0.25s ease;
+  border: 1px dashed transparent;
+}
+.event-progress:hover { background: rgba(139,58,58,0.05); border-color: rgba(139,58,58,0.25); }
+.event-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-family: var(--font-hand);
+  font-size: clamp(12px, 2.8vw, 14px);
+  color: var(--ink-2);
+  letter-spacing: 2px;
+  margin-bottom: 6px;
+  font-weight: 500;
+}
+.event-header::after {
+  content: '  ▸ 点击查看';
+  font-size: 0.75em;
+  color: var(--ink-3);
+  font-family: var(--font-main);
+  letter-spacing: 0;
+}
+.event-count {
+  font-family: var(--mono);
+  font-size: clamp(12px, 2.8vw, 14px);
+  color: var(--accent);
+  font-weight: 700;
+}
+.event-bar {
+  width: 100%;
+  height: 4px;
+  background: rgba(212,195,160,0.7);
+  border-radius: 2px;
+  overflow: hidden;
+  position: relative;
+}
+.event-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), var(--gold));
+  transition: width 0.9s ease;
+  border-radius: 2px;
+}
+
+.events-page {
+  padding: 16px 14px 16px 22px;
+  display: flex;
+  flex-direction: column;
+  min-height: 300px;
+}
+.events-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+  border-bottom: 1px dashed rgba(139,58,58,0.25);
+}
+.back-btn {
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  border: 1px solid rgba(139,58,58,0.3);
+  background: rgba(244,236,216,0.95);
+  color: var(--accent);
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.25s ease;
+  flex-shrink: 0;
+  font-family: var(--font-main);
+}
+.back-btn:hover { background: var(--accent); color: var(--paper); }
+.events-title {
+  font-family: var(--font-hand);
+  font-size: clamp(16px, 4vw, 19px);
+  color: var(--ink);
+  letter-spacing: 4px;
+  font-weight: 600;
+}
+.events-count {
+  margin-left: auto;
+  font-family: var(--mono);
+  font-size: clamp(11px, 2.6vw, 13px);
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.events-list { overflow-y: auto; max-height: 66vh; padding-right: 6px; }
+.events-list::-webkit-scrollbar { width: 3px; }
+.events-list::-webkit-scrollbar-thumb { background: rgba(139,58,58,0.3); border-radius: 2px; }
+
+.event-stage-group { margin-bottom: 14px; }
+.event-stage-title {
+  font-family: var(--font-hand);
+  font-size: clamp(12px, 2.8vw, 14px);
+  color: var(--ink-2);
+  letter-spacing: 2px;
+  padding: 4px 8px;
+  background: rgba(139,58,58,0.08);
+  border-left: 3px solid var(--accent);
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+.event-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  border-bottom: 1px dotted rgba(139,58,58,0.12);
+  font-family: var(--font-hand);
+  font-size: clamp(12px, 2.8vw, 14px);
+  transition: background 0.2s ease;
+}
+.event-item:hover { background: rgba(139,58,58,0.04); }
+.event-icon { flex-shrink: 0; width: 18px; text-align: center; font-size: 13px; color: var(--ink-3); }
+.event-item.done .event-icon { color: var(--accent); }
+.event-item.done .event-name { color: var(--ink-2); font-weight: 600; }
+.event-item:not(.done) .event-name { color: var(--ink-3); }
+.event-name { flex: 1; letter-spacing: 1px; }
+.event-idx {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--ink-3);
+  opacity: 0.6;
+  min-width: 18px;
+  text-align: right;
+}
+
+.footer {
+  margin: 6px 26px 16px;
+  padding-top: 8px;
+  border-top: 1px dashed rgba(139,58,58,0.15);
+  font-family: var(--font-main);
+  font-size: clamp(8px, 2vw, 9px);
+  color: var(--ink-3);
+  letter-spacing: 3px;
+  text-align: center;
+  font-style: italic;
+}
+.footer::before { content: '◇  '; color: var(--accent); opacity: 0.6; }
+.footer::after { content: '  ◇'; color: var(--accent); opacity: 0.6; }
+
+@media (max-width: 520px) {
+  .stats-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
+  .stat-card { padding: 10px 6px 8px; }
+  .thermo { height: 66px; }
+  .battery { width: 52px; height: 20px; }
+  .persuade-seal { width: 52px; height: 52px; }
+  .note { margin: 10px 16px 10px 22px; padding: 12px 12px 10px 64px; }
+  .note-avatar { width: 44px; height: 44px; left: 8px; }
+  .training-row, .event-progress { margin: 0 16px; }
+  .sub-stats { padding: 4px 12px 8px 16px; margin: 0 8px; }
+  .header, .stage-row, .stats-grid { padding-left: 16px; margin-left: 8px; }
+  .footer { margin-left: 16px; margin-right: 16px; }
+  .stage-seal { width: 62px; height: 62px; }
+  .stage-avatar { width: 50px; height: 50px; }
+  .events-page { padding: 12px 10px 12px 16px; }
+}
+
+@media (min-width: 720px) {
+  .book { max-width: 620px; }
+  .thermo { height: 96px; width: 20px; }
+  .persuade-seal { width: 70px; height: 70px; }
+}
+
+.book.collapsed { border-radius: 6px; }
+.book.collapsed::after { display: none; }
+</style>
+</head>
+
+<body>
+
+<div id="book" class="book">
+
+  <div class="collapsed-view">
+    <button id="toggleBtn" class="toggle-btn" title="展开">🔖</button>
+    <span class="ribbon"></span>
+    <span class="c-title">妈妈的寸止之爱</span>
+    <span id="collapsedStage" class="c-stage">母子</span>
+  </div>
+
+  <div class="expanded-view">
+    <div class="view-wrapper">
+      <div id="viewInner" class="view-inner">
+
+        <div class="view-page">
+          <button id="toggleBtnExpand" class="toggle-btn" title="折叠">🔖</button>
+
+          <div class="hero">
+            <div class="scene-banner">
+              <div id="sceneImg" class="scene-img"></div>
+              <div class="scene-overlay"></div>
+              <div class="scene-info">
+                <span id="sceneName" class="scene-name">家里客厅</span>
+                <span id="sceneTime" class="scene-time">Day 1 · 18:30 · 傍晚</span>
+              </div>
+              <div class="stage-avatar">
+                <img id="stageAvatarImg" src="" alt="当前阶段" />
+              </div>
+            </div>
+          </div>
+
+          <div class="header">
+            <div class="header-title">
+              <span class="title-main">妈妈的寸止之爱</span>
+              <span id="headerWeather" class="title-weather">秋 · 晴</span>
+            </div>
+            <span id="headerMood" class="header-mood">当前情绪：担忧</span>
+          </div>
+
+          <div class="stage-row">
+            <div class="stage-seal">
+              <span id="stageSealText" class="seal-text">母子</span>
+            </div>
+            <div class="stage-desc">
+              <span class="stage-label">RELATION STAGE</span>
+              <span id="stageEmotion" class="stage-emotion">担忧 · 今日状态</span>
+            </div>
+          </div>
+
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-label">好感度</div>
+              <div class="thermo-wrapper">
+                <div class="thermo">
+                  <div id="favorFill" class="thermo-fill"></div>
+                </div>
+                <div class="thermo-value">
+                  <span id="favorVal">0</span><span class="thermo-max">/300</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-label">羞耻值</div>
+              <div class="water-bar"><div id="shameFill" class="water-fill shame"></div></div>
+              <div class="water-value"><span id="shameVal">0</span></div>
+              <div class="stat-label" style="margin-top:10px;">欲望值</div>
+              <div class="water-bar"><div id="desireFill" class="water-fill desire"></div></div>
+              <div class="water-value"><span id="desireVal">0</span></div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-label">疲劳值</div>
+              <div class="battery">
+                <div id="fatigueFill" class="battery-fill"></div>
+              </div>
+              <div class="battery-value"><span id="fatigueVal">0</span></div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-label">自我说服</div>
+              <div id="persuadeSeal" class="persuade-seal">
+                <span id="persuadeVal">0</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="sub-stats">
+            <div class="sub-stat">
+              <span class="sub-label">依赖度</span>
+              <div class="sub-bar"><div id="dependFill" class="sub-fill"></div></div>
+              <span id="dependVal" class="sub-val">0</span>
+            </div>
+            <div class="sub-stat">
+              <span class="sub-label">敏感度</span>
+              <div class="sub-bar"><div id="sensFill" class="sub-fill sens"></div></div>
+              <span id="sensVal" class="sub-val">0</span>
+            </div>
+            <div class="sub-stat">
+              <span class="sub-label">责任感</span>
+              <div class="sub-bar"><div id="respFill" class="sub-fill"></div></div>
+              <span id="respVal" class="sub-val">0</span>
+            </div>
+            <div class="sub-stat">
+              <span class="sub-label">隐瞒度</span>
+              <div class="sub-bar"><div id="concealFill" class="sub-fill conceal"></div></div>
+              <span id="concealVal" class="sub-val">0</span>
+            </div>
+          </div>
+
+          <div class="note">
+            <div class="note-avatar">
+              <img id="noteAvatarImg" src="" alt="情绪" />
+            </div>
+            <div class="note-body">
+              <div id="innerVoice" class="note-text">（还没有想什么。）</div>
+              <div class="note-author">—— 江暮云 · 此刻</div>
+            </div>
+          </div>
+
+          <div class="training-row">
+            <div class="training-item">
+              <span class="training-label">当前手法</span>
+              <span id="trainMethod" class="training-val">无</span>
+            </div>
+            <div class="training-item">
+              <span class="training-label">训练阶段</span>
+              <span id="trainStage" class="training-val">未开始</span>
+            </div>
+          </div>
+
+          <div id="eventProgress" class="event-progress">
+            <div class="event-header">
+              <span>◆ 事件进度</span>
+              <span id="eventCount" class="event-count">0 / 24</span>
+            </div>
+            <div class="event-bar">
+              <div id="eventFill" class="event-fill"></div>
+            </div>
+          </div>
+
+          <div class="footer">by 三年的水</div>
+        </div>
+
+        <div class="view-page events-page">
+          <div class="events-header">
+            <button id="backBtn" class="back-btn" title="返回">‹</button>
+            <span class="events-title">事件卷宗</span>
+            <span id="eventsTotalCount" class="events-count">0 / 24</span>
+          </div>
+          <div id="eventsList" class="events-list"></div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+(function(){
+'use strict';
+
+var CDN_BASE = 'https://cdn.jsdelivr.net/gh/sanshui19516/Plot-Advancement-Illustration-@main/%E5%89%B2%E5%8C%85%E7%9A%AE%E5%90%8E%E7%9A%84%E5%84%BF%E5%AD%90%E8%A2%AB%E5%A6%88%E5%A6%88%E5%AF%B8%E6%AD%A2%E8%B0%83%E6%95%99/%E9%85%8D%E5%9B%BE/';
+
+var SCENE_MAP = {
+  '家里客厅': CDN_BASE + '%E5%9C%BA%E6%99%AF-%E5%AE%B6%E9%87%8C%E5%AE%A2%E5%8E%85.jpg',
+  '餐厅': CDN_BASE + '%E5%9C%BA%E6%99%AF-%E9%A4%90%E5%8E%85.jpg',
+  '厨房': CDN_BASE + '%E5%9C%BA%E6%99%AF-%E5%8E%A8%E6%88%BF.jpg',
+  '儿子的房间': CDN_BASE + '%E5%9C%BA%E6%99%AF-%E5%84%BF%E5%AD%90%E7%9A%84%E6%88%BF%E9%97%B4.jpg',
+  '母亲的房间': CDN_BASE + '%E5%9C%BA%E6%99%AF-%E6%AF%8D%E4%BA%B2%E7%9A%84%E6%88%BF%E9%97%B4.jpg',
+  '卫生间': CDN_BASE + '%E5%9C%BA%E6%99%AF-%E5%8D%AB%E7%94%9F%E9%97%B4.jpg',
+  '公寓阳台': CDN_BASE + '%E5%9C%BA%E6%99%AF-%E5%85%AC%E5%AF%93%E9%98%B3%E5%8F%B0.jpg',
+  '楼道电梯': CDN_BASE + '%E5%9C%BA%E6%99%AF-%E6%A5%BC%E9%81%93%E7%94%B5%E6%A2%AF.jpg',
+  '小区超市': CDN_BASE + '%E5%9C%BA%E6%99%AF-%E5%B0%8F%E5%8C%BA%E8%B6%85%E5%B8%82.jpg',
+  '公交站': CDN_BASE + '%E5%9C%BA%E6%99%AF-%E5%85%AC%E4%BA%A4%E7%AB%99.jpg',
+  '学校周边': CDN_BASE + '%E5%9C%BA%E6%99%AF-%E5%AD%A6%E6%A0%A1%E5%91%A8%E8%BE%B9.jpg',
+  '家庭餐馆': CDN_BASE + '%E5%9C%BA%E6%99%AF-%E5%AE%B6%E5%BA%AD%E9%A4%90%E9%A6%86.jpg',
+  '商业街': CDN_BASE + '%E5%9C%BA%E6%99%AF-%E5%95%86%E4%B8%9A%E8%A1%97.jpg',
+  '商场服装店': CDN_BASE + '%E5%9C%BA%E6%99%AF-%E5%95%86%E5%9C%BA%E6%9C%8D%E8%A3%85%E5%BA%97.jpg',
+  '酒店房间': CDN_BASE + '%E5%9C%BA%E6%99%AF-%E9%85%92%E5%BA%97%E6%88%BF%E9%97%B4.jpg',
+  '海边': CDN_BASE + '%E5%9C%BA%E6%99%AF-%E6%B5%B7%E8%BE%B9.jpg'
+};
+
+var STAGE_MAP = {
+  '母子': CDN_BASE + '%E5%85%B3%E7%B3%BB%E9%98%B6%E6%AE%B5-%E6%AF%8D%E5%AD%90.jpg',
+  '界限模糊': CDN_BASE + '%E5%85%B3%E7%B3%BB%E9%98%B6%E6%AE%B5-%E7%95%8C%E9%99%90%E6%A8%A1%E7%B3%8A.jpg',
+  '越界确认': CDN_BASE + '%E5%85%B3%E7%B3%BB%E9%98%B6%E6%AE%B5-%E8%B6%8A%E7%95%8C%E7%A1%AE%E8%AE%A4.jpg',
+  '关系确认': CDN_BASE + '%E5%85%B3%E7%B3%BB%E9%98%B6%E6%AE%B5-%E5%85%B3%E7%B3%BB%E7%A1%AE%E8%AE%A4.jpg',
+  '伴侣': CDN_BASE + '%E5%85%B3%E7%B3%BB%E9%98%B6%E6%AE%B5-%E4%BC%B4%E4%BE%A3.jpg'
+};
+
+var EMOTION_MAP = {
+  '平静': CDN_BASE + '%E6%83%85%E8%B6%A3-%E5%B9%B3%E9%9D%99.jpg',
+  '担忧': CDN_BASE + '%E6%83%85%E7%BB%AA-%E6%8B%85%E5%BF%A7.jpg',
+  '羞耻': CDN_BASE + '%E6%83%85%E7%BB%AA-%E7%BE%9E%E8%80%BB.jpg',
+  '心软': CDN_BASE + '%E6%83%85%E7%BB%AA-%E5%BF%83%E8%BD%AF.jpg',
+  '慌乱': CDN_BASE + '%E6%83%85%E7%BB%AA-%E6%85%8C%E4%B9%B1.jpg',
+  '疲惫': CDN_BASE + '%E6%83%85%E7%BB%AA-%E7%96%B2%E6%83%AB.jpg',
+  '动摇': CDN_BASE + '%E6%83%85%E7%BB%AA-%E5%8A%A8%E6%91%87.jpg',
+  '安心': CDN_BASE + '%E6%83%85%E7%BB%AA-%E5%AE%89%E5%BF%83.jpg'
+};
+
+var EMOTION_FALLBACK = {
+  '紧张': '慌乱', '柔软': '心软', '烦躁': '动摇', '困惑': '动摇',
+  '害羞': '羞耻', '满足': '安心', '厌恶': '动摇', '接受': '安心'
+};
+
+var EVENT_GROUPS = [
+  { title: '一 · 旁观忍耐', items: ['初次发现','正式询问','一夜失眠','提出训练','第一次旁观训练','旁观第3次'] },
+  { title: '二 · 生涩手交', items: ['请求手交','第一次手交','手交中发现反应','浴室发呆'] },
+  { title: '三 · 乳交泌乳', items: ['敏感点开发','请求乳交','第一次乳交','第一次泌乳','事后确认泌乳'] },
+  { title: '四 · 足交口交', items: ['足交加入','第一次口交'] },
+  { title: '五 · 高强度寸止', items: ['寸止变严格','浴室自慰哭泣','意识到超出初衷'] },
+  { title: '六 · 性交突破', items: ['请求插入','第一次插入','第二天害羞'] },
+  { title: '结局', items: ['关系稳定'] }
+];
+var EVENT_ALL = EVENT_GROUPS.flatMap(function(g){ return g.items; });
+
+function $(id) { return document.getElementById(id); }
+
+function unflatten(flat) {
+  if (!flat || typeof flat !== 'object') return {};
+  var keys = Object.keys(flat);
+  if (keys.length === 0) return {};
+  if (keys.every(function(k){ return k.indexOf('.') === -1; })) return flat;
+  var result = {};
+  for (var i = 0; i < keys.length; i++) {
+    var key = keys[i];
+    var val = flat[key];
+    var parts = key.split('.');
+    var cur = result;
+    for (var j = 0; j < parts.length - 1; j++) {
+      if (!cur[parts[j]]) cur[parts[j]] = {};
+      cur = cur[parts[j]];
+    }
+    cur[parts[parts.length - 1]] = val;
+  }
+  return result;
+}
+
+function getStatData() {
+  var raw = null;
+  try {
+    if (typeof getAllVariables === 'function') {
+      var all = getAllVariables();
+      raw = _.get(all, 'stat_data', null);
+      if (!raw || (typeof raw === 'object' && Object.keys(raw).length === 0)) {
+        raw = all;
+      }
+    }
+  } catch (e) {}
+  if (!raw || typeof raw !== 'object') return {};
+  return unflatten(raw);
+}
+
+function readVar(data, path, def) {
+  var v = _.get(data, path);
+  return v === undefined || v === null ? def : v;
+}
+
+var lastScene = '', lastStage = '', lastEmotion = '';
+
+function setText(id, val) {
+  var el = $(id);
+  if (el && el.textContent !== String(val)) el.textContent = val;
+}
+function setWidth(id, pct) {
+  var el = $(id);
+  if (el) el.style.width = Math.max(0, Math.min(100, pct)) + '%';
+}
+function setHeight(id, pct) {
+  var el = $(id);
+  if (el) el.style.height = Math.max(0, Math.min(100, pct)) + '%';
+}
+
+function updateSceneImage(scene) {
+  if (scene === lastScene) return;
+  lastScene = scene;
+  var imgEl = $('sceneImg');
+  if (!imgEl) return;
+  var url = SCENE_MAP[scene] || SCENE_MAP['家里客厅'];
+  imgEl.classList.remove('visible');
+  setTimeout(function() {
+    imgEl.style.backgroundImage = 'url("' + url + '")';
+    imgEl.classList.add('visible');
+  }, 300);
+}
+
+function updateStageAvatar(stage) {
+  if (stage === lastStage) return;
+  lastStage = stage;
+  var el = $('stageAvatarImg');
+  if (!el) return;
+  var url = STAGE_MAP[stage] || STAGE_MAP['母子'];
+  el.style.opacity = '0';
+  setTimeout(function() {
+    el.src = url;
+    el.onload = function() { el.style.opacity = '1'; };
+  }, 300);
+}
+
+function updateEmotionAvatar(emotion) {
+  if (emotion === lastEmotion) return;
+  lastEmotion = emotion;
+  var el = $('noteAvatarImg');
+  if (!el) return;
+  var key = emotion;
+  if (!EMOTION_MAP[key]) key = EMOTION_FALLBACK[key] || '平静';
+  var url = EMOTION_MAP[key] || EMOTION_MAP['平静'];
+  el.style.opacity = '0';
+  setTimeout(function() {
+    el.src = url;
+    el.onload = function() { el.style.opacity = '1'; };
+  }, 250);
+}
+
+var lastEventSnapshot = '';
+function renderEventsPage(data) {
+  var snapshot = JSON.stringify(data && data['事件'] ? data['事件'] : {});
+  if (snapshot === lastEventSnapshot) return;
+  lastEventSnapshot = snapshot;
+
+  var listEl = $('eventsList');
+  var countEl = $('eventsTotalCount');
+  if (!listEl) return;
+
+  var html = '';
+  var doneTotal = 0;
+  var total = EVENT_ALL.length;
+
+  EVENT_GROUPS.forEach(function(group) {
+    html += '<div class="event-stage-group">';
+    html += '<div class="event-stage-title">' + group.title + '</div>';
+    group.items.forEach(function(name) {
+      var done = readVar(data, '事件.' + name, false) === true;
+      if (done) doneTotal++;
+      var idx = EVENT_ALL.indexOf(name) + 1;
+      html += '<div class="event-item ' + (done ? 'done' : '') + '">';
+      html += '<span class="event-icon">' + (done ? '✓' : '○') + '</span>';
+      html += '<span class="event-name">' + name + '</span>';
+      html += '<span class="event-idx">' + idx + '</span>';
+      html += '</div>';
+    });
+    html += '</div>';
+  });
+
+  listEl.innerHTML = html;
+  if (countEl) countEl.textContent = doneTotal + ' / ' + total;
+}
+
+function render() {
+  var data = getStatData();
+  if (!data || Object.keys(data).length === 0) return;
+
+  var day = readVar(data, '世界.日期', 1);
+  var time = readVar(data, '世界.当前时间', '08:00');
+  var season = readVar(data, '世界.季节', '秋');
+  var weather = readVar(data, '世界.天气', '晴');
+  var period = readVar(data, '世界.时段', '上午');
+  var scene = readVar(data, '世界.当前场景', '家里客厅');
+
+  setText('sceneName', scene);
+  setText('sceneTime', 'Day ' + day + ' · ' + time + ' · ' + period);
+  setText('headerWeather', season + ' · ' + weather);
+  updateSceneImage(scene);
+
+  var favor = readVar(data, '江暮云.好感度', 0);
+  var shame = readVar(data, '江暮云.羞耻值', 0);
+  var desire = readVar(data, '江暮云.欲望值', 0);
+  var persuade = readVar(data, '江暮云.自我说服度', 0);
+  var fatigue = readVar(data, '江暮云.疲劳值', 0);
+  var stage = readVar(data, '江暮云.关系阶段', '母子');
+  var emotion = readVar(data, '江暮云.当前情绪', '平静');
+  var innerVoice = readVar(data, '江暮云.内心话', '');
+
+  setText('favorVal', Math.round(favor));
+  setHeight('favorFill', (favor / 300) * 100);
+
+  setText('shameVal', Math.round(shame));
+  setWidth('shameFill', shame);
+
+  setText('desireVal', Math.round(desire));
+  setWidth('desireFill', desire);
+
+  setText('fatigueVal', Math.round(fatigue));
+  var fatEl = $('fatigueFill');
+  if (fatEl) {
+    fatEl.style.width = Math.max(0, Math.min(100, fatigue)) + '%';
+    fatEl.classList.remove('warn', 'danger');
+    if (fatigue >= 80) fatEl.classList.add('danger');
+    else if (fatigue >= 60) fatEl.classList.add('warn');
+  }
+
+  setText('persuadeVal', Math.round(persuade));
+  var sealEl = $('persuadeSeal');
+  if (sealEl) {
+    sealEl.style.background = 'conic-gradient(var(--accent) 0%, var(--accent) ' + persuade + '%, rgba(212,195,160,0.5) ' + persuade + '%, rgba(212,195,160,0.5) 100%)';
+  }
+
+  setText('stageSealText', stage);
+  setText('stageEmotion', emotion + ' · 今日状态');
+  setText('collapsedStage', stage);
+  setText('headerMood', '当前情绪：' + emotion);
+  updateStageAvatar(stage);
+  updateEmotionAvatar(emotion);
+
+  setText('innerVoice', innerVoice || '（还没有想什么。）');
+
+  var depend = readVar(data, 'user.依赖度', 0);
+  var sens = readVar(data, 'user.敏感度', 0);
+  var resp = readVar(data, 'user.责任感', 0);
+  var conceal = readVar(data, 'user.隐瞒度', 0);
+  setText('dependVal', Math.round(depend));
+  setWidth('dependFill', depend);
+  setText('sensVal', Math.round(sens));
+  setWidth('sensFill', sens);
+  setText('respVal', Math.round(resp));
+  setWidth('respFill', resp);
+  setText('concealVal', Math.round(conceal));
+  setWidth('concealFill', conceal);
+
+  var trainStage = readVar(data, '关系.训练阶段', '未开始');
+  var trainMethod = readVar(data, '调教.当前手法', '无');
+  setText('trainStage', trainStage);
+  setText('trainMethod', trainMethod);
+
+  var done = 0;
+  for (var i = 0; i < EVENT_ALL.length; i++) {
+    if (readVar(data, '事件.' + EVENT_ALL[i], false) === true) done++;
+  }
+  setText('eventCount', done + ' / ' + EVENT_ALL.length);
+  setWidth('eventFill', (done / EVENT_ALL.length) * 100);
+
+  renderEventsPage(data);
+}
+
+function goToEvents() {
+  var inner = $('viewInner');
+  if (!inner) return;
+  inner.classList.add('show-events');
+}
+function goToMain() {
+  var inner = $('viewInner');
+  if (!inner) return;
+  inner.classList.remove('show-events');
+}
+
+var COLLAPSE_KEY = 'jmy_handbook_collapsed';
+function setCollapsed(collapsed) {
+  var book = $('book');
+  if (!book) return;
+  if (collapsed) book.classList.add('collapsed');
+  else book.classList.remove('collapsed');
+  try { localStorage.setItem(COLLAPSE_KEY, collapsed ? '1' : '0'); } catch (e) {}
+}
+function restoreCollapse() {
+  try {
+    var saved = localStorage.getItem(COLLAPSE_KEY);
+    if (saved === '1') setCollapsed(true);
+  } catch (e) {}
+}
+function toggleCollapse() {
+  var book = $('book');
+  if (!book) return;
+  var now = !book.classList.contains('collapsed');
+  setCollapsed(now);
+}
+
+function boot() {
+  restoreCollapse();
+
+  var btn = $('toggleBtn');
+  if (btn) btn.addEventListener('click', toggleCollapse);
+
+  var btnExpand = $('toggleBtnExpand');
+  if (btnExpand) btnExpand.addEventListener('click', toggleCollapse);
+
+  var ep = $('eventProgress');
+  if (ep) ep.addEventListener('click', goToEvents);
+
+  var back = $('backBtn');
+  if (back) back.addEventListener('click', goToMain);
+
+  render();
+  setInterval(render, 1500);
+}
+
+function start() {
+  var ready = function() {
+    if (typeof waitGlobalInitialized === 'function') {
+      Promise.resolve(waitGlobalInitialized('Mvu'))
+        .then(function(){ boot(); })
+        .catch(function(){ boot(); });
+    } else {
+      boot();
+    }
+  };
+  if (typeof errorCatched === 'function') {
+    try { errorCatched(ready)(); } catch (e) { ready(); }
+  } else {
+    ready();
+  }
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', start);
+} else {
+  start();
+}
+
+})();
+</script>
+
+</body>
+</html>
