@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>狐火三印 · 选项</title>
+
+<style>
+@import url("https://fontsapi.zeoseven.com/370/main/result.css");
+
+:root {
+  --fox-red: hsl(352, 62%, 46%);
+  --fox-red-b: hsl(352, 70%, 62%);
+  --fox-red-glow: hsla(352, 70%, 55%, 0.28);
+  --fox-fire: hsl(28, 88%, 58%);
+  --fox-fire-b: hsl(38, 92%, 70%);
+  --moon: #f5ece0;
+  --moon-b: hsl(42, 55%, 88%);
+  --moon-dim: hsla(42, 45%, 88%, 0.52);
+  --gold: hsl(42, 68%, 60%);
+  --border: hsla(42, 45%, 88%, 0.08);
+  --border-red: hsla(352, 62%, 52%, 0.28);
+  --font-hand: "KTXP-GlowRound", 'KaiTi', 'STKaiti', serif;
+  --mono: 'DIN', 'Courier New', 'Consolas', monospace;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+html, body {
+  background: transparent;
+  margin: 0;
+  padding: 0;
+  min-height: auto;
+}
+
+body {
+  font-family: var(--font-hand);
+  color: var(--moon);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 12px 10px;
+  line-height: 1.5;
+}
+
+/* ═══ 主面板 ═══ */
+.options-wrap {
+  width: 100%;
+  max-width: 620px;
+  display: flex;
+  justify-content: center;
+}
+
+.options-cover {
+  width: 100%;
+  position: relative;
+  border-radius: 3px;
+  overflow: hidden;
+  background: linear-gradient(160deg,
+    rgba(16, 12, 25, 0.88) 0%,
+    rgba(8, 6, 13, 0.94) 100%);
+  border: 1px solid var(--border-red);
+  box-shadow:
+    0 18px 50px rgba(0, 0, 0, 0.7),
+    0 0 40px hsla(352, 62%, 42%, 0.08),
+    inset 0 0 80px hsla(352, 40%, 20%, 0.08);
+  backdrop-filter: blur(12px);
+  isolation: isolate;
+}
+
+/* 顶部朱红细线 */
+.options-cover::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    var(--fox-red) 20%,
+    var(--gold) 50%,
+    var(--fox-red) 80%,
+    transparent 100%);
+  z-index: 10;
+  opacity: 0.7;
+}
+
+/* 右上云纹 */
+.options-cover::after {
+  content: '';
+  position: absolute;
+  top: 5px; right: 5px;
+  width: 20px; height: 20px;
+  border-top: 1px solid var(--border-red);
+  border-right: 1px solid var(--border-red);
+  border-top-right-radius: 2px;
+  pointer-events: none;
+}
+
+/* ═══ 顶栏 ═══ */
+.options-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 18px;
+  border-bottom: 1px solid var(--border);
+  background: rgba(8, 6, 13, 0.35);
+}
+
+.options-title {
+  font-family: var(--font-hand);
+  font-size: 12px;
+  color: var(--moon);
+  letter-spacing: 3px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.options-title::before {
+  content: '';
+  display: inline-block;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--fox-red);
+  box-shadow: 0 0 8px var(--fox-red);
+}
+
+.options-hint {
+  margin-left: auto;
+  font-family: var(--mono);
+  font-size: 8.5px;
+  color: var(--moon-dim);
+  letter-spacing: 1.5px;
+  opacity: 0.65;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.options-hint::before {
+  content: '◈';
+  font-size: 6px;
+  color: var(--gold);
+}
+
+/* ═══ 列表 ═══ */
+.options-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px 14px 14px;
+}
+
+/* ═══ 单个选项（div，不是 button） ═══ */
+.opt-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 13px 16px 13px 12px;
+  background: linear-gradient(135deg,
+    rgba(26, 20, 40, 0.6) 0%,
+    rgba(16, 12, 25, 0.4) 100%);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  cursor: pointer;
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+  font-family: var(--font-hand);
+  color: var(--moon);
+  text-align: left;
+  width: 100%;
+  font-size: 14px;
+  letter-spacing: 1px;
+  line-height: 1.4;
+  user-select: none;
+}
+
+/* 左侧朱红竖线（悬停展开） */
+.opt-item::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 50%;
+  transform: translateY(-50%);
+  width: 2px;
+  height: 0;
+  background: var(--fox-red);
+  transition: height 0.35s ease;
+  box-shadow: 0 0 8px var(--fox-red);
+}
+
+/* 底部狐火横线 */
+.opt-item::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg,
+    transparent,
+    var(--fox-fire) 30%,
+    var(--fox-fire-b) 50%,
+    var(--fox-fire) 70%,
+    transparent);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.opt-item:hover {
+  background: linear-gradient(135deg,
+    rgba(60, 30, 45, 0.55) 0%,
+    rgba(26, 20, 40, 0.6) 100%);
+  border-color: var(--border-red);
+  transform: translateX(3px);
+  box-shadow:
+    0 4px 20px rgba(0, 0, 0, 0.4),
+    0 0 24px hsla(352, 62%, 52%, 0.15);
+}
+
+.opt-item:hover::before { height: 55%; }
+.opt-item:hover::after { opacity: 1; }
+
+.opt-item.disabled {
+  pointer-events: none;
+  opacity: 0.45;
+  transform: none !important;
+}
+
+/* 序号方印 */
+.opt-number {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: hsla(352, 62%, 42%, 0.12);
+  border: 1.2px solid var(--fox-red);
+  border-radius: 2px;
+  transform: rotate(-3deg);
+  transition: all 0.35s ease;
+  font-family: var(--font-hand);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--fox-red-b);
+  text-shadow: 0 0 6px var(--fox-red-glow);
+  line-height: 1;
+}
+
+.opt-item:hover .opt-number {
+  background: hsla(352, 62%, 52%, 0.22);
+  border-color: var(--fox-red-b);
+  transform: rotate(-8deg) scale(1.05);
+  box-shadow: 0 0 16px var(--fox-red-glow);
+}
+
+/* 选项文字 */
+.opt-text {
+  flex: 1;
+  min-width: 0;
+  word-break: break-word;
+  letter-spacing: 1.2px;
+  color: var(--moon);
+  transition: color 0.3s ease;
+}
+
+.opt-item:hover .opt-text { color: var(--moon-b); }
+
+/* 右侧箭头 */
+.opt-arrow {
+  flex-shrink: 0;
+  width: 14px;
+  height: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--moon-dim);
+  opacity: 0.4;
+  transition: all 0.3s ease;
+}
+
+.opt-arrow svg {
+  width: 100%;
+  height: 100%;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.opt-item:hover .opt-arrow {
+  color: var(--fox-fire-b);
+  opacity: 1;
+  transform: translateX(3px);
+}
+
+/* 空状态 */
+.options-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 20px 16px;
+  font-family: var(--font-hand);
+  font-size: 12px;
+  color: var(--moon-dim);
+  letter-spacing: 3px;
+  opacity: 0.6;
+}
+
+.options-empty::before,
+.options-empty::after {
+  content: '◈';
+  font-size: 8px;
+  color: var(--fox-red);
+  opacity: 0.5;
+}
+
+/* ═══ 响应式 ═══ */
+@media (max-width: 520px) {
+  body { padding: 8px 6px; }
+  .options-header { padding: 8px 14px; }
+  .options-title { font-size: 11px; letter-spacing: 2.5px; }
+  .options-hint { font-size: 8px; letter-spacing: 1px; }
+  .options-list { padding: 10px 10px 12px; gap: 7px; }
+  .opt-item { padding: 11px 12px 11px 10px; gap: 10px; font-size: 13px; }
+  .opt-number { width: 30px; height: 30px; font-size: 13px; }
+  .opt-arrow { width: 12px; height: 12px; }
+}
+
+@media (min-width: 720px) {
+  .options-wrap { max-width: 680px; }
+  .options-list { padding: 14px 18px 16px; gap: 10px; }
+  .opt-item { padding: 15px 18px 15px 14px; gap: 14px; font-size: 15px; }
+  .opt-number { width: 40px; height: 40px; font-size: 17px; }
+  .opt-arrow { width: 16px; height: 16px; }
+}
+</style>
+</head>
+<body>
+
+<!-- UI 结构（严格照 Skill 骨架） -->
+<div class="options-wrap" id="options-root">
+  <div class="options-cover">
+    <div class="options-header">
+      <span class="options-title">狐火三择</span>
+      <span class="options-hint">点击行动</span>
+    </div>
+    <div class="options-list" id="options-list"></div>
+  </div>
+</div>
+
+<!-- ⚠️⚠️⚠️ 核心铁律：容器里必须有 $1，不能为空 -->
+<div id="options-data" style="display:none;">$1</div>
+
+<script>
+(function() {
+  'use strict';
+
+  /* 读取数据 —— 照抄 Skill，不要改 */
+  var dataContainer = document.getElementById('options-data');
+  var raw = dataContainer ? (dataContainer.textContent || '').trim() : '';
+
+  var container = document.getElementById('options-list');
+  if (!container) return;
+
+  /* 发送函数 —— 照抄 Skill，不要改 */
+  function sendOption(text) {
+    if (!text) return;
+
+    if (typeof triggerSlash === 'function') {
+      triggerSlash('/send ' + text + '|/trigger');
+      return;
+    }
+
+    var textarea = document.querySelector('#send_textarea') ||
+      (window.parent && window.parent.document.querySelector('#send_textarea'));
+    if (textarea) {
+      textarea.value = text;
+      textarea.dispatchEvent(new Event('input', { bubbles: true }));
+
+      var sendBtn = document.querySelector('#send_button') ||
+                    document.querySelector('#send_btn') ||
+                    (window.parent && window.parent.document.querySelector('#send_button'));
+      if (sendBtn) {
+        setTimeout(function() { sendBtn.click(); }, 80);
+      }
+    }
+  }
+
+  /* 解析选项 */
+  var items = raw
+    ? raw.split('|').map(function(s) { return s.trim(); }).filter(function(s) { return s.length > 0; })
+    : [];
+
+  if (items.length === 0) {
+    container.innerHTML = '<div class="options-empty">等待剧情选择</div>';
+    return;
+  }
+
+  /* 渲染选项 */
+  var numbers = ['壹', '贰', '叁', '肆', '伍'];
+  var html = '';
+
+  items.slice(0, 3).forEach(function(opt, index) {
+    var safe = opt
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+
+    var num = numbers[index] || (index + 1);
+
+    html +=
+      '<div class="opt-item" data-opt="' + safe + '">' +
+        '<span class="opt-number">' + num + '</span>' +
+        '<span class="opt-text">' + safe + '</span>' +
+        '<span class="opt-arrow"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></span>' +
+      '</div>';
+  });
+
+  container.innerHTML = html;
+
+  /* 点击事件（事件代理，照抄 Skill） */
+  container.addEventListener('click', function(e) {
+    var btn = e.target.closest('.opt-item');
+    if (!btn || btn.classList.contains('disabled')) return;
+
+    var text = btn.getAttribute('data-opt');
+    if (!text) return;
+
+    var allBtns = container.querySelectorAll('.opt-item');
+    for (var i = 0; i < allBtns.length; i++) {
+      allBtns[i].classList.add('disabled');
+    }
+
+    sendOption(text);
+
+    setTimeout(function() {
+      var btns = container.querySelectorAll('.opt-item');
+      for (var j = 0; j < btns.length; j++) {
+        btns[j].classList.remove('disabled');
+      }
+    }, 5000);
+  });
+
+  /* 触摸反馈 */
+  container.addEventListener('touchstart', function(e) {
+    var btn = e.target.closest('.opt-item');
+    if (!btn) return;
+    btn.style.transition = 'none';
+    btn.style.transform = 'translateX(1px) scale(0.98)';
+    setTimeout(function() {
+      btn.style.transition = '';
+      btn.style.transform = '';
+    }, 100);
+  }, { passive: true });
+
+  console.log('[狐火三择] 已加载，共 ' + items.length + ' 个选项');
+  console.log('[狐火三择] raw 原始数据:', raw);
+})();
+</script>
+
+</body>
+</html>
